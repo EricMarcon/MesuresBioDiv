@@ -1,0 +1,1564 @@
+<<Beta-parent, echo=FALSE, cache=FALSE>>=
+set_parent('Mesures_de_la_Biodiversite.Rnw')
+opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+options(width=60)
+par(mar=c(0,0,0,0))
+library("entropart")
+data(Paracou618)
+@
+
+\LargeMargins
+\selectlanguage{french}
+\sisetup{locale = FR}
+\chapter{Cadre}
+
+
+\begin{Essentiel}
+  La diversité $\beta$ désigne la différentiation entre communautés, c'est-à-dire une mesure de divergence de composition spécifique entre elle, ou bien la divergence entre elles et leur assemblage, appelée diversité proportionnelle.
+  La conciliation de ces deux définitions fait toujours l'objet de recherches.
+\end{Essentiel}
+
+\lettrine{L}{a notion} de diversité $\beta$ a été introduite par \textcite[][page 320]{Whittaker1960} comme le niveau de changement dans la composition des communautés, ou le degré de différenciation des communautés, en relation avec les changements de milieu.
+La traduction de cette notion intuitive en une définition sans ambiguïté est encore une question de recherche et de débats.
+
+\textcite{Anderson2011} fournissent une revue des analyses utiles de la diversité $\beta$ en forme de guide à destination des écologues reprise ici en introduction.
+La distinction entre diversité de différenciation et diversité proportionnelle est présentée ensuite.
+
+
+Pour simplifier l'exposé, les individus seront échantillonnés dans des communautés, appartenant à une méta-communauté. 
+Le Tableau~\ref{table:Notations} résume les notations.
+
+Des exemples montrent comment calculer cette diversité, principalement à l'aide du package \emph{entropart}. 
+Le package contient les données d'inventaire de deux hectares du dispositif de Paracou:
+
+<<entropartRappel>>=
+<<entropart>>
+@
+
+Les données sont organisées dans le package sous la forme d'un objet \code{MetaCommunity} qui contient notamment la matrice des $n_{s,i}$. 
+Les parcelles de Paracou sont dans l'objet \code{Paracou618.MC}.
+
+<<Paracou618.MC>>=
+summary(Paracou618.MC)
+@
+
+\tableFW{table:Notations}
+{Notations des effectifs, tableau espèces-communautés.}
+{
+  \begin{tabularx}{\textwidth}{p{2cm} p{7cm} p{1cm} X}
+    \toprule
+    & Communauté $i$ & $\dots$ & Total: méta-communauté \\
+    
+    \midrule
+    Espèce $s$ 
+    & $n_{s,i}$: nombre d'individus de l'espèce $s$ dans la communauté $i$. \newline
+    $\hat{p}_{s|i}=n_{s,i}/n_{+i}$ est l'estimateur de la probabilité $p_{s|i}$ qu'un individu de la communauté $i$ soit de l'espèce $s$.
+    &
+    & $n_{s+}=\sum_i{n_{s,i}}$ \newline
+    $p_s=\sum_i{w_{i}p_{s|i}}$ \\
+    
+    $\dots$
+    &
+    &
+    & \\
+    
+    Total
+    & $n_{+i}$: nombre d'individus de la communauté.\newline 
+    $w_i$: poids de la communauté
+    &
+    & $n$: nombre total d'individus échantillonnés \\
+    
+    \bottomrule
+  \end{tabularx}
+}
+
+\section[Définition de la diversité beta par objectifs]{Définition de la diversité $\beta$ par objectifs}
+
+\textcite{Anderson2011} proposent une revue des définitions de la diversité $\beta$ selon les analyses écologiques auxquelles elles peuvent contribuer plutôt que selon leurs propriétés mathématiques.
+
+
+Deux types de diversité $\beta$ peuvent être définies \autocite{Vellend2001} en accord avec les notions originales de Whittaker: le \emph{remplacement} (\foreignlanguage{english}{\emph{turnover}}) des espèces le long d'un gradient environnemental, spatial ou temporel et la \emph{variation} de la composition spécifique entre communautés, qui diffèrent de la méta-communauté et entre elles.
+Ces deux définitions sont présentées sur les figures~\ref{Anderson2011a} et \ref{Anderson2011b}.
+
+\figureSC{Anderson2011a}
+{Diversité $\beta$ liée au remplacement des espèces le long d'un gradient. 
+  $\Delta{y}$ est la mesure de la dissimilarité entre deux communautés, voir page~\pageref{sec:BetaPaires}.
+  $\vectorsym{x}$ est un gradient environnemental, spatial ou temporel.
+  $\Delta{x}$ est l'écart entre deux points du gradient.
+  (\emph{in} \textcite{Anderson2011})}
+{\includegraphics[width=\maxwidth]{Anderson2011a}}
+
+\figureSC{Anderson2011b}
+{Diversité $\beta$ liée à la variation de la composition spécifique.
+  $\beta_W$ est le rapport entre la diversité $\gamma$ et la diversité $\alpha$, $\beta_{Add}$ leur différence.
+  $d_{ij}$ est la dissimilarité entre les communautés $i$ et $j$.
+  $\hat{\sigma}^2$ est la variance de cette dissimilarité, $\bar{d}$ sa moyenne.
+  Si $d$ est une distance euclidienne, $\bar{d}_{cen}$ est la distance moyenne des communautés à leur centre de gravité.
+  (\emph{in} \textcite{Anderson2011})}
+{\includegraphics[width=\maxwidth]{Anderson2011b}}
+
+Les mesures de remplacement ne sont pas traitées en détail dans ce chapitre mais simplement présentées ici.
+
+La plus simple (Figure~\ref{Anderson2011a}, T1) est la dissimilarité entre deux communautés notée $\Delta{y}$.
+De nombreuses mesures de dissimilarité existent, elles sont détaillées dans le chapitre~\ref{chap:DivPaires}, à partir de la page~\pageref{sec:BetaPaires}.
+Whittaker n'envisageait que la présence ou l'absence des espèces, mais leur abondance peut être prise en compte.
+
+Cette dissimilarité peut être analysée en fonction du gradient de référence. 
+La dissimilarité entre des paires de communautés présentant la même différence (par exemple ayant subi ou non un traitement) situées le long d'un gradient (par exemple la fertilité du sol) peut être analysée en fonction de ce gradient (Figure~\ref{Anderson2011a}, T2).
+Plus classiquement, la diversité $\beta$ peut être régressée contre la valeur du gradient (T3).
+La dissimilarité de chaque paire de communautés est confrontée à son écart sur le gradient.
+Les deux analyses précédentes peuvent être combinées pour mesurer le remplacement des espèces selon deux gradients emboîtés (T6).
+
+Une variation sur le modèle T2 consiste à le représenter sous la forme d'un modèle de décroissance en fonction de la distance \autocite{Nekola1999}, éventuellement pour plusieurs groupes de communautés (Figure~\ref{Anderson2011a}, T4 et T5). 
+L'indice de Simpson spatialement explicite (page~\pageref{sec:SimpsonSpatial}) entre dans ce cadre bien qu'il soit construit différemment.
+
+Les mesures de variation (Figure~\ref{Anderson2011b}, V1) concernent la dissimilarité entre plusieurs communautés ou entre chaque communauté et la méta-communauté.
+L'équivalence de ces deux concepts n'est pas évidente: elle a été montrée pour les mesures de dissimilarité entre paires de communautés par \textcite{Legendre1999, Legendre2001, Legendre2005}, pour l'entropie de Rao par \textcite{Pavoine2004} et pour l'entropie HCDT par \textcite{Marcon2014a}.
+La diversité $\beta$ peut être mesurée pour un assemblage de communautés au choix comme la moyenne des dissimilarités entre les paires de communautés  ou à partir des diversités $\gamma$ et $\alpha$, c'est-à-dire en tant que mesure dérivée.
+Cette dernière approche est traitée dans ce chapitre, où il sera montré que la mesure dérivée est aussi une dissimilarité moyenne entre communautés.
+
+Si la diversité est mesurée comme moyenne des dissimilarités, elle peut être analysée par des méthodes d'ordination indirectes (Figure~\ref{Anderson2011b}, V2) ou directes (V3). Elle peut aussi être comparée entre méta-communautés ou modélisée en fonction d'un gradient environnemental (V4), de façon similaire au modèle T6.
+
+La diversité $\beta$ peut être décomposée en niveaux hiérarchiques emboîtés (V5). Des tests statistiques sont nécessaires pour comparer les niveaux: par exemple, montrer que la diversité (inter) entre des communautés supposées différentes est significativement plus grande que celle (intra) des placettes d'échantillonnage de chacune d'entre elles, à la manière d'une analyse de variance (V6).
+
+
+\section{Typologie des mesures}
+
+Cette approche utilitaire est complétée par le cadre théorique de \textcite{Jurasinski2009} qui distinguent plusieurs types de mesures de diversité:
+
+\begin{itemize}
+  \item  La diversité d'inventaire (\emph{inventory diversity}), qui traite des données récoltées sur une unité spatiale, ce qui correspond à la définition des diversités$\ \alpha$ et $\gamma$;
+  \item  La diversité de différenciation (\emph{differentiation diversity}), qui mesure à quel point les unités spatiales sont différentes, ce qui correspond à la définition littérale de la diversité $\beta$ de Whittaker;
+  \item  La diversité proportionnelle (\emph{proportional diversity}), diversité $\beta$ qui se construit par différence ou rapport des diversités $\gamma$ et $\alpha$. \textcite{Marcon2014a} ont montré qu'avec une décomposition appropriée de la diversité, la diversité proportionnelle est aussi la divergence entre la distribution des communautés locales et celle de la méta-communauté: la diversité $\beta$ mesure alors à quel point les unités spatiales sont différentes de leur assemblage plutôt qu'entre elles.
+\end{itemize}
+
+Dans son article fondateur, \textcite{Whittaker1960} définit la diversité $\beta$ comme le niveau de changement dans la composition des communautés, la nomme \og diversité secondaire \fg{} et lui attribue la lettre $\beta$ en référence à la diversité \og primaire \fg{}, mesurée par l'indice $alpha$ de Fisher \autocite{Fisher1943} (voir le chapitre \ref{chap:Fisher}, page \pageref{chap:Fisher}).
+Il illustre cette définition par une mesure de différentiation: l'indice de Jaccard, mais utilise ensuite une mesure proportionnelle: le rapport des indice $alpha$ de l'assemblage des communautés à sa moyenne sur les communautés.
+La conciliation des deux approches n'est pas simple.
+\textcite{Gregorius2016} montre notamment que les mesures habituelles de diversité proportionnelle ne rendent pas compte correctement de la différentiation.
+
+
+\section{Décomposition de la diversité}
+
+La façon de décomposer la diversité, aboutissant donc à une diversité $\beta$ proportionnelle, ne fait pas consensus.
+Les éléments du débat sont présentés ici.
+
+\subsection[Définitions de la diversité beta, mesure dérivée]{Définitions de la diversité $\beta$, mesure dérivée}
+
+\textcite{Tuomisto2010a} passe en revue l'ensemble des définitions de la diversité $\beta$ dérivée des diversités $\gamma$ et $\alpha$. 
+Toutes ont en commun:
+\begin{itemize}
+  \item  Une définition de la mesure de diversité, appliquée à la diversité $\gamma$, qui est généralement une des mesures vues dans le chapitre~\ref{chap:MesuresNeutres};
+  \item  Une définition de la diversité $\alpha$, qui peut être par exemple:
+  \begin{itemize}
+    \item  La diversité locale mesurée dans chaque communauté, indépendamment de toute référence hors de la communauté;
+    \item  De façon équivalente, le nombre d'espèces effectives dans les communautés.
+  \end{itemize}
+  \item  Une façon de combiner les diversités $\gamma$ et $\alpha$ pour obtenir la diversité $\beta$, par exemple:
+  \begin{itemize}
+    \item  $\beta={\gamma}/{\alpha}$;
+    \item  $\beta=\gamma-\alpha$.
+  \end{itemize}
+\end{itemize}
+
+L'utilisation des nombres de Hill, la mesure locale de la diversité $\alpha$ et la définition de la diversité $\beta$ comme rapport des diversités $\gamma$ et $\alpha$ permet de définir la \og vraie diversité\fg{} \autocite{Jost2006, Jost2007} $\beta$ qui est un nombre de communautés équivalentes (\foreignlanguage{english}{\emph{compositionnal units}}) similaire au nombre d'espèces équivalentes des diversités $\alpha$ et $\gamma$. 
+\textcite{Tuomisto2011} milite pour que le terme diversité soit réservé à la vraie diversité (homogène à un nombre d'espèces) et que les autres mesures soient appelées différemment: \og entropie\fg{} de Shannon ou \og probabilité\fg{} de Gini-Simpson notamment.
+
+\subsection{Le débat sur la décomposition}
+\label{subseq:DebatDecomposition}
+
+L'objectif est de décomposer la diversité totale, notée $\gamma$ en une composante inter-groupes, notée $\beta$ et une composante intra-groupes notée $\alpha$.
+
+\textcite{Whittaker1960, Whittaker1972} est l'auteur de ce concept. 
+Il a posé le principe que la diversité $\gamma$ devait être le produit des diversités $\alpha$ et $\beta$.
+
+\textcite{Lande1996} a une approche additive et postule que les mesures de diversité doivent être concaves: la diversité d'un jeu de données regroupant plusieurs communautés doit être supérieure ou égale à la somme pondérée des diversités dans chaque communauté. 
+De cette façon, il est possible de définir une diversité totale égale à la somme pondérée des diversités $\alpha$ (intra-communautés) et $\beta$ (inter-communautés), toutes les diversités étant positives ou nulles. 
+Il note que \og la partition serait plus facilement interprétable si les différentes composantes de la diversité pouvaient être exprimés au moyen de la même formule\fg{} (ce qui n'est en fait jamais le cas). 
+Une revue sur les avantages de la décomposition additive est proposée par \textcite{Veech2002}.
+
+Un débat assez stérile a découlé de l'opposition entre les deux approches, principalement dû à la transformation logarithmique \autocite{Ricotta2005a}, à des définitions imprécises et des démonstrations empiriques remises en question \autocite{Baselga2010a, Veech2010a}. 
+Il reste que la décomposition multiplicative permet seule la définition de la diversité $\beta$ en tant que diversité au sens strict \autocite{Chao2012a}.
+
+
+\textcite{Marcon2012a} montrent que l'entropie de Shannon $H_{\beta}$ est une mesure de diversité de différenciation en donnant sa définition indépendamment de $H_{\alpha}$ et $H_{\gamma}$, comme l'avaient fait Ricotta et Marignani pour l'entropie quadratique de Rao \autocite{Ricotta2007a}.
+C'est également une diversité proportionnelle, comme toutes les mesures passées en revue par Tuomisto: la diversité de Shannon permet d'unifier les deux approches.
+
+L'indice de Shannon, couplé à son expression sous forme de nombre de Hill, respecte finalement tous les critères imposés ou souhaités. 
+Sa décomposition est détaillée ci-dessous. 
+Enfin, \textcite{Marcon2014a} généralisent ce résultat à toutes les mesures de diversités dérivées de l'entropie généralisée de Tsallis.
+
+
+\subsection{Décomposition multiplicative de la diversité}
+
+\textcite{Jost2007} et \textcite{Chao2012a} ont montré que la décomposition des nombres de Hill en éléments indépendants est multiplicative:
+
+\begin{equation}
+  \xq{D}{q}{}{\gamma}{} = \xq[\,]{D}{q}{}{\alpha}{} \xq[\,]{D}{q}{}{\beta}{}
+  \label{eq:DecompDq}
+\end{equation}
+
+$\xq{D}{q}{}{\alpha}{}$ et $\xq{D}{q}{}{\gamma}{}$ sont les nombres de Hill d'ordre $q$ égaux aux diversités $\alpha$ et $\gamma$. 
+Ce sont des nombres équivalents d'espèces. 
+$\xq{D}{q}{}{\beta}{}$ est le \og nombre de communautés effectives\fg{} ou \og nombre équivalent de communautés \fg{}, c'est-à-dire le nombre de communautés de poids égal ne possédant aucune espèce en commun (et dont la dissimilarité entre les espèces de communautés différentes est maximale quand la diversité est phylogénétique ou fonctionnelle) \autocite{Pavoine2015a}, qui fourniraient la même valeur de diversité $\beta$.
+
+La diversité $\beta$ est indépendante de la diversité $\alpha$ si les poids des communautés sont égaux. 
+L'\emph{indépendance} signifie que la valeur de $\xq{D}{q}{}{\beta}{}$ n'est pas contrainte par celle de $\xq{D}{q}{}{\alpha}{}$. 
+Cette propriété est souvent considérée comme importante \autocite{Wilson1984, Gregorius2010}, et sera discutée largement ici.
+
+
+\subsection[Définitions de la diversité alpha]{Définitions de la diversité $\alpha$}
+
+La diversité $\alpha$ est calculée pour chaque communauté, et notée $^q_iD_{\alpha}$ (l'entropie correspondante est notée $\xq{H}{q}{}{\alpha}{i}$). 
+La diversité $\alpha$ de la méta-communauté est intuitivement la moyenne de celle des communautés. 
+En raison de leurs propriétés mathématiques, il est plus simple de considérer la moyenne des entropies $\alpha$.
+
+Le poids de chaque groupe est $w_i$, souvent choisi égal au nombre d'individus de la communauté divisé par le nombre total ou à la surface de chaque groupe, mais qui peut être arbitraire, tant que $p_s=\sum_i{w_i p_{s|i}}$. 
+Deux façons de pondérer la somme émergent de la littérature \autocite{Chao2012a}. 
+La définition classique est selon \textcite{Routledge1979} :
+
+\begin{equation}
+  \xq{H}{q}{}{\alpha}{} = \sum_i{w_i\xq[\,]{H}{q}{}{\alpha}{i}}
+\end{equation}
+
+\begin{equation}
+  \xq{D}{q}{}{\alpha}{}={\left(\sum_s{\sum_i{w_ip^q_{s|i}}}\right)}^{1/{\left(1-q\right)}}
+\end{equation}
+
+\label{JostAlpha}
+La pondération proposée par \textcite{Jost2007} est:
+
+\begin{equation}
+  \xq{H}{q}{}{\alpha}{} = \sum_i{\frac{w^q_i}{\sum_i{w^q_i}}\xq[\,]{H}{q}{}{\alpha}{i}}
+\end{equation}
+
+\begin{equation}
+  \xq{D}{q}{}{\alpha}{} = {\left(\sum_s{\sum_i{\frac{w^q_i}{\sum_i{w^q_i}}p^q_{s|i}}}\right)}^{{1}/{\left(1-q\right)}}
+\end{equation}
+
+La première est la pondération naturelle. 
+La seconde, qui utilise les poids à la puissance $q$, donne donc d'autant moins d'importance que $q$ est grand aux communautés dont le poids est faible. 
+Les deux définitions se confondent pour $q=1$.
+
+Si les poids sont différents, \textcite{Jost2007} a montré que l'indépendance n'est possible que si la diversité $\alpha$ est définie selon sa pondération. 
+En revanche, cette pondération ne garantit pas que la diversité $\gamma$ soit supérieure à la diversité $\alpha$ si $q$ n'est égal ni à 0 ni à 1. 
+Jost conclut donc que la décomposition n'est possible que pour des communautés de même poids ou pour $q=0$ ou $q=1$.
+\textcite{Ricotta2009b} contourne cette difficulté en proposant une méthode de ré-échantillonnage qui permet d'égaliser les poids.
+
+\label{ChiuAlpha}
+\textcite{Chiu2014} établissent une nouvelle définition de la diversité $\alpha$ qui permet d'assurer l'indépendance et garantit que la diversité $\beta$ est positive quels que soient les poids des communautés:
+
+\begin{equation}
+  \xq{D}{q}{}{\alpha}{}=\frac{1}{I}{\left(\sum_s{\sum_i{{\left(w_ip_{s|i}\right)}^q}}\right)}^{{1}/{\left(1-q\right)}}
+\end{equation}
+
+Cette définition pose problème: alors que le choix de $q$ a pour but de donner une importance plus ou moins grande aux espèces rares, son effet est le même sur la taille des communautés La diversité dépendra essentiellement des espèces rares dans les communautés de faible poids si $q$ est petit, définissant une diversité bi-dimensionnelle. 
+Cette question est traitée en détail page~\pageref{sec:DiversiteJointe}.
+
+\textcite{Marcon2014a} préfèrent la définition de Routledge qui est plus intuitive que garantit que la diversité $\gamma$ est supérieure à la diversité $\alpha$. 
+La dépendance entre $\xq{D}{q}{}{\beta}{}$ et $\xq{D}{q}{}{\alpha}{}$ est le prix à payer.
+
+
+
+\chapter{Diversité de différentiation}
+\label{sec:BetaPaires}
+
+\begin{Essentiel}
+  La diversité $\beta$ de différentiation mesure la dissimilarité entre communautés, généralement considérées par paires.
+  Les dissimilarités les plus connues sont celles de Jaccard ou de Sørensen.
+  Ces mesures peuvent prendre en compte la seule présence ou absence des espèces, leur abondance ou même la similarité entre les espèces, peuvent être traitées par l'analyse multivariée et être testées contre l'hypothèse de nullité de la dissimilarité.
+\end{Essentiel}
+
+
+\lettrine{L}{a littérature} des indices de similarité est bien antérieure à celle de la biodiversité.
+De nombreuses mesures de dissimilarité entre paires de communautés existent donc, et leurs propriétés ont été bien étudiées.
+Elles seront présentées ici en fonction des types de données qu'elles traitent: présence-absence, abondance ou abondance et similarité des espèces.
+Enfin, des tests statistiques ont été construits pour rejeter l'hypothèse que les communautés sont issues d'une même méta-communautés par un simple tirage multinomial des espèces.
+
+\section{Données de présence-absence}
+
+\subsection{Indices de similarité}
+
+Les indices les plus simples et probablement les plus connus pour calculer la diversité $\beta$ sont l'indice de \textcite{Jaccard1901} et de Sørensen \autocite{Dice1945, Sorensen1948}. 
+Ils sont définis pour deux communautés et comptent la proportion d'espèces qu'elles partagent. 
+Plus elle est faible, moins la composition spécifique des communautés est semblable, plus la diversité $\beta$ est considérée comme grande.
+
+Précisément, notons $s_{1,1}$ les espèces observées dans les deux communautés, $s_{1,0}$ celles observées dans la première communauté mais pas la deuxième (et de même  $s_{0,1}$). 
+L'indice de Jaccard est le rapport entre le nombre d'espèces communes et le nombre d'espèces total:
+
+\begin{equation}
+  \label{eq:Jaccard}
+  S_3 = \frac{s_{1,1}}{s_{1,1}+s_{1,0}+s_{0,1}}
+\end{equation}
+
+L'indice de Sørensen vaut deux fois le nombre d'espèces communes divisé par la somme du nombre d'espèces des deux communautés:
+
+\begin{equation}
+  S_7 = \frac{2s_{1,1}}{2s_{1,1}+s_{1,0}+s_{0,1}}
+\end{equation}
+
+Les notations $S_n$ correspondent à celles de l'article de référence de \textcite{Gower1986} qui fait la revue de ces indices de similarité (13 autres sont traités) et en étudie les propriétés. 
+Certains indices prennent en compte les espèces absentes des deux communautés mais qui auraient pu être observées $s_{0,0}$.
+
+Deux autres indices sont mentionnés ici, celui de \textcite{Sokal1963} et celui d'\textcite{Ochiai1957} :
+
+\begin{equation}
+  S_5 = \frac{s_{1,1}}{s_{1,1}+2 \left(s_{1,0}+s_{0,1}\right)}
+\end{equation}
+\begin{equation}
+  S_{12} = \frac{s_{1,1}}{\sqrt{\left(s_{1,1}+s_{1,0}\right)\left(s_{1,1}+s_{0,1}\right)}}
+\end{equation}
+
+Une propriété importante est la possibilité de comparer plusieurs communautés en calculant la matrice de leurs dissimilarités deux à deux et en en faisant une représentation graphique. 
+Pour cela, la similarité est transformée en dissimilarité $D_n=1-S_n$ (les similarités sont construites pour être comprises entre 0 et 1). 
+$D_n$ n'est pas toujours une distance euclidienne, mais $\sqrt{D_n}$ l'est pour la majorité des indices. 
+On utilisera donc généralement la matrice de distances euclidiennes $\Delta$ dont chaque élément $d_{i,j}$ est la racine de la dissimilarité $\sqrt{D_n}$ calculée entre les communautés $i$ et $j$.
+
+Exemple: l'indice de Jaccard peut être calculé pour tous les carrés de BCI comparés deux à deux. 
+La fonction \code{dist.binary} du package \emph{ade4} calcule $\sqrt{D_n}$ pour 10 indices de similarité étudiés par Gower et Legendre (voir l'aide de la fonction). 
+Le résultat est une demi-matrice de distances de classe \code{dist}.
+
+<<Jaccard>>=
+DistJaccard <- dist.binary(BCI, method = 1)
+@
+
+La distribution des valeurs de l'indice de Jaccard $S_3=1-D_3^2$ est en figure~\ref{JaccardFig}
+\verbfootnote{Code R pour la figure:
+  <<JaccardCode, eval=FALSE>>=
+  plot(density(1-DistJaccard^2))
+  @
+}. 
+Le mode est proche de 0,5: la moitié des espèces sont communes entre deux carrés.
+
+\figureMargin{JaccardFig}
+{Distribution des indices de Jaccard calculés pour les 50 carrés de BCI deux à deux.}
+{
+  <<JaccardFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
+  <<JaccardCode>>
+  @
+}
+
+Pour afficher l'indice de Jaccard entre les carrés 1 et 2, il faut transformer la demi-matrice des distances en matrice de similarité:
+<<Jaccard2>>=
+Jaccard <- 1-(as.matrix(DistJaccard))^2
+Jaccard[1,2]
+@
+
+
+\subsection{Biais d'estimation}
+
+Tous les indices de similarité vus plus haut sont sensibles au biais d'estimation.
+\textcite{Chao2004a} fournissent un estimateur de la probabilité qu'un individu de la première communauté appartienne à une espèce commune aux deux communautés:
+
+\begin{equation}
+  \hat{U} = \sum_{s}^{s_{1,1}}{\frac{n_{s,1}}{n}} + \frac{n_{+2}-1}{n_{+2}} \frac{s_1^{(2)}}{2 s_2^{(2)}} \sum_{s}^{s_{1,1}}{\frac{n_s}{n}{\mathbf 1}\left( n_{s,2}=1 \right)}
+\end{equation}
+
+Les sommes s'entendent pour toutes les espèces communes, indicées de 1 à $s_{1,1}$.
+Le premier terme de la somme est donc la probabilité qu'un individu de la première communauté appartienne à une espèce commune aux deux communautés.
+$n_{+2}$ est le nombre d'individus de la deuxième communauté.
+$s_1^{(2)}$ et $s_2^{(2)}$ sont le nombre d'espèces communes qui sont des singletons et doubletons dans la deuxième communauté.
+L'indicatrice ${\mathbf 1}(n_{s,2}=1)$ vaut 1 si l'espèce $s$ est un singleton dans la deuxième communauté: la dernière somme est donc la probabilité qu'un individu de la première communauté appartienne à une espèce commune qui soit un singleton dans la deuxième communauté.
+S'il n'y a pas de doubletons dans la deuxième communauté, leur nombre est remplacé par 1.
+Enfin, il est possible que l'estimateur soit supérieur à 1, il est alors fixé à 1.
+
+L'estimateur de la probabilité qu'un individu de la deuxième communauté appartienne à une espèce commune est noté $\hat{V}$ et est calculé de façon symétrique à $\hat{U}$.
+Le nombre d'espèces communes $s_{1,1}$ est estimé par $\hat{U}\hat{V}$, $s_{1,0}$ par $(1-\hat{U})\hat{V}$ et $s_{1,0}$ par $\hat{U}(1-\hat{V})$. 
+L'estimateur de l'indice de Jaccard est donc:
+
+\begin{equation}
+  \hat{S}_3 = \frac{\hat{U}\hat{V}}{\hat{U}+\hat{V}-\hat{U}\hat{V}}
+\end{equation}
+
+L'estimateur de l'indice de Sørensen est :
+
+\begin{equation}
+  \hat{S}_7 = \frac{2\hat{U}\hat{V}}{\hat{U}+\hat{V}}
+\end{equation}
+
+La matrice de dissimilarité corrigée est assez différente de l'originale. L'indice de Jaccard entre les deux premiers carrés devient:
+
+<<ChaoJaccard1>>=
+# Calcul de U et V, N2Col est une matrice ou un dataframe de deux colonnes contenant les effectifs de chaque parcelle
+ChaoUV <- function(N2Col) {
+NCommunity <- colSums(N2Col)
+Common <- (N2Col[, 1] > 0) & (N2Col[, 2] > 0)
+Single <- N2Col == 1
+NSingleCommon <- colSums(Common & Single)
+Double <- N2Col == 2
+NDoubleCommon <- colSums(Common & Double)
+NsCommon <- N2Col[Common,]
+PsCommon <- t(t(NsCommon)/colSums(N2Col))
+U <- sum(PsCommon[, 1]) + (NCommunity[2]-1)/NCommunity[2] * NSingleCommon[2]/2/max(NDoubleCommon[2], 1) * sum(PsCommon[, 1][(NsCommon == 1)[, 2]]) 
+V <- sum(PsCommon[, 2]) + (NCommunity[1]-1)/NCommunity[1] * NSingleCommon[1]/2/max(NDoubleCommon[1], 1) * sum(PsCommon[, 2][(NsCommon == 1)[, 1]]) 
+return (list(U=U, V=V))
+}
+
+# Indice de Jaccard corrigé
+bcJaccard <- function(N2Col) {
+ChaoEst <- ChaoUV(N2Col)
+return (min(ChaoEst$U * ChaoEst$V / (ChaoEst$U + ChaoEst$V - ChaoEst$U*ChaoEst$V), 1))
+}
+
+# Calcul de l'indice entre les carrés i et j de BCI, i<j.
+BCIjaccard <- function(i,j) {
+if (i>=j) 
+return(NA)
+else
+return(bcJaccard(t(BCI[c(i,j),])))
+}
+
+# Calcul de la matrice de dissimilarité entre les 50 carrés
+ChaoJaccard <- sapply(1:50, function(i) {sapply(1:50, function(j) BCIjaccard(i,j))})
+
+# Indice de Jaccard, carrés 1 et 2, corrigé
+BCIjaccard(1,2)
+@
+
+La distribution des valeurs de l'indice corrigé se trouve en figure~\ref{ChaoJaccardFig}
+\verbfootnote{Code R pour la figure:
+  <<ChaoJaccardCode, eval=FALSE>>=
+  plot(density(ChaoJaccard, na.rm=TRUE, to=1))
+  @
+}. 
+
+\figureMargin{ChaoJaccardFig}
+{Distribution des indices de Jaccard corrigés du biais d'etimation pour les 50 carrés de BCI deux à deux.}
+{
+  <<ChaoJaccardFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
+  <<ChaoJaccardCode>>
+  @
+}
+
+La majorité des paires de carrés a une similarité supérieure à 0,8 après correction.
+
+
+
+\subsection{Représentation graphique}
+
+La matrice de distances peut être représentée par une analyse en coordonnées principales (PCoA) \autocite{Gower1966} :
+<<JaccardPCO>>=
+DistChaoJaccard <- as.dist(sqrt(1-ChaoJaccard))
+PcoChaoJaccard <- dudi.pco(DistChaoJaccard, scannf = FALSE)
+@
+
+\figureSC{JaccardPCOFig}
+{Représentation des 50 carrés de BCI dans une analyse en coordonnées principale fondée sur les distances de Jaccard.}
+{
+  <<JaccardPCOFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
+  <<JaccardPCOCode>>
+  @
+}
+
+La représentation de l'analyse est en figure~\ref{JaccardPCOFig}
+\verbfootnote{Code R pour la figure:
+  <<JaccardPCOCode, eval=FALSE>>=
+  scatter(PcoChaoJaccard, posieig = "bottomright")
+  @
+}. 
+Les 50 carrés de BCI sont représentés sur le plan des deux premiers facteurs. 
+Les valeurs propres sont représentées dans le cartouche en haut à gauche de la figure. 
+Les distances entre les points sont les valeurs de $\sqrt{D_3}$, projetées sur le plan.
+La matrice de distances n'est pas euclidienne à cause des approximations de l'estimation mais les conséquences sont faibles sur les premiers axes.
+
+
+\subsection{Emboîtement et substitution}
+
+L'indice de Sørensen et les indices similaires prennent en compte deux types de dissimilarité: l'emboîtement des composition spécifiques (\foreignlanguage{english}{\emph{nestedness}}) et la substitution d'espèces (\foreignlanguage{english}{\emph{turnover}}).
+On parle d'emboîtement quand une communauté diffère d'une autre parce que sa composition est un sous-ensemble des espèces de l'autre.
+La substitution correspond au remplacement de certaines espèces d'une communauté par de nouvelles espèces.
+\textcite{Baselga2010} montre que la diversité $\beta$ de longicornes en Europe du nord est similaire à celle observée en Europe du sud, mais pour des raisons totalement différentes. 
+En Europe du nord, les communautés perdent des espèces avec la latitude: leur dissimilarité est due principalement à l'emboîtement.
+En Europe du sud, les communautés sont composées d'espèces différentes: la diversité $\beta$ est due à la substitution des espèces.
+Baselga décompose l'indice de dissimilarité de Sørensen, $1-S_7$, en un terme mesurant la substitution et un mesurant l'emboîtement.
+
+Le premier composant est l'indice de dissimilarité de \textcite{Simpson1943}:
+\begin{equation}
+  D_{sim} = \frac{\min(s_{1,0},s_{0,1})}{s_{1,1}+\min(s_{1,0},s_{0,1})}
+\end{equation}
+
+Il vaut 0 quand les communautés sont emboîtées.
+Son complément $D_{nes}$ prend en compte la partie de la dissimilarité due à l'emboîtement:
+\begin{equation}
+  D_{nes} 
+  = \frac{s_{1,0} + s_{0,1}}{2s_{1,1} + s_{1,0} + s_{0,1}}
+  - \frac{\min(s_{1,0},s_{0,1})}{s_{1,1}+\min(s_{1,0},s_{0,1})}
+\end{equation}
+
+Ces mesures de dissimilarité sont généralisées au-delà de deux communautés: les formules sont disponibles dans l'article de Baselga.
+
+Les mesures de diversité $\beta$ fondées sur l'entropie HCDT (chapitre \ref{chap:Beta}) ne permettent pas de distinguer directement emboîtement et substitution.
+La variabilité des contributions $\xq{H}{q}{}{\beta}{i}$ des communautés à l'entropie $\beta$ augmente avec l'emboîtement, mais cette voie n'a pas été explorée.
+
+
+\section{Données d'abondance}
+
+La distance la plus évidente entre communautés quand les effectifs des espèces sont connus est simplement la distance euclidienne (Figure~\ref{BCIPCAFig}), éventuellement normalisée par le nombre d'espèces (Dissimilarité $D_1$ de \textcite{Gower1986}).
+Son problème principal est qu'elle est très sensible aux ordres de grandeurs relatifs des variables.
+
+La dissimilarité de Steinhaus \autocite{Motyka1947}, plus connue sous le nom de Bray-Curtis \autocite{Odum1950, Bray1957} (voir l'analyse historique de \textcite[][note de bas de page, eq. 7.58]{Legendre2012}) est très utilisée (par défaut dans plusieurs analyses du package \emph{vegan} par exemple):
+
+\begin{equation}
+  \label{BrayCurtis}
+  D_{8} = \frac{\sum_s{\left| n_{s,1}-n_{s,2} \right|}}{\sum_s{\left( n_{s,1}+n_{s,2} \right)}}
+\end{equation}
+
+$n_{s,1}$ et $n_{s,2}$ sont le nombre d'individus de l'espèce $s$ dans la première et la deuxième communauté.
+La racine carrée de la dissimilarité de Bray-Curtis est euclidienne.
+
+\textcite{Gower1971} propose une extension de la dissimilarité de Bray-Curtis:
+\begin{equation}
+  D_{G} = \frac{\sum_s{w_s\left| n_{s,1}-n_{s,2} \right|}}{R_s\sum_s{w_s}}
+\end{equation}
+
+$R_s$ est l'étendue ou l'écart-type de l'abondance de l'espèce $s$, qui permet de ne pas surpondérer l'effet des espèces très abondantes.
+$w_s$ est le poids attribué à l'espèce $s$, qui peut être utilisé pour éliminer les doubles absences ($w_s=0$ si l'espèce est absente des deux communautés, 1 sinon).
+
+\textcite{Anderson2006} proposent une mesure de dissimilarité (de Gower modifiée) donnant le même poids à une différence d'un ordre de grandeur entre les abondances qu'à la différence entre présence et absence, qui permet donc de se passer de la normalisation par $R_s$.
+Les effectifs sont transformés de la façon suivante : $x_s=\log n_s +1$ si $n_s \ne 0$, $x_s=1$ sinon (le logarithme est décimal).
+La dissimilarité est :
+\begin{equation}
+  D_{\mathit{MG}} = \frac{\sum_s{w_s\left| x_{s,1}-x_{s,2} \right|}}{\sum_s{w_s}}
+\end{equation}
+
+Elle n'est pas euclidienne.
+
+\section{Données d'abondance et similarité des espèces}
+
+\subsection{Dissimilarité minimale moyenne}
+
+\textcite{Ricotta2010} définissent une mesure de dissimilarité paramétrique entre deux communautés.
+Une matrice de dissimilarité est définie entre toutes les paires d'espèces.
+$\min{d_{s,2}}$ désigne la dissimilarité entre l'espèce $s$ présente dans la première communauté et l'espèce la plus proche d'elle dans la deuxième communauté.
+$\min{d_{t,1}}$ est la même notation pour l'espèce $t$ de la deuxième communauté et l'espèces la plus proche dans la communauté 1.
+Ces valeurs sont nulles pour toutes les espèces communes.
+
+$\pi_{s(n)}$ désigne la contribution de l'espèce $s$ à l'indice de Hurlbert, déjà vue dans le cadre de l'originalité taxonomique (page~\pageref{sec:OrigTax}).
+La contribution des espèces rares augmente avec le paramètre $n$ (Figure~\ref{HurlbertCFig}, page~\pageref{HurlbertCFig}).
+Pour chaque communauté, la moyenne des dissimilarités minimales entre chaque espèce et l'autre communauté est calculée, pondérée par la contribution de l'espèce à l'indice de Hurlbert.
+
+La dissimilarité pondérée (W pour \foreignlanguage{english}{\emph{weighted}}) entre les deux communautés (C pour \foreignlanguage{english}{\emph{community}}) en est la moyenne entre les deux communautés:
+\begin{equation}
+  d_{\mathit{CW}(n)} = \frac{1}{2}\left(\sum_s{\pi_{s(n)} \min{d_{s,2}}} + \sum_t{\pi_{t(n)} \min{d_{t,1}}} \right) 
+\end{equation}
+
+Sa version non pondérée (U pour \foreignlanguage{english}{\emph{unweighted}}) par les abondances est \autocite{Ricotta2008}:
+\begin{equation}
+  d_{\mathit{CU}} = \frac{\sum_s{\min{d_{s,2}}} + \sum_t{\min{d_{t,1}}}}{2s_{1,1}+s_{1,0}+s_{0,1}}
+\end{equation}
+
+
+
+\subsection{Similarité moyenne entre individus}
+
+\textcite{Pavoine2014b} définissent une famille de similarités entre communautés construite à partir de la similarité moyenne entre les paires d'individus de chaque communauté et les paires intercommunautaires. 
+Une matrice de similarité $\matrixsym{Z}$ est définie entre les paires d'espèces: $z_{s,t}$ est la similarité entre l'espèce $s$ et l'espèce $t$, comprise entre 0 et 1 de la même façon que pour le calcul de la diversité $\xq{D}{q}{\matrixsym{Z}}{}{}$ (page~\pageref{sec:LeinsterCobbold}). 
+La matrice $\matrixsym{Z}$ doit de plus être semi-définie positive, ce qui implique que $\sqrt{1-\matrixsym{Z}}$ est euclidienne: de cette façon, les espèces peuvent être représentées graphiquement par une PCoA. 
+Les fréquences des espèces dans les deux communautés sont $\vectorsym{p}$ et $\vectorsym{q}$. 
+La similarité moyenne dans chaque communauté est $\sum_{s,t}{p_s p_t z_{s,t}}$ et $\sum_{s,t}{q_s q_t z_{s,t}}$. 
+La similarité moyenne des paires d'individus de communautés différentes est $\sum_{s,t}{p_s q_t z_{s,t}}$.
+
+La dissimilarité entre communautés de Rao (page~\pageref{sec:RaoDisc}) peut être normalisée (en la divisant par sa valeur maximale pour qu'elle soit comprise entre 0 et 1) puis transformée en similarité (en prenant son complément à 1) pour obtenir:
+
+\begin{equation}
+  S_{\mathit{Sorensen}} = \frac{\sum_{s,t}{p_s q_t z_{s,t}}}{\frac{1}{2}\sum_{s,t}{p_s p_t z_{s,t}} + \frac{1}{2}\sum_{s,t}{q_s q_t z_{s,t}}}
+\end{equation}
+
+Les probabilités peuvent être remplacées par n'importe quel vecteur de valeurs positives, par exemple les abondances ou des valeurs 1 et 0 pour des données de présence-absence. 
+Dans ce dernier cas, et  si $\matrixsym{Z}$ est la matrice identité $\matrixsym{I}$ (la similarité de deux espèces différentes est nulle et $z_{s,s}=1$), $S_{\mathit{Sorensen}}$ se réduit à l'indice de Sørensen vu plus haut.
+
+La généralisation de l'indice de Jaccard aux données d'abondances est :
+
+\begin{equation}
+  S_{\mathit{Jaccard}} = \frac{\sum_{s,t}{p_s q_t z_{s,t}}}{\sum_{s,t}{p_s p_t z_{s,t}} + \sum_{s,t}{q_s q_t z_{s,t}} - \sum_{s,t}{p_s q_t z_{s,t}}}
+\end{equation}
+
+Il se réduit à l'indice de Jaccard original pour les données de présence-absence et $\matrixsym{Z} = \matrixsym{I}$. 
+
+
+L'indice de Sokal et Sneath se généralise par:
+
+\begin{equation}
+  S_{\mathit{Sokal}} = \frac{\sum_{s,t}{p_s q_t z_{s,t}}}{2 \sum_{s,t}{p_s p_t z_{s,t}} + 2 \sum_{s,t}{q_s q_t z_{s,t}} - 3 \sum_{s,t}{p_s q_t z_{s,t}}}
+\end{equation}
+
+Celui d'Ochiai par:
+
+\begin{equation}
+  S_{\mathit{Ochiai}} = \frac{\sum_{s,t}{p_s q_t z_{s,t}}}{\sqrt{\sum_{s,t}{p_s p_t z_{s,t}}} \sqrt{\sum_{s,t}{q_s q_t z_{s,t}}}}
+\end{equation}
+
+Ces quatre similarités permettent une représentation des communautés par PCoA de la même façon que l'indice de Jaccard traité plus haut.
+
+\figureSC{BCIPCAFig}
+{Représentation des deux premiers axes factoriels de l'ACP des 50 carrés de BCI. 
+  Les données sont les nombres d'individus par espèce, ni centrées ni réduites pour l'ACP. 
+  Les carrés sont représentés avec les espèces. 
+  Les carrés 35 et 40 ont une diversité faible et sont associés aux espèces \emph{Gustavia superba} et \emph{Alseis blackiana}.}
+{
+  <<BCIPCAFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
+  <<BCIPCACode>>
+  @
+}
+
+
+\section{Distance entre paires de communautés et diversité $\beta$}
+
+\textcite{terBraak1983} a le premier rapproché l'entropie de Simpson et l'Analyse en Composantes Principales \autocite{Pearson1901}. 
+En représentant les communautés dans l'espace des espèces, la norme du vecteur de la communauté $i$ est $({\sum_s{p_{s|i}}})^2$, c'est-à-dire 1 moins l'entropie de Simpson. 
+La représentation graphique de l'ACP (non centrée, non réduite) montre les communautés les moins diverses (les plus éloignées de l'origine du repère). 
+Ter Braak \emph{définit} la diversité $\beta$ comme la distance entre deux communautés (et la moyenne des distances entre paires de communautés si leur nombre est supérieur à 2). 
+Cette \og définition\fg{} est valide puisque cette distance est la composante inter de la décomposition de l'entropie $\beta$ de Simpson (page~\pageref{eq:SimpsonNei}).
+
+\figureSC{BCIPCA2Fig}
+{ACP centrée des 50 carrés de BCI pour visualiser la diversité $\beta$.}
+{
+  <<BCIPCA2Fig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
+  <<BCIPCA2Code>>
+  @
+}
+
+L'ACP non centrée des 50 carrés de BCI est en figure~\ref{BCIPCAFig}
+\verbfootnote{Code R pour la figure:
+  <<BCIPCACode, eval=FALSE>>=
+  pcaBCI <- dudi.pca(BCI, scannf = FALSE, nf = 2, center = FALSE, scale = FALSE)
+  scatter(pcaBCI, posieig = "bottomleft")
+  @
+}. 
+L'ACP centrée (mais non réduite, figure~\ref{BCIPCA2Fig})
+\verbfootnote{Code R:
+  <<BCIPCA2Code, eval=FALSE>>=
+  pcaBCI <- dudi.pca(BCI, scannf = FALSE, nf = 2, center = TRUE, scale = FALSE)
+  scatter(pcaBCI, clab.col = 0)
+  @
+} permet de mieux représenter la diversité $\beta$ : la distance de chaque carré au centre du repère est sa contribution.
+
+
+\textcite{Legendre1999} ont montré plus largement que si les communautés sont représentées dans l'espace vectoriel des espèces, la moyenne des carrés des distances euclidiennes entre communautés égale la somme des carrés des écarts à la moyenne des distributions des espèces:
+
+\begin{equation}
+  \frac{1}{I} \sum_{i=1}^{I-1}{\sum_{j=i+1}^{I}{d_{i,j}^2}}
+  = \sum_{s=1}^{S}{\sum_{i=1}^{I}{\left(y_{s|i}-y_s \right)^2}}
+\end{equation}
+
+$y_{s|i}$ peut être le nombre d'individus $n_{s,i}$ ou la probabilité $p_{s|i}$. 
+Les communautés ont ici le même poids, $y_s$ est la moyenne des valeurs de l'espèce $s$ dans chaque communauté. 
+La somme des carrés des écarts est une mesure de diversité $\beta$. 
+Si $y_{s|i}$ est la probabilité $p_{s|i}$, il s'agit de l'entropie $\beta$ de Simpson.
+
+Ce résultat peut être étendu à toute matrice de distances euclidiennes entre communautés \autocite{Legendre2005} : l'argument est qu'il existe une matrice de $y_{s|i}$, transformation des $p_{s|i}$, telle que la distance entre les communautés est cette matrice de distances. 
+Pour un certain nombre de distances, la transformation de $p_{s|i}$ en $y_{s|i}$ est connue \autocite{Legendre2001}.
+
+La moyenne des dissimilarités $D_n$ ou des compléments à 1 des similarités de Pavoine et Ricotta (qui sont les carrés des distances euclidiennes de la PCoA) est donc une mesure de diversité $\beta$.
+
+
+\section{Tests de significativité}
+
+\subsection{Test de non-nullité}
+
+\textcite{Chase2011} testent la valeur de diversité $\beta$ observée contre sa valeur attendue sous l'hypothèse nulle d'une distribution aléatoire des individus dans les communautés.
+
+Leur motivation principale est d'éliminer la dépendance de la diversité $\beta$ à la diversité $\alpha$ due à la mesure de diversité qu'ils utilisent : l'indice de Jaccard, appliqué aux données de présence-absence.
+Des communautés théoriques sont tirées selon le modèle nul (selon une distribution multinomiale correspondant aux probabilités des espèces dans la méta-communauté et la taille de chaque communauté dans le cas le plus courant).
+La distribution de la diversité $\beta$ sous l'hypothèse nulle est obtenue en répétant les simulations.
+La différence entre la diversité $\beta$ réelle et la moyenne simulée est normalisée par la moyenne simulée pour obtenir une valeur comprise entre -1 et +1 (l'indice de Jaccard est compris entre 0 et 1), comparée à sa distribution sous l'hypothèse nulle pour évaluer sa significativité.
+
+\textcite{Tucker2015} étendent cette méthode aux données d'abondance en utilisant la dissimilarité de Bray-Curtis et testent, à partir de communautés simulées, sa capacité à distinguer les mécanismes d'assemblage des communautés: niche contre modèle neutre, et modèles déterministes contre stochastiques (c'est-à-dire dont les paramètres varient aléatoirement).
+Ces deux oppositions peuvent être traitées indépendamment, pour éviter la confusion entre niche et déterminisme et entre neutralité et stochasticité.
+Ils concluent qu'une valeur de diversité $\beta$ significativement différente de celle du modèle nul permet de détecter le mécanisme de niche (alors que le modèle neutre donne une valeur identique à celle de l'hypothèse nulle, 0 étant donné la normalisation).
+\textcite{Chase2011a} interprétait les valeurs significatives comme preuve de déterminisme (par opposition à la stochasticité).
+Tucker et al. montrent que ce n'est pas le cas: le niveau de stochasticité influe peu sur les résultats quand la diversité est mesurée à partir de données d'abondance.
+En revanche, la méthode n'est pas fiable quand elle est utilisée avec des données de présence-absence: la stochasticité ne permet alors plus de distinguer les mécanismes.
+
+
+\subsection{Analyse de la variabilité}
+
+\textcite{Anderson2006} fournissent un test d'égalité de la diversité $\beta$ entre groupes de communautés.
+Les communautés sont placées dans un espace euclidien, dans lequel les distances entre elles sont une mesure de dissimilarité présentée dans ce chapitre.
+Si les dissimilarités ne sont pas euclidiennes, une PCoA permet de les placer dans un espace euclidien dont certains axes sont imaginaires, sans que cette difficulté invalide la méthode.
+
+Dans chaque groupe, la distance entre chaque communauté et le centre de gravité du groupe est calculée.
+Une Anova est réalisée à partir de ces distances.
+La statistique F de l'Anova suit une loi de Fisher si la distribution des distances aux centres de gravité est normale.
+Si ce n'est pas le cas, le test peut être réalisé par permutation des distances entre les groupes.
+La statistique de test de l'Anova est le rapport de la dispersion des centres de gravité des groupes à celle des dispersion des communautés dans chaque groupe.
+Elle est comparée à sa distribution obtenue par permutation.
+
+Une alternative consiste à utiliser la distance aux médianes spatiales des groupes.
+La médiane spatiale est le point qui minimise la somme des distances entre les points et lui (alors que le centre de gravité minimise la somme des carrés de ces distances).
+
+La fonction \code{betadisper} du package \emph{vegan} implémente ce test.
+
+\textcite{Ricotta2009a} utilisent comme point central de chaque groupe celui représentant l'assemblage de ses communautés.
+Ils définissent ainsi la diversité $\beta$ comme la dissimilarité moyenne entre chaque communauté et la méta-communauté.
+
+\textcite{Bacaro2012} préfèrent tester la distribution des dissimilarités entre paires des communautés plutôt que la dissimilarité entre chaque communauté et un point de référence.
+Une statistique F est calculée à partir de ces dissimilarités et comparée à sa distribution obtenue par permutation.
+La méthode de permutation originale est inappropriée et donc corrigée \autocite{Bacaro2013a}: les dissimilarités doivent être redistribuées aléatoirement entre les groupes.
+
+
+
+\chapter{Décomposition de l'entropie HCDT}
+\label{chap:DedompHCDT}
+
+
+\begin{Essentiel}
+  L'entropie HCDT $\gamma$ peut être décomposée en somme de l'entropie $\alpha$ et la moyenne de la divergence entre la distribution de chaque communauté et celle de la méta-communauté.
+  L'entropie $\beta$ est donc interprétable comme le gain d'information apporté par la connaissance de la distribution détaillée des communautés en plus de celle, aggrégée, de la méta-communauté.
+  L'entropie $\beta$ va de pair avec le nombre effectif de communautés, c'est-à-dire le nombre de communautés de même poids, sans aucune espèce commune, qui fourniraient la même valeur d'entropie $\beta$ que les communautés réelles.
+  La diversité $\gamma$ se décompose donc en produit du nombre effectif d'espèces de la diversité $\alpha$ et du nombre effectif de communautés.
+\end{Essentiel}
+
+
+\lettrine{Ce}{chapitre} traite de la diversité proportionnelle, qui mesure à quel point les communautés diffèrent de leur assemblage.
+Dans la littérature, la diversité $\beta$ est généralement une mesure \emph{dérivée} \autocite{Ellison2010a}, c'est-à-dire calculée à partir des diversités $\alpha$ et $\gamma$, d'où un abondant débat sur l'indépendance souhaitée mais pas toujours observée entre les valeurs de diversité $\alpha$ et $\beta$ \autocite{Baselga2010a, Jost2010a, Veech2010a}. 
+Un forum a été consacré à la question dans la revue \emph{Ecology}, conclu par \textcite{Chao2012a}, et une revue a été faite par \textcite{Tuomisto2010a, Tuomisto2010b}.
+
+La décomposition de l'entropie HCDT constitue un cadre cohérent dans lequel la diversité $\beta$ est non seulement une mesure dérivée, mais également une mesure de la divergence entre les distributions des communautés et celle de la méta-communauté.
+
+
+
+\section{Décomposition de l'indice de Shannon}
+
+\tableFW{table:Shannon}
+  {Définition explicite de la diversité de Shannon en tant que divergence entre une distribution observée et une distribution attendue. 
+Les indices $H_\alpha$ et $H_\gamma$ sont les compléments au logarithme du nombre d'espèces de cette divergence.
+  }
+  {
+\begin{tabularx}{\textwidth}{l X X X}
+\toprule
+Indice & Distribution observée & Distribution attendue & Formule \\
+
+\midrule
+$H_\alpha$
+  & Fréquence des espèces dans la communauté
+  & Fréquences égales, hors formule
+  & $_{i}H_\alpha = \sum_s{p_{s|i}\ln{p_{s|i}}}$ \newline
+    $H_\alpha = \sum_i{w_i\,_{i}H_\alpha}$ \\
+
+$H_\beta$
+  & Fréquence des espèces dans la communauté
+  & Fréquence totale des espèces
+  & $_{i}H_\beta = \sum_s{p_{s|i}\ln{p_{s|i}/p_{s}}}$ \newline
+    $H_\beta = \sum_i{w_i\,_{i}{H}_\beta}$ \\
+
+$H_\gamma$
+  & Fréquence des espèces dans la méta-communauté
+  & Fréquences égales, hors formule
+  & $H_\gamma = \sum_s{p_{s}\ln{p_{s}}}$ \\
+
+\bottomrule
+\end{tabularx}
+  }
+
+\subsection{Définition}
+
+La décomposition explicite (Tableau~\ref{table:Shannon}) est due à \textcite{Marcon2012a} mais avait été établie plus ou moins clairement plusieurs fois dans la littérature, notamment par \textcite{Rao1985} : la diversité $\beta$ est la divergence de Kullback-Leibler entre la distribution des espèces dans chaque parcelle et la distribution moyenne, appelée divergence de Jensen-Shannon \autocite{Lin1991}. 
+Les diversités $\alpha$ et $\gamma$ sont les compléments à $\ln{S}$ des indices de dissimilarité de Theil (\ref{eq:Theil}), divergences de Kullback-Leibler entre les distributions des espèces et leur équiprobabilité.
+
+\textcite{Lewontin1972}, dans son célèbre article sur la diversité génétique humaine, définit la diversité de Shannon inter-groupe comme la différence entre la diversité totale et la diversité moyenne intra-groupe, mais ne cherche pas à explorer ses propriétés.
+
+La forme de $H_{\beta}$ a été établie par \textcite{Ricotta2003a}, sans la relier à celle de $H_{\alpha}$ et $H_{\gamma}$. 
+Enfin, l'idée de la décomposition de la divergence de Kullback-Leibler, mais avec une approche différente, sans rapprochement avec l'indice de Shannon, a été publiée par \textcite{Ludovisi2006}.
+
+Les méta-communautés peuvent à leur tour être regroupées à un niveau supérieur, la diversité $\gamma$ du niveau inférieur devenant diversité $\alpha$ pour le niveau supérieur. 
+La décomposition ou le regroupement peuvent être effectués sur un nombre quelconque de niveaux.
+
+Calcul sous R: La fonction \code{BetaEntropy} calcule l'entropie $\beta$ de la méta-communauté (l'argument $q=1$ permet de choisir l'entropie de Shannon). 
+
+
+<<BetaEntropy1>>=
+# Pas de correction du biais d'estimation
+summary(BetaEntropy (Paracou618.MC, q=1, Correction = "None"))
+@
+
+\subsection{Biais d'estimation}
+
+L'estimateur du taux de couverture de la communauté $i$ est noté $\hat{C}_i$, le taux de couverture total $\hat{C}$. 
+L'estimateur corrigé de $_iH_{\beta}$ est:
+
+\begin{equation}
+  _{i}\tilde{H}_{\beta} = \sum^{\xq{s}{}{}{\ne 0}{}}_{i=1}{\frac{{\hat{C}}_i{\hat{p}}_{s|i} \ln\frac{{\hat{C}}_i{\hat{p}}_{s|i}}{\hat{C}{\hat{p}}_s}}{1-{\left(1-{\hat{C}}_i{\hat{p}}_{s|i}\right)}^n}}
+\end{equation}
+
+Calcul sous R: \code{BetaEntropy} applique cette correction:
+
+<<BetaEntropy2>>=
+summary(BetaEntropy(Paracou618.MC, q=1, Correction="ChaoShen"))
+@
+
+\label{InfoMutuelle}
+\textcite{Chao2013} utilisent une approche différente pour corriger le biais d'estimation: l'information mutuelle. 
+Les données sont organisées comme dans le tableau~\ref{table:Notations}, mais les probabilités qu'un individu appartienne à la communauté $i$ et à l'espèce $s$ sont calculées pour que leur somme soit égale à 1 sur l'ensemble du tableau: $\sum_s{\sum_i{_{s,i}}}=1$ (au lieu de $\sum_i{p_{s|i}}=1$).
+
+L'information mutuelle est la divergence de Kullback-Leibler entre la distribution de $\{p_{s,i}\}$ et celle du produit des distributions marginales $\{p_s\}$ et $\{p_i\}$. 
+Si les distributions marginales sont indépendantes, la probabilité $p_{s,i}$ qu'un individu appartienne à l'espèce $s$ et se trouve dans la communauté $i$ est donnée par le produit des probabilités marginales $p_s$ et $p_i$, et l'information mutuelle est nulle.
+
+L'information mutuelle se calcule comme la différence entre l'entropie de Shannon calculée sur l'ensemble du tableau $H(\{p_{s,i}\})$ et les entropies marginales $H(\{p_s\})$ et $H(\{p_i\})$. 
+$H(\{p_s\})$ est l'entropie $\gamma$ de la méta-communauté. 
+Si on choisit de pondérer les communautés par leurs effectifs ($w_i=p_i$), alors $H(\{p_{s,i}\})-H(\{p_i\})$ est l'entropie $\alpha$ de la méta-communauté, c'est-à-dire la moyenne pondérée des entropies $\alpha$ des communautés. 
+Dans ce cas, l'entropie $\beta$ est égale à l'opposée de l'information mutuelle. 
+Comme chaque terme du calcul est une entropie $\alpha$, il peut être corrigé selon l'équation (\ref{eq:Chao2013}) pour obtenir un estimateur moins biaisé de $H_{\beta}$.
+
+Calcul sous R:
+
+<<MutualInformation>>=
+Shannon(Paracou618.MC$Ns) + Shannon(colSums(Paracou618.MC$Nsi)) - Shannon(Paracou618.MC$Nsi)
+@
+
+Cet estimateur est le moins biaisé à ce jour, mais n'est applicable qu'à l'entropie de Shannon, sous la condition que la pondération des communautés soit donnée par les effectifs.
+
+\textcite{Zhang2014a} proposent un estimateur de la divergence de Kullback-Leibler avec un biais réduit selon la même méthode que pour l'estimation de l'entropie HCDT ou de l'entropie de Shannon:
+
+\begin{multline}
+  _{i}\tilde{H}_{\beta} 
+  = \sum^{\xq{s}{}{}{\ne 0}{}}_{s=1}{\frac{n_{s,i}}{n} }\\{
+  \left\{ \sum^{n-n_s}_{v=1}{\frac{1}{v} \prod^v_{j=1}{ \left( 1-\frac{n_s}{n-j+1} \right) }}
+     -  \sum^{n_i-n_{s,i}}_{v=1}{\frac{1}{v} \prod^v_{j=1}{\left( 1-\frac{n_{s,i}-1}{n_i-j} \right) }} \right\} }
+\end{multline}
+
+Cette correction est incluse dans la fonction \code{ShannonBeta} de \emph{entropart} :
+<<bcShannonBeta>>=
+# Divergence de Kullback-Leibler entre chaque communauté de Paracou618.MC et la métacommunauté
+(Beta <- apply(Paracou618.MC$Nsi, 2, ShannonBeta, Nexp=Paracou618.MC$Ns, Correction="ZhangGrabchak"))
+# Entropie beta
+sum(Paracou618.MC$Wi * Beta)
+@
+
+La correction de Zhang et Grabchak réduit beaucoup plus fortement l'estimation que celle de Chao et Shen. 
+Le meilleur estimateur peut être évalué à partir de la différence entre les entropies $\gamma$ et $\alpha$, corrigées par le meilleur estimateur disponible (celui de Chao, Wang et Jost, voir page~\pageref{sec:BiaisShannon}):
+
+<<bcShannonAlpha>>=
+# Entropie alpha de chaque communauté de Paracou618.MC
+(Alpha <- apply(Paracou618.MC$Nsi, 2, Shannon, CheckArguments=FALSE))
+# Entropie beta estimée par différence
+bcShannon(Paracou618.MC$Ns) - sum(Paracou618.MC$Wi * Alpha)
+@
+
+L'estimateur de Chao et Shen est apparemment le meilleur, la correction de celui de Zhang et Grabchak est trop forte.
+
+
+\section{Décomposition de l'entropie généralisée}
+
+La décomposition additive de l'entropie selon \textcite{Lande1996} doit être la suivante:
+
+\begin{equation} 
+  \xq{H}{q}{}{\gamma}{}=\xq[\,]{H}{q}{}{\alpha}{} + \xq[\,]{H}{q}{}{\beta}{}
+\label{eq:DecompHq}
+\end{equation}
+
+\textcite{Bourguignon1979} comme \textcite{Lande1996} définissent une mesure d'inégalité décomposable comme respectant les propriétés suivantes:
+
+\begin{itemize}
+  \item  La population totale étant partitionnée, chaque partition recevant un poids $w_i$, la composante intra-groupe de la mesure $H_{\alpha}$ est égale à la somme pondérée des mesures dans chaque-groupe $H_{\alpha}=\sum_i{w_i\xq[\,]{H}{}{}{\alpha}{i}}$;
+  \item  La composante intergroupe $H_{\beta}$ est la mesure d'inégalité entre les groupes;
+  \item  La mesure totale $H_{\gamma}$ est la somme des mesures intra et intergroupes.
+\end{itemize}
+
+En passant par les nombres de Hill, \textcite{Jost2007} montre que l'indice de Shannon est le seul pouvant être décomposé de cette façon. 
+
+
+La démonstration de Jost repose sur le postulat que la transformation de l'entropie en  nombre de Hill, définie pour la diversité $\alpha$, doit avoir la même forme pour la diversité $\beta$. 
+La remise en cause de ce postulat \autocite{Marcon2014a} permet de décomposer la diversité d'ordre quelconque quel que soit le poids des communautés.
+
+La décomposition de l'entropie est faite en écrivant le logarithme d'ordre $q$ de la décomposition de la diversité, équation (\ref{eq:DecompDq}):
+
+\begin{equation}
+  \xq{H}{q}{}{\gamma}{} = {\xq{H}{q}{}{\alpha}{}}+\ln_q{\xq{D}{q}{}{\beta}{}}-\left(q-1\right){\xq{H}{q}{}{\alpha}{}}\ln_q{\xq{D}{q}{}{\beta}{}}
+\label{eq:DecompJost}
+\end{equation}
+
+Ceci est la décomposition de \textcite{Jost2007}. 
+Jost désigne sous le nom de \og composante $\beta$ de l'entropie\fg{} le logarithme d'ordre $q$ de la diversité, qu'il note $H_B$. 
+La décomposition n'est pas additive, mais $H_B$ est indépendant de l'entropie $\alpha$.
+
+Les deux derniers termes peuvent être regroupés et réarrangés pour obtenir $\xq{H}{q}{}{\beta}{}$ conformément à la décomposition additive de l'équation (\ref{eq:DecompHq}):
+
+\begin{equation}
+\label{eq:ContributionBeta}
+  \xq{H}{q}{}{\beta}{} = \sum_i{w_i\sum_s{p^q_{s|i}\ln_q\frac{p_{s|i}}{p_s}}}
+\end{equation}
+
+L'entropie $\beta$ est la somme pondérée par $w_i$ (et pas autrement) des contributions de chaque communauté:
+
+\begin{equation}
+  \xq{H}{q}{}{\beta}{i}=\sum_s{p^q_{s|i}\ln_q\frac{p_{s|i}}{p_s}}
+\end{equation}
+
+$\xq{H}{q}{}{\beta}{i}$ est une divergence de Kullback-Leibler généralisée \autocite{Borland1998, Tsallis1998}.
+$\xq{H}{q}{}{\beta}{}$ en est la moyenne sur l'ensemble des communautés, c'est donc une généralisation de la divergence de Jensen-Shannon \autocite{Marcon2014a}.
+$\xq{H}{q}{}{\gamma}{}$ peut s'écrire sous la forme $\xq{H}{q}{}{\gamma}{} = -\sum_s{p^q_s}\ln_q{p_s}$: la formalisation de la décomposition est une généralisation de la décomposition de l'entropie de Shannon, résumée dans le Tableau~\ref{Decomposition}.
+
+Il est intéressant d'écrire $\xq{H}{q}{}{\beta}{i}$ et $\xq{H}{q}{}{\gamma}{}$ sous la forme d'entropies, pour faire apparaître leur fonction d'information. 
+Pour $q$ différent de 1, l'entropie $\gamma$ est:
+
+\begin{equation}
+  \xq{H}{q}{}{\gamma}{} 
+= \sum_s{p_s\frac{1-p^{q-1}_s}{q-1}}
+= \sum_s{p_s\ln_q\frac{1}{p_s}}
+\label{eq:Hqgamma}
+\end{equation}
+
+Sa fonction d'information a été tracée Figure~\ref{IFig}, page~\pageref{IFig}.
+
+L'entropie $\beta$ est:
+
+\begin{equation}
+  \xq{H}{q}{}{\beta}{i} 
+  = \sum_s{p_{s|i}\frac{p^{q-1}_{s|i}-p^{q-1}_s}{q-1}}
+  = \sum_s{p_{s|i}\left(\ln_q\frac{1}{p_s}-\ln_q\frac{1}{p_{s|i}}\right)}
+\label{eq:Hqbeta}
+\end{equation}
+
+La forme de l'entropie $\beta$ évoque la divergence de puissance \autocite{Cressie1984} qui est une statistique qui mesure la divergence entre deux distributions (déjà mentionnée page~\pageref{CressieRead}), dont les propriétés asymptotiques sont connues. 
+La divergence de puissance peut être écrite sous la forme $I_q= \nicefrac{-2}{q} \sum_s{p_{s|i} \ln_q\nicefrac{p_{s}}{p_{s|i}}}$. 
+Elle est égale à (deux fois) la divergence de Kullback-Leibler pour $q=1$, mais diffère de l'entropie $\beta$ pour les autres valeurs de $q$.
+La divergence non-logarithmique de Jensen-Shannon \autocite{Lamberti2003} est identique à une normalisation près: $K_q= -\sum_s{p_{s|i} \ln_q\nicefrac{p_{s}}{p_{s|i}}}$.
+Elle mesure l'écart entre la diversité $\alpha$ et la valeur de $\sum_s{w_i p^q_{s|i} \ln_q{p_s}^q}$, qui n'est pas la diversité $\gamma$ \autocite{Marcon2014a}.
+
+
+Calcul sous R: La fonction \code{DivPart} calcule entropie et diversité en même temps:
+
+<<DivPartq>>=
+DivPart(q = 1, Paracou618.MC, Biased = FALSE)
+@
+
+\section{Décomposition du nombre d'espèces}
+
+Les résultats généraux se simplifient pour $q=0$. 
+L'entropie $\gamma$ est le nombre d'espèces de la méta-communauté moins un ($\xq{H}{0}{}{\gamma}{}=S-1$), l'entropie $\alpha$ est la moyenne pondérée du nombre d'espèces des communautés moins un ($\xq{H}{0}{}{\alpha}{}=\bar{S}-1$), l'entropie $\beta$ est la différence: $\xq{H}{0}{}{\beta}{}=S-\bar{S}$.
+
+En termes de diversité:
+
+\begin{equation}
+  \xq{D}{0}{}{\beta}{}=\frac{S}{\bar{S}}
+  \label{eq:D0beta}
+\end{equation}
+
+$\xq{D}{0}{}{\beta}{}$ peut être supérieur au nombre de communautés \autocite{Chao2012a} si les poids sont très inégaux, ce qui complique son interprétation. 
+La pondération de Jost donne pour le nombre d'espèces le même poids à toutes les communautés et garantit $\xq{D}{0}{}{\beta}{}\le I$, ce qui constitue pour Chao et al. un argument en faveur de son utilisation. 
+Un contre-argumentaire est fourni par \textcite{Marcon2014a}.
+Quel que soit la distribution des poids des communautés, il est toujours possible de ramener les données à un ensemble de communautés de poids identiques, dont certaines sont répétées.
+La communauté dont le poids $w_{min}$ est le plus faible est représentée une seule fois, les autres $\nicefrac{w_i}{w_{min}}$ fois.
+L'indépendance entre les diversités $\alpha$ et $\beta$ est donc bien vérifiée.
+Le diversité $\beta$ maximale théorique est $\nicefrac{1}{w_{min}}$ (et non $I$).
+Elle n'est pas atteinte parce que plusieurs communautés sont identiques.
+
+La définition de la diversité $\beta$ par \textcite{Whittaker1960} s'appliquait aux données de présence-absence. 
+La diversité $\beta$ était le rapport entre le nombre d'espèces total de l'assemblage des communautés (diversité $\gamma$) et le nombre moyen d'espèces dans chaque communauté (diversité $\alpha$).
+C'est précisément la définition de $\xq{D}{0}{}{\beta}{}$ (équation \ref{eq:D0beta}).
+
+
+\section{Décomposition de l'indice de Gini-Simpson}
+
+L'entropie de Simpson peut aussi être décomposée comme une variance. 
+La probabilité qu'un individu appartienne à l'espèce $s$ est $p_s$. 
+Elle suit une loi de Bernoulli, dont la variance est $p_s\left(1-p_s\right)$. 
+Cette variance peut être décomposée entre les communautés, où la probabilité est $p_{s|i}$. 
+La décomposition entre variance intra et inter-communautés est:
+
+\begin{equation}
+p_s\left(1-p_s\right)=\sum_i{w_i\left[p_{s|i}\left(1-p_{s|i}\right)+{\left(p_{s|i}-p_s\right)}^2\right]}
+\end{equation}
+
+Cette égalité peut être sommée sur toutes les espèces pour donner:
+
+\begin{equation}
+\label{eq:SimpsonNei}
+E_{\gamma}=\sum_i{w_i E_{\alpha,i}}+\sum_i{w_i\sum_s{{\left(p_{s|i}-p_s\right)}^2}}=E_{\alpha}+E_{\beta}
+\end{equation}
+
+L'entropie $\gamma$ de Simpson peut être décomposée en sa diversité $\alpha$, somme pondérée des entropies $\alpha$ des communautés, et son entropie $\beta$, égale à la somme pondérée des distances $l^2$ entre la distribution des fréquences dans chaque communauté et celle de l'ensemble de la communauté.
+
+En génétique, l'égalité s'écrit\autocite{Nei1973} $H_t=H_s+D_{s,t}$. 
+$H_t$ est l'hétérozygotie totale, décomposée en $H_s$, l'hétérozygotie moyenne des populations et $D_{s,t}$ la différenciation absolue entre populations. 
+$G_{s,t}={D_{s,t}}/{H_t}$ est la différenciation relative.
+
+L'entropie $E_{\beta}$ calculée de cette manière est égale à $\xq{H}{2}{}{\beta}{}$ calculée à l'équation (\ref{eq:Hqbeta}) pour le cas général, mais la contribution de chaque communauté est différente: la décomposition de la variance est une façon alternative de décomposer l'entropie, valable uniquement pour l'entropie de Simpson.
+
+Cette décomposition est remise en cause par \textcite{Jost2007, Jost2008}, qui a généré le débat \autocite{Heller2009, Ryman2009, Jost2009a, Whitlock2011}. 
+$E_{\gamma}$ étant inférieure ou égale à 1, $E_{\beta}$ n'est pas indépendante de $E_{\alpha}$: seule la décomposition multiplicative permet l'indépendance, et Jost propose d'utiliser une transformation de $\xq{D}{2}{}{\beta}{}$ comme mesure de différenciation (voir page~\pageref{sec:Chevauchement}). 
+\textcite{Gregorius2014} montre que ce problème n'est pas limité à l'entropie de Simpson mais s'applique à toutes les entropies HCDT d'ordre supérieur à 1.
+
+Jost postule que la diversité $\beta$ de Simpson a la même relation à $E_{\beta}$ que les diversités $\alpha$ et $\gamma$:
+
+\begin{equation}
+  \xq{D}{q}{}{\gamma}{} = {\xq{D}{q}{}{\alpha}{}}{\xq{D}{q}{}{\beta}{}} \Leftrightarrow \frac{1}{1-E_{\gamma}}=\frac{1}{1-E_{\alpha}}\frac{1}{1-E_{\beta}}
+\end{equation}
+
+D'où une décomposition additive différente, qui correspond à sa décomposition générale (\ref{eq:DecompJost}):
+
+\begin{equation}
+  E_{\gamma}=E_{\alpha}+E_{\beta}-{E_{\alpha}}{E_{\beta}}
+\end{equation}
+
+Il n'y a en réalité aucune raison pour que le nombre équivalent de la diversité $\beta$ ait la même forme que celle de la diversité $\alpha$: les deux diversités sont par nature très différentes, et Hill ne traitait pas la diversité $\beta$. 
+La diversité de Shannon est exceptionnelle parce que, pour des raisons différentes, son nombre de Hill est l'exponentielle de l'entropie, et l'exponentielle de la décomposition additive (\ref{eq:DecompHq}) est la décomposition multiplicative (\ref{eq:DecompDq}).
+
+\tableFW{Decomposition}
+  {Entropie, diversité et décomposition. 
+L'entropie $\alpha$ de chaque communauté se calcule comme l'entropie $\gamma$}
+  {
+\begin{tabularx}{\textwidth}{X c c}
+\toprule
+  Mesure de diversité & 
+	Entropie généralisée &
+	Shannon \\
+\midrule
+Entropie $\gamma$ & 
+	$\xq{H}{q}{}{\gamma}{}=-\sum_s{p^q_s}\ln_q{p_s}$ & 
+	$\xq{H}{1}{}{\gamma}{}=-\sum_s{p_s}\ln{p_s}$ \\ \noalign{\medskip}
+
+Entropie $\beta$ & 
+	$\xq{H}{q}{}{\beta}{}=\sum_i{w_i\sum_s{p_{s|i}\left(\ln_q\frac{1}{p_s}-\ln_q\frac{1}{p_{s|i}}\right)}}$ &
+	$\xq{H}{1}{}{\beta}{}=\sum_i{w_i\sum_s{p_{s|i}\ln\frac{p_{s|i}}{p_s}}}$ \\ \noalign{\medskip}
+
+Diversité $\gamma$ (Nombre de Hill) & 
+	$\xq{D}{q}{}{\gamma}{}=e^{^q\!H_{\gamma}}_q$ & 
+	$\xq{D}{1}{}{\gamma}{}=e^{^1\!H_\gamma}$ \\ \noalign{\medskip}
+
+Diversité $\beta$ (nombre équivalent) &
+	$\xq{D}{q}{}{\beta}{}=e^{\frac{\xq{H}{q}{}{\beta}{}}{1-(q-1)\xq{H}{q}{}{\alpha}{}}}_q$ &
+	$\xq{D}{1}{}{\beta}{}=e^{\xq{H}{1}{}{\beta}{}}$ \\
+  
+\bottomrule
+\end{tabularx}
+  }
+
+Le nombre équivalent de communautés a une forme légèrement différente d'un nombre de Hill (Tableau~\ref{Decomposition}).
+
+\section{Décomposition de l'indice de Rao}
+\label{sec:RaoDisc}
+
+Les notations sont celles de la présentation de l'indice de Rao, page~\pageref{sec:Rao}.
+
+La diversité de la méta-communauté, peut être décomposée en une somme (pondérée) de diversités intra et une diversité inter \autocite{Pavoine2004} en définissant une dissimilarité entre les communautés $i$ et $j$:
+
+\begin{equation}
+D_{H_{\Delta }}\left(\vectorsym{p}_i,\vectorsym{p}_j\right)
+= 2 H_{\Delta}\left(\frac{\vectorsym{p}_{i}+\vectorsym{p}_j}{2}\right)-H_{\Delta}\left(\vectorsym{p}_j\right)-H_{\Delta}\left(\vectorsym{p}_j\right)
+\end{equation}
+
+Elle est définie par Rao comme la différence entre l'entropie quadratique du mélange des deux communautés et celles des deux communautés prises individuellement. 
+Elle peut être utilisée pour calculer un indice de diversité entre communautés, de la même façon qu'on calcule la diversité entre espèces d'une communauté:
+
+\begin{equation}
+H_{\Delta }\left(\vectorsym{p}\right) = \sum_i{w_i H_{\Delta }\left({\vectorsym{p}}_i\right)}+\sum_i{\sum_j{w_i w_j D_{H_{\Delta }}\left({\vectorsym{p}}_i,{\vectorsym{p}}_j\right)}}
+\label{eq:Raobeta}
+\end{equation}
+
+Le deuxième terme de la somme est la diversité inter-\break
+communautés. 
+C'est un indice de Rao: les poids des communautés sont équivalents aux tableaux de fréquences et les dissimilarités entre communautés sont équivalentes aux dissimilarités entre espèces de l'équation (\ref{eq:Rao}). 
+La divergence entre communautés est construite à partir des entropies de chacune: l'entropie $\beta$ est définie comme la différence entre les entropies $\gamma$ et $\alpha$.
+
+L'exemple suivant utilise les communautés du fichier\break
+\code{rao.effectifs.csv} :
+
+<<disc1>>=
+# Vecteur contenant 8 espèces...
+(read.csv2("http://www.ecofog.gf/IMG/csv/rao.effectifs.csv", row.names=1, header=T)-> effectifs)
+@
+
+Il contient 4 communautés.
+
+Pour obtenir tous les éléments de l'équation (\ref{eq:Raobeta}):
+
+\begin{itemize}
+  \item  $H_{\Delta }\left(\vectorsym{p}\right)$: diversité totale. 
+Calculer $\vectorsym{p}$ en sommant les communautés. 
+Calculer ensuite l'entropie quadratique avec \code{divc} :
+\end{itemize}
+
+<<disc2>>=
+(tabF <- apply(effectifs [names (phyf$leaves), ], MARGIN=1, sum))
+divc(as.data.frame(tabF), phyf$Wdist)
+@
+
+\begin{itemize}
+  \item  $H_{\Delta}\left({\vectorsym{p}}_i\right)$: diversité de chaque communauté, fournie par \code{divc} :
+\end{itemize}
+
+<<disc3>>=
+divc(effectifs [names(phyf$leaves), ], phyf$Wdist)
+@
+
+\begin{itemize}
+  \item  La variabilité inter-communautés peut être calculée par \code{divc} en utilisant la distance fournie par \code{disc}, en définissant la matrice des poids (égale aux effectifs):
+\end{itemize}
+
+<<disc4>>=
+divc(as.data.frame (colSums(effectifs)), disc(effectifs[names(phyf$leaves),], phyf$Wdist))
+@
+
+La fonction \code{disc} calcule $\sqrt{2D_{H_{\Delta}}\left({\vectorsym{p}}_i,{\vectorsym{p}}_j\right)}$:
+
+<<disc5>>=
+disc(effectifs[names(phyf$leaves), ], phyf$Wdist)
+@
+
+Une interprétation géométrique de la décomposition est la suivante \autocite{Pavoine2004}.
+Les espèces peuvent être placées dans un espace multidimensionnel construit par une Analyse en Coordonnées Principales \autocite{Gower1966} de la matrice de dissimilarité $\Delta$ (les distances dans l'espace multidimensionnel sont $\sqrt{2d_{s's''}}$; autrement dit: la dissimilarité entre deux espèces est la moitié du carré de la distance entre elles dans la représentation géométrique).
+Chaque communauté se trouve au centre de gravité des espèces qu'elle contient, pondérées par leur fréquence.
+La moitié du carré de la distance entre deux communautés dans ce même espace est le coefficient de dissimilarité entre communautés de Rao.
+La distance entre communautés est donc interprétable directement comme une mesure de diversité $\beta$ \autocite{Ricotta2015}, dans la tradition de l'utilisation de la dissimilarité entre paires de communautés (chapitre~\ref{chap:DivPaires}).
+
+Cette partition suppose que les poids des communautés sont proportionnels à leur nombre d'individus \autocite{Rao1982, Villeger2008}. 
+\textcite{Hardy2007} décomposent (par différence entre $\gamma$ et $\alpha$) l'indice de Rao de communautés de poids égaux. 
+\textcite{Hardy2008} montrent que les deux pondérations sont valides mais l'absence de cadre général assurant que la diversité $\gamma$ de Rao est supérieure à la diversité $\alpha$ \autocite{DeBello2010} motive \textcite{Guiasu2011} à proposer une alternative à l'indice de Rao, l'indice de Gini-Simpson quadratique pondéré, dont la concavité est démontrée (ce qui implique que $\gamma\ge \alpha$). 
+Il sera traité dans le chapitre consacré à la diversité de paires (page~\pageref{chap:DivPaires}). 
+La pondération peut en fait être quelconque tant que la matrice dont les éléments sont la racine carré des éléments de la matrice de dissimilarité est euclidienne \autocite{Champely2002}.
+Ce résultat a été obtenu pour les arbres ultramétriques dans le cadre plus général de la décomposition de l'entropie phylogénétique (voir chapitre~\ref{chap:DedompHCDT} page~\pageref{chap:DedompHCDT}).
+
+La partition peut être faite avec la fonction \code{DivPart} :
+
+<<DivPartRao>>=
+# Création d'une méta-communauté, poids égaux aux effectifs
+MC <- MetaCommunity(effectifs, colSums(effectifs))
+summary(DivPart(q=2, MC, Tree=phyf, Normalize=FALSE))
+@
+
+La décomposition de la diversité (et non seulement de l'entropie) de Rao a été établie par \textcite{Ricotta2009}.
+
+
+\section{Synthèse}
+
+La diversité mesurée par l'entropie généralisée peut être décomposée dans tous les cas de figure, y compris lorsque les poids des communautés ne sont pas égaux. 
+Les formules d'entropie et de diversité sont résumées dans le Tableau~\ref{Decomposition}.
+L'entropie $\beta$ est une mesure de divergence entre la distribution de chaque communauté et celle de la méta-communauté, comme l'avaient suggéré \textcite{Ricotta2009a}.
+
+L'entropie de Shannon est un cas particulier dans lequel toutes les controverses disparaissent: l'entropie $\beta$ est indépendante de l'entropie $\alpha$, et la pondération de Jost se confond avec celle de Routledge.
+
+L'entropie de Simpson peut être décomposée de deux façons: comme une variance quand les poids des communautés sont donnés par leurs effectifs, ou selon le cas général. 
+Les deux décompositions produisent les mêmes valeurs d'entropie $\beta$, mais la contribution de chaque communauté n'est pas la même.
+
+L'entropie peut être décomposée hiérarchiquement sur plusieurs niveaux \autocite{Crist2003, Marcon2012a}.
+
+Les probabilités d'occurrence des espèces ne sont pas connues mais estimées à partir des données. 
+Les diversités $\alpha$ et $\gamma$ sont sous-estimées et la diversité $\beta$ surestimée \autocite{Marcon2012a, Beck2013}, d'autant plus que l'ordre de diversité est faible (le biais est négligeable au-delà de l'indice de Simpson). 
+Des méthodes de correction existent, mais pas pour l'entropie $\beta$ à l'exception de Shannon. 
+La méthode générale consiste donc à corriger les entropies $\alpha$ et $\gamma$, calculer l'entropie $\beta$ par différence et transformer les résultats en nombres équivalents \autocite{Marcon2014a,Marcon2014e}.
+
+
+\section{Normalisation}
+
+La mesure de diversité $\xq{D}{q}{}{\beta}{}$ est le nombre équivalent de communautés totalement distinctes qui fourniraient ce niveau de diversité.
+
+
+\subsection[Nécessité de normaliser la diversité beta]{Nécessité de normaliser la diversité $\beta$}
+
+Selon une première approche, cette mesure n'a de sens que comparée à nombre de communautés. 
+La diversité entre un hectare de forêt tropicale et un hectare de forêt tempérée (de même poids, sans espèce commune) est égale à 2 quel que soit $q$. 
+La diversité entre un nombre suffisant d'échantillons de forêt tropicale relativement homogène (avec de nombreuses espèces communes) peut facilement dépasser 2: c'est le cas des 50 carrés de BCI pour $q=0$. 
+Pour ne pas conclure de façon erronée que les carrés de BCI sont plus différents entre eux que BCI et la forêt de Fontainebleau, \textcite{Jost2007} suggère de diviser la diversité $\beta$ par le nombre de communautés pour la normaliser. 
+Ce raisonnement a un sens quand la diversité maximale envisageable est effectivement égale au nombre de communautés, par exemple si les communautés sont choisies dans des habitats différents: la diversité $\beta$ mesure cette différence.
+
+Un autre cas est envisageable : les communautés peuvent être des échantillons d'une méta-communauté clairement définie. 
+La diversité $\beta$ mesure alors la variabilité de l'échantillonnage à l'intérieur de la méta-communauté à une échelle donnée. 
+Pour une taille d'échantillon fixée (par exemple un hectare de forêt), la diversité $\beta$ ne dépend pas du nombre de communautés: l'entropie $\beta$ est l'espérance (estimée par la moyenne, équation~\ref{eq:ContributionBeta}, page~\pageref{eq:ContributionBeta}) de la divergence de Jensen-Shannon entre la distribution des espèces d'une communauté et celle de la méta-communauté, fixe. 
+Cette variabilité dépend de l'échelle de l'échantillonnage dans le sens où elle diminue si les échantillons sont de taille plus grande: l'entropie $\alpha$ de deux hectares de forêts est la diversité $\alpha$ moyenne de chacun des deux hectares plus l'entropie $\beta$ entre eux. 
+L'entropie $\beta$ entre les échantillons de deux hectares est donc diminuée de cette entropie $\beta$ \og intra\fg{} qui est absorbée par la nouvelle entropie $\alpha$ quand la taille des échantillons augmente.
+
+La Figure~\ref{BetaSampleFig}
+\verbfootnote{Code pour réaliser la figure:
+  <<BetaSampleCode1, eval=FALSE, tidy=FALSE>>=
+  library("gplots")
+  MC <- MetaCommunity(as.data.frame(t(BCI)))
+
+  # Création d'une méta-communauté à partir de n carrés de BCI 
+  SamplePlots <- function (n, q) {
+    Plots <- sample(1:50, n)
+    Nsi <- MC$Nsi[, Plots]; MCsample <- MetaCommunity(Nsi)
+    dp <- DivPart(q, MCsample, Biased = FALSE)
+    # Retourne la diversité beta
+    return(dp$TotalBetaDiversity)
+  }
+  # Calcul de la diversité moyenne à partir des simulations
+  BetaPlots <- function (q, nPlots, nSimulations) {
+    buiw <- b <- vector("numeric", length(nPlots)); i <- 1
+    for (Size in nPlots) {
+      Sims <- replicate(nSimulations, SamplePlots(Size, q))  
+      b[i] <- mean(Sims)
+      buiw[i] <- sd(Sims)
+      i <- i+1
+    }
+    plotCI(x = nPlots, y = b, uiw = buiw, col = "black", barcol = "blue",
+      lwd = 1, xlab = "Nombre de carrés", 
+      ylab = expression(paste("Diversité ", beta)))
+    dpBCI <- DivPart(q, MC, Biased = FALSE)
+    abline(h = dpBCI$TotalBetaDiversity, lty = 2)
+  }
+  
+  BetaPlots(q = 2, nPlots=c(2, 5, 10, 15, 20, 25, 30), 
+            nSimulations = 100)  
+  @
+} présente les valeurs estimées de diversité neutre $\beta$ entre carrés de BCI tirés aléatoirement, en fonction du nombre de carrés.
+
+\figureSC{BetaSampleFig}
+  {Estimation de la diversité $\beta$ entre carrés de BCI. 
+La diversité est calculée à partir du nombre de carrés en abscisse, de 2 à 30, tirés aléatoirement. 
+La valeur en ordonnée est la diversité d'ordre 2 moyenne sur 100 tirages, les barres représentent l'écart-type. 
+Aux erreurs d'estimation près, la valeur de la diversité $\beta$ ne dépend pas du nombre de carrés.}
+  {
+  <<BetaSampleFig1, echo=FALSE, results='hide', message=FALSE>>=
+  <<BetaSampleCode1>>
+  @
+  }
+
+L'estimation de la diversité présente les difficultés classiques dues au biais d'estimation: la diversité $\gamma$ est sous-estimée si l'échantillonnage est trop faible, la diversité $\beta$ augmente avec le nombre de communautés comme la diversité $\gamma$ augmente avec la taille de l'échantillon ; il s'agit d'un problème d'estimation, pas de normalisation. 
+
+La diversité $\beta$ ne doit donc pas être normalisée systématiquement, mais seulement dans le premier cas.
+
+\subsection[L'indice de chevauchement CqN]{L'indice de chevauchement $C_{qN}$}
+\label{sec:Chevauchement}
+
+Plutôt qu'une simple normalisation, \textcite{Chao2008} définissent un indice de chevauchement, c'est-à-dire la proportion d'espèces partagées en moyenne par une communauté. 
+Si $N$ communautés (le nombre de communautés est noté $N$ ici et non $I$ pour conserver le nom de l'indice établi dans la littérature) de mêmes diversités $\alpha$ et $\gamma$ que les données, contenaient chacune $S$ espèces équifréquentes, dont $A$ seraient communes à toutes les communautés et les autres représentées dans une seule, $A/S$ serait cet indice de chevauchement.
+
+Pour $q\ne 1$:
+
+\begin{equation}
+  C_{qN} = {\left[{\left(\frac{1}{\xq{D}{q}{}{\beta}{}}\right)}^{q-1}-{\left(\frac{1}{N}\right)}^{q-1}\right]}/{\left[1-{\left(\frac{1}{N}\right)}^{q-1}\right]}
+\end{equation}
+
+Et:
+
+\begin{equation}
+  C_{1N} 
+  =\frac{1}{\ln{N}}\sum^S_{s=1}{\sum^N_{i=1}{\frac{p_{s|i}}{N}\ln\left(1+\frac{\sum_{j\ne i}{p_{sj}}}{p_{s|i}}\right)}}
+  =1-\frac{H_{\beta}}{\ln{N}}
+\end{equation}
+
+$C_{qN}$ a été défini à l'origine pour $q\ge 2$. 
+\textcite{Chao2012a} l'étendent sans précaution à $q$ quelconque. 
+Sa valeur peut être négative pour $q<1$, on se limitera donc à $q \ge 1$.
+
+
+
+\chapter{Décomposition de la diversité phylogénétique et fonctionnelle}
+
+
+\begin{Essentiel}
+  L'entropie phylogénétique et l'entropie de Ricotta et Szeidl se décomposent comme l'entropie HCDT.
+  La diversité $\beta$ phylogénétique et la diversité $\beta$ de Leinster et Cobbold sont des nombres effectifs de communautés, c'est-à-dire des communautés de même poids et dont les espèces seraient totalement dissimilaires qui fourniraient la même entropie $\beta$ que les communautés réelles.
+\end{Essentiel}
+
+
+\lettrine{L}{'entropie} phylogénétique est une combinaison linéaire de l'entropie HCDT donc sa décomposition est identique \autocite{Marcon2014b}. 
+
+\section{Décomposition de la diversité phylogénétique}
+
+En combinant l'équation (\ref{eq:Hbarq}) et le Tableau~\ref{Decomposition}, on obtient:
+
+\begin{equation}
+  \xq{\bar{H}}{q}{}{\gamma}{}\left(T\right)
+  = \xq[\,]{\bar{H}}{q}{}{\alpha}{}\left(T\right)
+  + \xq[\,]{\bar{H}}{q}{}{\beta}{}\left(T\right)
+\end{equation}
+
+L'entropie $\gamma$ est celle de la méta-communauté, l'entropie $\alpha$ est la somme pondérée de celles des communautés, la pondération est libre mais doit respecter $p_s=\sum_i{w_ip_{s|i}}$:
+
+\begin{equation}
+  \xq{\bar{H}}{q}{}{\alpha}{}\left(T\right)
+  = \sum_i{w_i\xq[\,]{\bar{H}}{q}{}{\alpha}{i}\left(T\right)}
+\end{equation}
+
+
+L'entropie $\beta$ est:
+
+\begin{align}
+\xq{\bar{H}}{q}{}{\beta}{}\left(T\right)
+&= \sum_i{w_i}\xq[\,]{\bar{H}}{q}{}{\beta}{i}\left(T\right)\\
+&= \sum_i{w_i}\sum_k{\frac{T_k}{T}\xq[\,]{H}{q}{}{\beta}{ik}}\\
+&= \sum_i{w_i}\sum_k{\frac{T_k}{T}\sum_u{p^{q}_{k,u,i}\ln_q\frac{p_{k,u,i}}{p_{k,u}}}}
+\end{align}
+
+où $p_{k,u}$ est la probabilité d'observer une des espèces de la branche $u$ de l'arbre à la période $k$ (Figure~\ref{Arbre}) dans la méta-communauté, et $p_{k,u,i}$ la même probabilité dans la communauté $i$.
+
+\figureSC{DivPartFig}
+  {Représentation graphique de la diversité des deux parcelles du jeu de données \code{Paracou618}. 
+Les rectangles transparents représentent la diversité neutre, les rectangles hachurés la diversité phylogénétique (l'arbre est la taxonomie des espèces, $q=1$). 
+Dans chaque cas, le rectangle le plus large, de hauteur 1, représente la diversité $\gamma$. 
+Le rectangle plus haut a pour largeur et longueur les diversités $\alpha$ et $\beta$. 
+Les surfaces des deux rectangles sont identiques.}
+  {
+  <<DivPartFig, echo=FALSE, results='hide'>>=
+  <<DivPartCode>>
+  @
+  }
+
+La décomposition de l'entropie phylogénétique (au sens d'\textcite{Allen2009}), c'est-à-dire dans la cas particulier $q=1$, a été établie par \textcite{Mouchet2011}.
+
+La fonction \code{DivPart} de \emph{entropart} permet de décomposer l'entropie. 
+Les résultats contiennent la valeur de la diversité:
+
+<<DivPart1, tidy=FALSE>>=
+data(Paracou618)
+summary(DivPart(q = 1, Paracou618.MC, Biased = FALSE,
+                Tree = Paracou618.Taxonomy))
+@
+
+La Figure~\ref{DivPartFig}
+\verbfootnote{Code pour réaliser la figure:
+  <<DivPartCode, eval=FALSE, tidy=FALSE>>=
+  data(Paracou618)
+  q <- 1
+  Neutre <- DivPart(q, Paracou618.MC, Biased = FALSE)
+  plot(c(0, Neutre$GammaDiversity), c(0, Paracou618.MC$Ncommunities),
+       type = "n", 
+       xlab = expression(paste(alpha, " / ", gamma, " diversity")), 
+       ylab = expression(paste(beta, " diversity")))
+  rect(0, 0, Neutre$GammaDiversity, 1, lty=2)
+  rect(0, 0, Neutre$TotalAlphaDiversity, Neutre$TotalBetaDiversity, 
+       lty = 2)
+  Phylo <- DivPart(q, Paracou618.MC, Biased = FALSE, 
+                   Tree = Paracou618.Taxonomy)
+  rect(0, 0, Phylo$GammaDiversity, 1, angle=135, density=10)
+  rect(0, 0, Phylo$TotalAlphaDiversity, Phylo$TotalBetaDiversity,
+       density = 10)
+  @
+} donne une représentation graphique de la décomposition de la diversité. 
+La différence de taille entre les rectangles hachurés et les rectangles transparents est due à la prise en compte de la phylogénie. 
+La diversité $\gamma$ (rectangles de hauteur 1) est égale au produit des diversités $\alpha$ et $\beta$ (côtés du rectangle plus haut). 
+Si les communautés étaient de même poids et complètement différentes, c'est à dire contenant des espèces totalement dissimilaires entre communautés \autocite{Pavoine2015a}, la hauteur du rectangle serait égale à leur nombre (2 ici).
+
+
+\section{Partitionnement de la diversité de Leinster et Cobbold}
+
+Selon les mêmes principes que pour la décomposition de l'entropie HCDT, \textcite{Marcon2014e} ont décomposé l'entropie de \textcite{Ricotta2006b}. 
+L'entropie $\alpha$ de la communauté $i$ est:
+
+\begin{equation}
+  \xq{H}{q}{\matrixsym{Z}}{\alpha}{i}
+  = \frac{1-\sum_s{p_{s|i}{\left(\vectorsym{Zp}\right)}^{q-1}_{s|i}}}{q-1}
+\end{equation}
+
+L'entropie $\alpha$ est la somme pondérée des entropies des communautés:
+
+\begin{equation}
+  \xq{H}{q}{\matrixsym{Z}}{\alpha}{}
+  = \sum_i{w_i\xq[\,]{H}{q}{\matrixsym{Z}}{\alpha}{i}}
+  = \frac{1-\sum_i{w_i\sum_s{p_{s|i}{\left(\vectorsym{Zp}\right)}^{q-1}_{s|i}}}}{q-1}
+\end{equation}
+
+L'entropie $\beta$ est similaire à l'entropie $\beta$ HCDT: c'est la divergence généralisée de Jensen-Shannon entre les distributions de $\vectorsym{Zp}$ des communautés. 
+Formellement:
+
+\begin{equation}
+  \xq{H}{q}{\matrixsym{Z}}{\beta}{}
+=\sum_i{w_i}\sum_{s}{p_{s|i}\left(\ln_q\frac{1}{{\left(\vectorsym{Zp}\right)}_s}-\ln_q\frac{1}{{\left(\vectorsym{Zp}\right)}_{s|i}}\right)}
+\end{equation}
+
+La diversité $\beta$ est obtenue en calculant l'exponentielle déformée de la décomposition additive de l'entropie:
+
+\begin{equation}
+  \xq{D}{q}{\matrixsym{Z}}{\beta}{}
+=e^{\frac{\xq{H}{q}{\matrixsym{Z}}{}{}}{1+\left(1-q\right)\xq[\,]{H}{q}{\matrixsym{Z}}{\alpha}{}}}_q
+\end{equation}
+
+La décomposition de la diversité peut être faite directement, sans passer par l'entropie.
+
+L'inverse de $\xq{D}{q}{\matrixsym{Z}}{\gamma}{}$ est la moyenne généralisée d'ordre $q-1$ de ${\left(\vectorsym{Zp}\right)}_s$:
+
+\begin{equation}
+  \frac{1}{\xq{D}{q}{\matrixsym{Z}}{\gamma}{}}
+={\left[\sum_i{p_s{{\left(\vectorsym{Zp}\right)}_s}^{q-1}}\right]}^{\frac{1}{q-1}}
+\end{equation}
+
+Partant de $\xq{D}{q}{}{\gamma}{} = {\xq{D}{q}{}{\alpha}{}} {\xq{D}{q}{}{\beta}{}}$ et de la définition de Routledge de la diversité $\alpha$, on obtient:
+
+\begin{equation}
+  \xq{D}{q}{\matrixsym{Z}}{\beta}{}
+={\left[\sum_i{w_i}{\left(\frac{1/\xq[\,]{D}{q}{\matrixsym{Z}}{\alpha}{i}}{1/\xq[\,]{D}{q}{\matrixsym{Z}}{\gamma}{}}\right)}^{q-1}\right]}^{\frac{1}{q-1}}
+\label{eq:Dbeta}
+\end{equation}
+
+De la même façon que $1/\xq[\,]{D}{q}{\matrixsym{Z}}{\gamma}{}$ est la banalité moyenne des espèces, $\xq{D}{q}{\matrixsym{Z}}{\beta}{}$ est la banalité moyenne normalisée des communautés, où la banalité normalisée de la communauté $i$ est définie comme $\nicefrac{\left(1/\xq[\,]{D}{q}{\matrixsym{Z}}{\alpha}{i}\right)}{\left(1/\xq[\,]{D}{q}{\matrixsym{Z}}{\gamma}{}\right)}$, c'est-à-dire la banalité moyenne de ses espèces divisée par celle de la méta-communauté.
+
+La fonction \code{DivPart} (comme les autres fonctions avancées de \emph{entropart}) supporte la décomposition de la diversité de Leinster et Cobbold quand une matrice de similarité lui est passée comme argument à la place d'un arbre phylogénétique pour le calcul de la phylodiversité HCDT:
+
+<<DivPartZ>>=
+# Matrice de distances fonctionnelles
+DistanceMatrix <- as.matrix(Paracou618.dist)
+# Transformation en matrice de similarité
+Z <- 1 - DistanceMatrix/max(DistanceMatrix)
+# Partition de la diversité
+summary(DivPart(q = 1, Paracou618.MC, Z=Z , Biased = FALSE))
+@
+
+Le partitionnement de la diversité fonctionnelle de la méta-communauté \code{Paracou618.MC} selon la matrice de distances des traits fonctionnels montre que la diversité $\beta$ est extrêmement faible entre les deux parcelles.
+
+
+
+\chapter{Tests de significativité}
+
+\begin{Essentiel}
+  Les tests de significativité permettent d'affirmer que des communautés sont réellement différentiées. En complément, les intervalles de confiance des mesures de diversité peuvent être calculés sous l'hypothèse d'une distribution multinomiale.
+\end{Essentiel}
+
+
+\lettrine{L}{a diversité} $\beta$ calculée entre plusieurs échantillons successifs d'une même communauté n'est pas nulle: par simple fluctuation des effectifs due au hasard, les distributions des échantillons ne sont pas identiques.
+Des tests statistiques ont été développés pour rejeter cette hypothèse nulle à partir de données d'inventaires.
+
+\section{Test de non-nullité}
+
+L'objectif est de tester si deux communautés ne sont pas simplement deux échantillons d'une même communauté, dont les différences ne sont que des fluctuations dues au hasard. 
+Sous l'hypothèse nulle, les observations $\hat{q}_{s|i}$ sont des réalisations des mêmes probabilités $p_s$.
+Il est possible \autocite{Crist2003} mais controversé \autocite{Jones1986} de tester la significativité de la différence entre communautés. 
+Une meilleure approche consiste à calculer l'intervalle de confiance de la diversité $\beta$ due à l'incertitude sur les estimateurs de probabilités.
+
+Le test est réalisé de la façon suivante \autocite{Marcon2014a}:
+\begin{itemize}
+  \item  Les effectifs de chaque communauté $i$ sont tirés dans une loi multinomiale ${\mathcal M}(n_{+i},{n_{s,i}}/{n_{+i}})$ et ${\tilde{H}}_{\beta}$ est estimé;
+  \item  La simulation est répétée un grand nombre de fois, par exemple 10000, et les valeurs extrêmes sont éliminées. Au seuil de risque $\alpha=5\%$, les 251\ieme\ et 9750\ieme\ valeurs simulées définissent les bornes de l'intervalle de confiance de l'hypothèse nulle.
+\end{itemize}
+
+L'hypothèse nulle est rejetée si la valeur observée de ${\tilde{H}}_{\beta}$ n'est pas dans cet intervalle, en général au-delà de la borne supérieure. 
+Il peut arriver que les deux communautés soient plus semblables que sous l'hypothèse nulle, c'est-à-dire que les fréquences varient moins que dans le tirage d'une loi multinomiale, si deux communautés ont été créées artificiellement avec le même nombre d'individus de chaque espèce par exemple.
+
+Lorsque les données sont issues de communautés réelles, le sens même de ce type de test est remis en question \autocite{Jones1986} : les communautés réelles ne pouvant pas être exactement identiques, il suffit d'augmenter la taille de l'échantillonnage pour prouver leur différence.
+
+\subsection{Intervalle de confiance}
+
+L'intervalle de confiance de l'estimateur de $H_{\beta}$ \autocite{Marcon2014a} peut être calculé en simulant les communautés par des tirages dans des lois multinomiales suivant leurs fréquences: ${\mathcal M}\left(n_{+i},{n_si}/{n_+i}\right)$.
+
+Si l'intervalle de confiance ne contient pas 0, l'égalité des distributions est rejetée.
+
+Calcul sous R: la fonction \code{DivEst} produit un graphique avec l'intervalle de confiance (Figure~\ref{DivestFig}
+\verbfootnote{
+  Code R:
+  <<DivestCode, eval=FALSE>>=
+  de <- DivEst(q = 1, Paracou618.MC, Simulations = 1000)
+  plot(de)
+  @
+}).
+
+\figureSC{DivestFig}
+{Estimation de la diversité de la méta-communauté \code{Paracou618}.}
+{
+  <<DivestFig, echo=FALSE, results='hide'>>=
+  <<DivestCode>>
+  @
+}
+
+Par défaut, \code{DivEst} ne corrige pas les biais d'estimation. 
+Les résultats sont présentés sous forme de diversité et non d'entropie, la valeur attendue en cas d'égalité des communautés est 1.
+
+
+\subsection{Correction des biais}
+
+Les simulations nécessaires aux tests créent un biais d'estimation: les espèces les plus rares dans les communautés sont souvent éliminées par les tirages. 
+La correction du biais des tirages recentre leur distribution autour des valeurs originales des communautés non débiaisées. 
+Il n'existe pas de correction analytique pour corriger successivement le biais dû aux simulations (dû à la perte des espèces rares des communautés réelles) puis celui dû à l'échantillonnage des communautés elles-mêmes (dû à la non-observation des espèces rares de la communauté). 
+\textcite{Marcon2012a}, comme \textcite{Chao2015}, effectuent la deuxième correction par un recentrage de la distribution de $H_{\beta}$ simulée autour de sa valeur observée débiaisée, ce qui permet d'obtenir l'intervalle de confiance de l'estimateur de $H_{\beta}$.
+
+
+\section{Analyse de la variabilité}
+
+On se place maintenant dans un cadre un peu différent: les communautés sont elles-mêmes obtenues par regroupement de placettes d'échantillonnage.
+Pour tester la significativité de la diversité $\beta$ entre communautés, l'approche pourrait être celle de l'analyse de variance: l'entropie totale de la méta-communauté est la somme des entropies des sites, de l'entropie $\beta$ entre sites des communautés et de l'entropie $\beta$ entre communautés.
+L'entropie $\beta$ inter-communautés pourrait être comparée à l'entropie $\beta$ intra-communautés en calculant une statistique F.
+Cette approche souffre de la dépendance de l'entropie $\beta$ à l'entropie $\alpha$: si une communauté est plus diverse que l'autre, son entropie $\beta$ sera forcément plus faible.
+
+Le test correct porte sur la diversité plutôt que sur l'entropie \autocite{Richard-Hansen2015}.
+La statistique de test est le ratio de la diversité $\beta$ inter-communautés sur la la diversité $\beta$ intra-communautés.
+Sa valeur observée est comparée à la distribution de sa valeur simulée en redistribuant les placettes aléatoirement dans les communautés.
+
+
+
+\chapter{Autres approches}
+
+\lettrine{D}{es définitions} différentes de la diversité $\beta$ ou du partitionnement de la diversité sont présentées ici parce qu'elles sont importantes dans la littérature même si elles n'entrent pas dans le cadre précédent.
+
+
+\section{Le partitionnement de la diversité selon Pélissier et Couteron}
+
+\subsection{Cadre}
+
+\tableFW{Couteron}
+  {Tableau d'occurrence des espèces.}
+  {
+    \begin{tabularx}{\textwidth}{l l l X c l}
+    \toprule
+      &  &  & Forêt $k$    & \dots & Total \\
+      &  &  & Parcelle $j$ & \dots & \\
+      &  &  & Placette $i$ & \dots & \\
+      &  &  & Arbre $h$    & \dots & \\ \hline 
+    Famille $u$
+      & Genre $t$ 
+      & Espèce $s$ 
+      & $n_{sh}=1$ si l'arbre $h$ appartient à l'espèce $s$, $0$ sinon.\newline $n_{s\cdot}={n_{s+}}/{n}$ 
+      &  &  \\
+    
+    \dots  & \dots & \dots &  &  &  \\
+    
+    Total & & & $q_{+h}=p_{+h}=1$ &  & 1 \\ 
+    
+    \bottomrule 
+    \end{tabularx}
+  }
+
+
+Un cadre général de partitionnement de la diversité, applicable aux trois indices classiques, est proposé par \textcite{Pelissier2007}, en conclusion d'une série d'articles \autocite{Pelissier2003, Couteron2004}.
+
+Les données sont désagrégées jusqu'au niveau de l'individu. 
+Suivant les notations précédentes, les placettes sont considérées comme le regroupement d'arbres, indicés par $h$.
+
+Le Tableau~\ref{Couteron} est appelé tableau d'occurrence des espèces.
+Il ne contient que des 0 et des 1. 
+Chaque arbre (colonne) a une seule valeur 1 dans la cellule correspondant à son espèce.
+
+Un arbre moyen s'il pouvait exister appartiendrait partiellement à chaque espèce, proportionnellement à son effectif. 
+Chaque arbre $h$ apporte une quantité d'information égale à la somme sur toutes les espèces des écarts quadratiques entre la valeur $n_{sh}$, indicatrice de son appartenance à l'espèce $s$, et la valeur $n_{s\cdot }$ correspondant à l'arbre moyen: $\sum_s{{\left(n_{sh}-n_{s\cdot }\right)}^2}$. 
+La somme peut être pondérée pour donner une importance plus ou moins grande des espèces selon leur fréquence: $\sum_s{{w_s\left(n_{sh}-n_{s\cdot }\right)}^2}$. 
+La mesure totale, sommée sur tous les arbres, est notée $\mathit{TSS}$:
+
+\begin{equation}
+  \mathit{TSS} = \sum_s{w_s\sum_h{{\left(n_{sh}-n_{s\cdot}\right)}^2}}
+\end{equation}
+
+Si le poids $w_s$ vaut toujours 1, $\mathit{TSS}/{n}$ est l'indice de Simpson.
+
+Si $w_s={\ln{\left(1/{n_{s\cdot}}\right)}/{\left(1-n_{s\cdot}\right)}}$, on obtient l'indice de Shannon, et $w_s={1}/{w_{s\cdot}}$ donne le nombre d'espèces moins 1.
+
+
+\subsection{Décomposition}
+
+L'intérêt de la méthode est de permettre l'utilisation de modèles linéaires et des outils informatiques associés classiques pour décomposer la diversité de différentes manières. 
+Nous nous intéresserons ici à la décomposition de la diversité totale $\gamma$ en diversités $\alpha$ et $\beta$. 
+Dans ce cadre, la diversité $\beta$ est la partie expliquée par le modèle (les différentes communautés sont les paramètres explicatifs), notée $\mathit{MSS}$, alors que la diversité $\alpha$ est résiduelle, notée $\mathit{RSS}$.
+
+La diversité totale est $\mathit{TSS}/{n}$. 
+La diversité $\alpha$ est calculée de la même manière, en prenant pour référence la fréquence des espèces à l'intérieur de chaque placette. 
+Dans la placette $i$:
+
+\begin{equation}
+  \mathit{RSS}_i = \sum_s{w_s\sum_{h\in {\mathcal I}}{{\left(n_{sh} - \frac{\sum_{h\in {\mathcal I}}{n_{sh}}}{n}\right)}^2}} 
+\end{equation}
+
+La diversité $\beta$ est calculée de façon similaire par la différence entre les fréquences des espèces dans chaque placette ${\left(\sum_{h\in {\mathcal I}}{n_{sh}}\right)}/{n}$ et leur fréquence après regroupement $n_{s\cdot}$.
+
+Le problème est que le poids attribué à chaque espèce, $w_s$, dépend de la distribution totale des espèces. 
+$\mathit{RSS}$ n'est donc pas une diversité $\alpha$ puisque sa valeur dépend de données extérieures à la placette.
+
+Le poids $w_s=1$ pour toutes les espèces règle le problème. 
+Le modèle est alors celui de la décomposition de l'indice de Simpson présenté plus haut.
+
+
+\section{Diversité de Kosman}
+
+\textcite{Kosman2013} nomme \emph{diversité génétique} la diversité des individus d'une population (non regroupés par espèces) pour lesquels une mesure de dissimilarité a été choisie. 
+Les mesures de dissimilarité acceptables \autocite{Kosman2005} sont par exemple les mêmes que celles utilisées pour la diversité $\beta$ des communautés appliquées aux présences/absences de bandes de profils AFLP.
+
+La mesure de dissimilarité moyenne entre les individus, notée $ADW_{\rho}$ pour \foreignlanguage{english}{\emph{Average Dissimilarity Within}}, où $\rho$ représente la dissimilarité choisie, est simplement l'entropie quadratique de Rao.
+Si la dissimilarité n'est pas euclidienne, la concavité de $ADW_{\rho}$ n'est pas garantie, ce qui motive Kosman à proposer une autre mesure \autocite{Kosman1996, Kosman2007}, ${KW}_{\rho}$, qui est la dissimilarité moyenne des $n$ paires d'individus les plus dissimilaires (au lieu de toutes les $\nicefrac{n(n-1)}{2}$ paires).
+Les $n$ paires d'individus sont construites de façon que chaque individu apparaisse une fois en tant que premier et une fois en tant que second membre de la paire, selon un algorithme non trivial \autocite{Bellman1970}.
+Tous les individus contribuent donc à la mesure de la diversité.
+
+Pour un assemblage de $I$ populations, la diversité de Kosman ${KW}_{\rho}$ de l'assemblage des populations est toujours plus grande que la moyenne des diversités intra-populations ${KW}_{\rho}$ pondérées par le poids des populations (c'est-à-dire la diversité $\alpha$ selon la définition de Routledge) parce que ${KW}_{\rho}$ est concave.
+La différence est la diversité entre populations, interprétable comme une diversité $\beta$ selon la définition additive de la décomposition.
+
+Pour obtenir une diversité $\beta$ indépendante des diversités $\alpha$ et $\gamma$, Kosman définit ${KA}_{d}$ comme la moyenne des distances entre les $I$ paires de populations assignées selon le même algorithme que précédemment. 
+La distance entre populations $d$ est de préférence la distance de Kosman entre populations, ${KB}_{\rho}$: la moyenne des $n$ paires d'individus appartenant chacun à une population les plus dissimilaires (si la taille des populations n'est pas identique, un échantillon de la plus grande population de la taille de la plus petite est tiré aléatoirement, la valeur moyenne de la distance obtenue sur plusieurs tirages est calculée).
+La diversité $\gamma$ est la somme de la moyenne des diversités intra-populations ${KW}_{\rho}$ pondérées par le poids des populations et de la diversité inter-populations ${KA}_{d}$.
+Ce n'est pas la diversité ${KW}_{\rho}$ de l'assemblage des populations, ce qui limite fortement l'intérêt de cette approche.

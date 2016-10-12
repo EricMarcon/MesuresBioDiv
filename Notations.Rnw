@@ -1,0 +1,74 @@
+<<Notations-parent, echo=FALSE, cache=FALSE>>=
+set_parent('Mesures_de_la_Biodiversite.Rnw')
+opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+options(width=60)
+par(mar=c(0,0,0,0))
+@
+
+\LargeMargins
+\selectlanguage{french}
+\sisetup{locale = FR}
+\LargeMargins
+\chapter{Notations}
+
+\lettrine{L}{es} notations peuvent différer de celles de la littérature citée pour l'homogénéité de ce document.
+
+\noindent $A$: l'aire d'étude, et, selon le contexte, sa surface.
+
+\noindent $\alpha_\nu$: la probabilité moyenne des espèces représentées par $\nu$ individus.
+
+\noindent $C$: le taux de couverture de l'échantillon, c'est-à-dire la probabilité qu'un individu de la communauté appartienne à une des espèces échantillonnées. 
+$\xq{C}{}{n}{}{}$ est le taux de couverture correspondant à un échantillon de taille $n$.
+
+\noindent $\xq{D}{q}{}{}{}$: la diversité vraie (nombre de Hill pour les diversités $\alpha$ et $\gamma$), nombre équivalent de communautés pour la diversité $\beta$. 
+$\xq{D}{q}{}{\alpha}{i}$ est la diversité $\alpha$ mesurée dans la communauté $i$. 
+$\xq{\bar{D}}{q}{}{}{}\left(T\right)$ est la diversité phylogénétique.
+
+\noindent $\Delta$: la matrice de dissimilarité dont les éléments sont $d_{s,t}$, la dissimilarité entre l'espèce $s$ et l'espèce $t$.
+
+\noindent ${\mathbb E}\left(X\right)$: l'espérance de la variable aléatoire $X$.
+
+\noindent $\xq{H}{q}{}{}{}$: l'entropie de Tsallis (ou HCDT). 
+$\xq{H}{q}{}{\alpha}{i}$ est l'entropie $\alpha$ mesurée dans la communauté $i$. 
+Si nécessaire, le vecteur des probabilités servant au calcul est précisé sous la forme $\xq{H}{q}{}{}{}(\vectorsym{q})$ ou $\xq{H}{q}{}{}{}(\{p_s\})$.
+$\xq{\bar{H}}{q}{}{}{}(T)$ est l'entropie phylogénétique.
+
+\noindent $I$: le nombre de communautés qui constituent une partition de la méta-communauté dans le cadre de la décomposition de la diversité. 
+Les communautés sont indexées par $i$.
+
+\noindent $I(p_s)$: l'information apportée par l'observation d'un évènement de probabilité $p_s$. 
+$I(q_s,p_s)$ est le gain d'information apporté par l'expérience ($q_s$ est observé) par rapport aux probabilités $p_s$ attendues.
+
+\noindent $N$: le nombre (aléatoire) d'individus se trouvant dans l'aire d'étude. 
+$N_s$ est la même variable aléatoire, mais restreinte aux individus de l'espèce $s$.
+
+\noindent $n$: le nombre d'individus échantillonnés. 
+$n_{s,i}$ est le nombre d'individus de l'espèce $s$ dans la communauté $i$. 
+Les effectifs totaux sont $n_{s+}$ (pour l'espèce $s$), $n_{+i}$ pour la communauté $i$ et $n$ le total général. 
+S'il n'y a qu'une communauté, le nombre d'individus par espèce est $n_s$.
+
+\noindent $p_s$: la probabilité qu'un individu tiré au hasard appartienne à l'espèce $s$. 
+Son estimateur, ${\hat{p}}_s$ est la fréquence observée. 
+$p_{s|i}$ est la même probabilité dans la communauté $i$.
+
+\noindent $\vectorsym{p}=\left( p_1, p_2, \dots, p_s, \dots, p_S \right)$: le vecteur décrivant la distribution des probabilités $p_s$, appelé simplexe en référence à sa représentation dans l'espace à $S$ dimensions.
+
+\noindent ${\pi}_{\nu}$: la probabilité qu'une espèce choisie au hasard soit représentée par $\nu$ individus, $\sum^n_{\nu=1}{{\pi}_{\nu}}$=1. 
+Si l'espèce est choisie explicitement, la probabilité est notée ${\pi}_{n_s}$.
+
+\noindent $\xq{R}{q}{}{}{}$: l'entropie de Rényi d'ordre $q$.
+
+\noindent $S$: le nombre d'espèces, considéré comme une variable aléatoire, estimé par $\hat{S}$.
+
+\noindent $\xq{S}{}{n}{\nu}{}$: le nombre d'espèces, considéré comme une variable aléatoire, observées $\nu$ fois dans l'échantillonnage. 
+L'indice est le nombre de fois où l'espèce est détectée: par exemple $\xq{S}{}{}{1}{}$ ou $\xq{S}{}{}{\ne 0}{}$. 
+L'exposant est la taille de l'échantillon: $\xq{S}{}{A}{}{}$ pour la surface $A$ ou $\xq{\hat{S}}{}{n}{}{}$ pour un échantillon de $n$ individus. 
+$\xq{S}{}{A}{0}{}$ est le nombre d'espèces non rencontrées dans la surface $A$. 
+Pour alléger les notations, s'il n'y a pas d'ambiguïté, l'indice est omis pour les espèces présentes: $\xq{S}{}{A}{\ne 0}{}$ est noté $\xq{S}{}{A}{}{}$. 
+Si l'exposant n'est pas noté, l'échantillon n'est pas précisé et peut être aussi bien un nombre d'individus qu'une surface.
+
+\noindent $\xq{s}{}{n}{\nu}{}$: le nombre d'espèces observées, avec les mêmes notations que ci-dessus. 
+$\xq{s}{}{n}{\nu}{}$ peut être considéré comme une réalisation de $\xq{S}{}{n}{\nu}{}$.
+
+\noindent $t^{n}_{1-\alpha/2}$: le quantile d'une loi de Student à $n$ degrés de liberté au seuil de risque $\alpha$, classiquement 1,96 pour $n$ grand et $\alpha=5\%$.
+

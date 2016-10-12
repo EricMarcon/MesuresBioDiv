@@ -1,0 +1,100 @@
+<<Conclusion-parent, echo=FALSE, cache=FALSE>>=
+set_parent('Mesures_de_la_Biodiversite.Rnw')
+opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+options(width=60)
+par(mar=c(0,0,0,0))
+library("entropart")
+data(Paracou618)
+@
+
+\LargeMargins
+\selectlanguage{french}
+\sisetup{locale = FR}
+\chapter{Synthèse}
+
+\lettrine{L}{a} biodiversité peut être mesurée de nombreuses façons. 
+La dualité entropie-diversité fournit un cadre clair et rigoureux pour le faire.
+D'autres mesures de diversité ont été présentées ici, d'autres encore peuvent être trouvées dans la littérature. 
+Elles ont en général un moins bon support mathématique, surtout les mesures de diversité $\beta$, elles ne peuvent pas être décomposées, corrigées ou interprétées. 
+La diversité de Hurlbert possède toutes ses propriétés et une correction très efficace du biais d'estimation, mais elle n'est pas généralisée à la diversité phylogénétique.
+
+
+\section{Entropie et diversité}
+
+\figureMargin{ConclusionFig}
+{Généralisation des mesures classiques de diversité. 
+  La figure présente les mesures d'entropie, qui peuvent toutes être transformées en mesures de diversité au sens strict. 
+  Toutes ces entropies sont des cas particuliers de l'entropie de Ricotta et Szeidl, qui peut être transformée en diversité de Leinster et Cobbold.}
+{\includegraphics[width=\maxwidth]{Conclusion}}
+
+L'entropie est la surprise moyenne fournie par les individus d'une communauté. 
+Le choix de la fonction d'information qui mesure cette surprise à partir des probabilités d'occurrence des espèces (ou d'autres catégories) permet de définir les mesures de diversités neutres, fonctionnelles ou phylogénétique présentées ici. 
+
+L'entropie est transformée en diversité au sens strict par une fonction croissante (l'exponentielle déformée), ce qui simplifie son interprétation en tant que nombre équivalent d'espèces, dans une distribution idéale dans laquelle toutes les espèces seraient équifréquentes.
+
+\textcite{Chao2014a} proposent un cadre fondé exclusivement sur les nombres de Hill sans référence à l'entropie. 
+Les principales différences avec celui présenté ici concernent la définition de la diversité $\alpha$ et donc celle de la diversité $\beta$ et l'absence d'estimateurs à biais réduit.
+
+L'entropie phylogénétique généralise les indices de diversité classique (Figure~\ref{ConclusionFig}), intègre si nécessaire la distance entre espèces, peut être décomposée et corrigée des biais d'estimation. 
+Sa transformation en diversité au sens strict permet d'interpréter les valeurs sous une forme unique: un nombre équivalent d'espèces et un nombre équivalent de communautés. 
+La diversité de Leinster et Cobbold généralise à son tour la diversité phylogénétique et permet d'autres définitions de la distance entre espèces.
+Le paramétrage des mesures (l'ordre de la diversité) permet de donner plus ou moins d'importance aux espèces rares et de tracer des profils de diversité.
+
+Les communautés et assemblages idéals définissant les nombres équivalents d'espèces et de communautés sont :
+\begin{itemize}
+  \item des communautés d'espèces équiprobables \autocite{Hill1973}, dont l'ancêtre commun est la racine de l'arbre phylogénétique (diversité phylogénétique)\autocite{Marcon2014b} ou dont la distance fonctionnelle est maximale (diversité fonctionnelle) \autocite{Leinster2012};
+  \item une méta-communauté contenant des communautés de poids égal et totalement distinctes \autocite{Jost2007}, c'est-à-dire n'ayant aucune espèce en commun. De plus, la distance fonctionnelle ou phylogénétique est maximale entre deux espèces quelconques appartenant à des communautés différentes \autocite{Pavoine2015a}.
+\end{itemize}
+
+Le package \emph{entropart}\autocite{Marcon2014c} permet de calculer avec R la diversité d'une méta-communauté à partir de données d'abondances et d'un arbre (phylogénétique) ou d'une matrice de distances (fonctionnelles).
+
+
+\section{Ordres particuliers de diversité}
+
+La diversité d'ordre 2 présente de nombreuses particularités et avantages qui font qu'elle est très employée:
+
+\begin{description}
+  
+  \item[Estimation]
+  Tous les estimateurs de $\xq{H}{q}{}{}{}$ sont biaisés, d'autant plus que $q$ est petit. 
+  Seul l'estimateur de l'indice de Simpson, $\xq{\tilde{H}}{2}{}{}{}=(\nicefrac{n}{n-1})(1-\sum_s{{\hat{p}}^{2}_{s}})$ est non biaisé.
+  Comme l'entropie de Rao est la somme sur les périodes de l'arbre des entropies de Simpson, $\xq{\tilde{H}}{2}{}{}{}(T)=(\nicefrac{n}{n-1})\xq{\bar{H}}{2}{}{}{}(T)$ est donc sans biais.
+  
+  \item[Partition]
+  L'entropie de Simpson peut être décomposée comme une variance. 
+  La contribution de chaque communauté à la variance inter n'est pas la même que dans la décomposition générale de l'entropie HCDT mais la variance inter est bien égale à l'entropie $\beta$. 
+  La décomposition de la diversité de Pélissier et Couteron est identique.
+  Dans le cas particulier de l'entropie de Rao, l'entropie phylogénétique, sans normalisation par la hauteur de l'arbre, est égale à la somme pondérée des dissimilarités (divergences de Jensen-Shannon) entre les paires de communautés. 
+  Cette propriété permet de représenter dans un même espace les espèces et les communautés par une double analyse en composantes principales.
+  
+  \item[\'Egalité des diversités]
+  Pour $q=2$ seulement, toutes les mesures de diversité sont identiques:
+  \begin{itemize}
+    \item  Le nombre équivalent d'espèces de Hurlbert est égal à $\xq{D}{2}{}{}{}$, le nombre de Hill;
+    \item  La diversité de Leinster et Cobbold est égale à la diversité phylogénétique.
+  \end{itemize}
+  
+\end{description}
+
+La diversité d'ordre 1 a en revanche des propriétés avantageuses pour la décomposition : toutes les définitions de diversité $\alpha$ sont dans ce cas identiques, et l'information mutuelle se confond avec la diversité $\beta$.
+
+
+\section{Limites}
+
+Les principales limites des mesures de diversité sont d'ordre conceptuel et pratique. 
+L'axiome de symétrie interdit de donner un rôle particulier à une espèce: il n'est donc pas possible conceptuellement de prendre en compte les espèces focales \autocite{Zacharias2001} dans la quantification de la diversité (espèces emblématiques, espèces clé de voûte \autocite{Paine1969}, espèces parapluie \autocite{Roberge2004}, espèces ingénieures\autocite{Jones1994}\dots). 
+Leur présence peut être décisive pour la conservation, mais il s'agit clairement d'une question distincte de celle de la diversité.
+
+Sur le plan pratique, la mesure de la diversité se réduit souvent à un groupe biologique (dans ce document, les arbres). 
+Estimer la biodiversité totale est un objectif hors d'atteinte. 
+Si la diversité à prendre en compte est au-delà des données disponibles, il est nécessaire d'utiliser des \emph{indicateurs} \autocite{Balmford2003} qui peuvent être la diversité d'un ou quelques groupes représentatifs, voire la présence d'espèces indicatrices \autocite{Clements1916}. 
+Des indicateurs indirects sont la diversité des habitats ou même l'étendue de certains habitats reconnus comme les plus favorables à un haut niveau de diversité. 
+Une réflexion en cours \autocite{Pereira2013} consiste à établir une liste de variables pertinentes (\foreignlanguage{english}{\emph{Essential biodiversity variables}}) qui puissent constituer des indicateurs standardisés à l'échelle globale pour permettre la comparaison des données.
+Les indicateurs dévient souvent de la notion stricte de diversité et peuvent mesurer tout autre chose, comme l'indice BII (\foreignlanguage{english}{\emph{Biodiversity Intactness Index}} \autocite{Scholes2005}) qui est la moyenne pondérée par la surface des habitats et le nombre d'espèces concernées de la variation des effectifs des populations induite par l'anthropisation. 
+Les effectifs ne sont pas pris en compte dans la mesure de la diversité (sauf dans le calcul des biais d'estimation), seules les proportions importent: l'indice BII mesure donc la dégradation des habitats plus que la variation de la biodiversité. 
+L'argument, développé par \textcite{Balmford2003}, est que la diminution des effectifs des espèces suivies est corrélé à la disparition des espèces plus vulnérables; l'effectif d'une population est aussi un indicateur de sa diversité génétique.
+La moyenne géométrique des abondances relatives \autocite{Buckland2011} compare les abondances des espèces au cours du temps à leur valeur initiale.
+L'indice LPI (\foreignlanguage{english}{\emph{Living Planet Index}}) \autocite{Loh2005} s'appuie sur ce même principe: il mesure l'évolution dans le temps des effectifs d'un grand nombre de populations de vertébrés.
+
+La recherche sur la mesure de la diversité est très active, ce document évolue donc régulièrement pour prendre en compte les avancées récentes.
+
