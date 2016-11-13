@@ -971,7 +971,7 @@ L'indice de Shannon est concave (Figure~\ref{ShannonFig}
 }) donc son estimateur (\ref{eq:Shannon}) est biaisé négativement, même sans prendre en considération les espèces non observées.
 
 \figureMargin{ShannonFig}
-  {courbe de $x\ln x$ entre 0 et 1.).}
+  {courbe de $-x\ln x$ entre 0 et 1.).}
   {
   <<ShannonFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
   <<ShannonCode>>
@@ -1979,6 +1979,7 @@ La figure~\ref{comProfilzeta}
 \verbfootnote{Code R pour réaliser la figure:
   <<comProfilzetaCode, eval=FALSE>>=
   # Profil P6
+  library("EntropyEstimation")
   zeta6 <- CommunityProfile(GenSimpson, NsP6, 1:(S-1))
   sigma6 <- sapply(1:(S-1), function(r) GenSimp.sd(NsP6,r))
   ic6 <- qnorm(1-0.05/2)*sigma6/sqrt(sum(NsP6))
@@ -2041,7 +2042,7 @@ En comparaison, la figure~\ref{comProfilHCDT}
 Ils se chevauchent pour les petits ordres de diversité, ce qui ne permet pas de conclure.
 
 \figureFW{compProfils}
-{Comparaison des profiles de diversité des parcelles 6 et 18 de Paracou avec leur intervalle de confiance à 95\%. La parcelle 18 est tracée en rouge, lignes continues, et la 6 en vert, lignes pointillées.}
+{Comparaison des profils de diversité des parcelles 6 et 18 de Paracou avec leur intervalle de confiance à 95\%. La parcelle 18 est tracée en rouge, lignes continues, et la 6 en vert, lignes pointillées.}
 {
   \subfloat[Diversité généralisée de Simpson (nombres effectif d'espèces). Les profils sont distincts, ce qui permet de conclure que la parcelle 6 est plus diverse que la parcelle 18.\label{comProfilzeta}]
   {

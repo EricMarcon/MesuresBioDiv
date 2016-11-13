@@ -32,7 +32,7 @@ Il est présenté au chapitre suivant.
 Son problème est qu'il est souvent utilisé pour décrire la diversité locale, comme s'il permettait de normaliser l'effort d'échantillonnage, alors que sa validité est plutôt à l'échelle régionale \autocite{Hubbell2001}.
 
 A cette échelle, plusieurs communautés sont prises en compte simultanément.
-Il est possible de rechercher une nouvelle asymptote, atteinte quand toutes les communautés sont incluses (par exemple, la totalité de la forêt amazonienne \autocite{TeerSteege2013}) ou de raisonner en termes de relation aire-espèces, sans rechercher une richesse totale hypothétique \autocite{Preston1960}.
+Il est possible de rechercher une nouvelle asymptote, atteinte quand toutes les communautés sont incluses (par exemple, la totalité de la forêt amazonienne \autocite{TerSteege2013}) ou de raisonner en termes de relation aire-espèces, sans rechercher une richesse totale hypothétique \autocite{Preston1960}.
 Là encore, $\alpha$ de Fisher est ambigu puisqu'il peut provenir à la fois d'une infinité d'espèces dans son modèle original ou être compris comme le nombre fondamental de la théorie neutre, égal à deux fois le taux de spéciation fois le nombre total d'espèces (fini) de la méta-communauté \autocite{Hubbell2001}.
 
 Enfin, la diversité $\beta$ spatialement explicite est introduite au chapitre~\ref{chap:betasp}.
@@ -74,30 +74,41 @@ La probabilité ${\pi}_{n_s}$ d'observer $n_s$ individus d'une espèce donnée e
 \pi_{n_s} = \int^{+\infty}_{0}{\frac{{\lambda}^{n_s}e^{-\lambda}}{n_s!} f(\lambda)\mathop{d\lambda}}
 \end{equation}
 
-La distribution de $\lambda$ retenue par Fisher est une loi gamma, ce qui implique que ${\pi}_{n_s}$ suit une loi binomiale négative de paramètre $k$.
+La distribution de $\lambda$ retenue par Fisher est une loi gamma, ce qui implique que ${\pi}_{n_s}$ suit une loi binomiale négative de paramètres $p$ et $k$.
+Le paramètre $p$ n'a pas d'interprétation utile à ce stade; $k$ est lié à la variance de la distribution: plus il est grand, plus les probabilités des espèces sont uniformes. 
 
 On notera que la distribution de ${\pi}_{n_s}$ n'est pas celle de $p_s$. 
 La courbe représentant $n_s$ en fonction de son rang n'est pas un vrai diagramme rang-abondance, mais un \og pseudo-RAC\fg{} \autocite{Izsak2012}.
 
-En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui correspond à une distribution comprenant de nombreuses espèces et un pseudo-RAC décroissant rapidement, et retient cette propriété pour la suite de son raisonnement. 
-Dans ce cas, et après calcul, le nombre d'espèces échantillonnées pour $n$ individus est calculable (pour $n$ suffisamment grand) et ne dépend que d'un paramètre $\alpha$ estimé à partir des données.
+En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui correspond à une distribution comprenant de nombreuses espèces de fréquences très variables, donc un pseudo-RAC décroissant rapidement, et retient cette propriété pour la suite de son raisonnement. 
+Dans ce cas, l'espérance du nombre d'espèces représentées par $l$ individus est, en posant $x=\nicefrac{p}{p+1}$ et $\alpha$ une constante:
 
-Le modèle est donc applicable pour un grand nombre d'observations et un grand nombre d'espèces, dont les individus sont distribués indépendamment. 
-Alors:
+\begin{equation}
+  s_l = \frac{\alpha}{l} x^l
+\end{equation}
+
+Le nombre total d'individus en est donc la somme pour toutes les valeurs de $l$:
+\begin{equation}
+  n = \sum_{l=1}^{\infty}{\alpha x^l} = \frac{\alpha x}{1-x}
+\end{equation}
+
+La combinaison des deux équations permet d'éliminer $x$ et d'obtenir l'espérance du nombre d'espèces observées en fonction de la taille de l'échantillon:
 
 \begin{equation}
 {\mathbb E}\left( \xq{{S}}{}{n}{}{} \right) = \alpha\ln \left( 1 + \frac{n}{\alpha} \right)
 \label{eq:AlphaFisher}
 \end{equation}
 
-$\alpha$ est un indicateur de la biodiversité qui peut être interprété comme le nombre d'espèces nouvelles découvertes quand le nombre d'individus échantillonnés est multiplié par $e$: c'est en effet la pente de la courbe de $\xq{\hat{S}}{}{n}{}{}$ en fonction de $\ln n$, qui se stabilise à partir d'une valeur de $n$ suffisante. 
+$\alpha$ est un indicateur de la biodiversité qui peut être interprété comme le nombre d'espèces nouvelles découvertes quand le nombre d'individus échantillonnés est multiplié par $e$: c'est en effet la pente de la courbe de $\xq{S}{}{n}{}{}$ en fonction de $\ln n$, qui se stabilise à partir d'une valeur de $n$ suffisante. 
 
-$\alpha$ est aussi égal à $\theta$, le nombre fondamental de la biodiversité de Hubbell quand le nombre d'espèces est grand\autocite{Alonso2004} : la SAD de la méta-communauté (pas celle de la communauté locale si la dispersion est limitée) du modèle neutre est en log-séries.
+$\alpha$ est aussi égal à $\theta$, le nombre fondamental de la biodiversité de Hubbell quand le nombre d'espèces est grand \autocite{Alonso2004} : la SAD de la méta-communauté (pas celle de la communauté locale si la dispersion est limitée) du modèle neutre est en log-séries.
 
 Dans R, les fonctions \code{fisher.alpha} de la librairie \emph{vegan} et \code{fishers.alpha} de la librairie \emph{untb} \autocite{Hankin2007} effectuent une résolution numérique de l'équation~\ref{eq:AlphaFisher} pour estimer $\alpha$.
 La fonction \code{optimal.theta} dans \emph{untb} évalue la valeur de $\theta$ par la méthode du maximum de vraisemblance \autocite[page 122]{Hubbell2001}, en utilisant toute l'information de la distribution.
 Le résultat est très différent parce que l'approximation de l'égalité de $\alpha$ et $\theta$ ne tient pas dans ce cas:
 <<FisherAlpha>>=
+library("vegan")
+data(BCI)
 # Ns est un vecteur contenant les effectifs de chaque espèce
 Ns <- colSums(BCI)
 fisher.alpha(Ns)
@@ -161,6 +172,7 @@ $Q = \alpha$ si la distribution est en log-séries, et $Q = \nicefrac{c S}{\sigm
 La simulation suivante tire \SI{10000} arbres dans le jeu de données BCI indépendamment et selon les fréquences des espèces.
 L'indice Q est calculé:
 <<KemptonQ>>=
+Ns <- colSums(BCI)
 Inventaire <- rmultinom(10000, 1, Ns/sum(Ns))
 # Cumul de l'inventaire
 Cumul <- apply(Inventaire, 1, cumsum)
@@ -515,7 +527,7 @@ La fonction \code{specaccum} de \emph{vegan} permet de calculer une SAC selon ce
 La relation d'Arrhenius est plus robuste que celle de Gleason, selon les résultats empiriques et des considérations théoriques \autocite{GarciaMartin2006}, y compris de thermodynamique \autocite{Wurtz2008}.
 
 \textcite{Engen1974} généralise le modèle de Fisher en autorisant des valeurs négatives du paramètre $k$ de la loi binomiale négative.
-Dans le modème de Fisher, ce paramètre est l'inverse de la variabilité de l'espérance du nombre d'individus observés par espèce, qui tend vers 0 car la variabilité est très grande.
+Dans le modèle de Fisher, ce paramètre est l'inverse de la variabilité de l'espérance du nombre d'individus observés par espèce, qui tend vers 0 car la variabilité est très grande.
 Il perd son sens quand il devient négatif mais l'espérance du nombre d'espèces en fonction de la surface a une forme plus générale \autocite{Engen1977}:
 \begin{equation}
 {\mathbb E}\left( \xq{{S}}{}{n}{}{} \right) = \frac{\alpha}{k} \left[ 1 - \left(\frac{\alpha}{\alpha + n}\right)^k \right]
@@ -557,7 +569,7 @@ Ses hypothèses sont peu réalistes dans la zone A, mais il valide la loi de pui
 
 La relation d'Arrhenius est donc systématiquement validée à l'échelle régionale (Figure~\ref{Williamson2001}). 
 On remarquera que la distribution de Fisher, validée par Hubbell pour la méta-communauté, n'est jamais observée dans la SAR à cause de l'agrégation spatiale: en augmentant la surface d'échantillonnage, de nouvelles communautés sont ajoutées progressivement, mais l'échantillonnage de toute la méta-communauté n'est jamais réalisé (sauf au point marquant le passage de la zone B à la zone C). 
-Les seuls exemples empiriques sont des inventaires d'arbres à l'échelle de l'Amazonie entière \autocite{TerSteege2013}, ou de la totalité des forêts tropicales \autocite{Slik2015} qui correspondent bien à la distribution de Fisher.
+Les seuls exemples empiriques sont des inventaires d'arbres à l'échelle de l'Amazonie entière \autocite{TerSteege2013}, ou de la totalité des forêts tropicales \autocite{Slik2015} qui correspondent à la distribution de Fisher. Dans ces deux exemples, l'ajustement est obtenu en extrapolant linéairement la SAD, ce qui est légitime \autocite{Izsak2012} si la distribution est effectivement celle de Fisher : la forme de la distribution est donc assumée, pas prouvée.
 Les valeurs de $\alpha$ à ces échelles sont bien supérieures aux valeurs locales (35 pour BCI, voir page~\pageref{eq:AlphaFisher}): 754 pour l'Amazonie, de l'ordre de 1000 pour les néotropiques, mais seulement de 250 pour l'Afrique, et de l'ordre de 2000 pour l'ensemble des tropiques.
 
 Enfin, quand l'échelle est encore plus grande, le nombre d'espèces augmente à nouveau plus vite parce que d'autres méta-communautés sont intégrées.
