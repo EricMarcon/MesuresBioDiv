@@ -82,7 +82,7 @@ Ces deux définitions sont présentées sur les figures~\ref{Anderson2011a} et \
 
 \figureSC{Anderson2011a}
 {Diversité $\beta$ liée au remplacement des espèces le long d'un gradient. 
-  $\Delta{y}$ est la mesure de la dissimilarité entre deux communautés, voir page~\pageref{sec:BetaPaires}.
+  $\Delta{y}$ est la mesure de la dissimilarité entre deux communautés, voir page~\pageref{chap:BetaPaires}.
   $\vectorsym{x}$ est un gradient environnemental, spatial ou temporel.
   $\Delta{x}$ est l'écart entre deux points du gradient.
   (\emph{in} \textcite{Anderson2011})}
@@ -100,7 +100,7 @@ Ces deux définitions sont présentées sur les figures~\ref{Anderson2011a} et \
 Les mesures de remplacement ne sont pas traitées en détail dans ce chapitre mais simplement présentées ici.
 
 La plus simple (Figure~\ref{Anderson2011a}, T1) est la dissimilarité entre deux communautés notée $\Delta{y}$.
-De nombreuses mesures de dissimilarité existent, elles sont détaillées dans le chapitre~\ref{chap:DivPaires}, à partir de la page~\pageref{sec:BetaPaires}.
+De nombreuses mesures de dissimilarité existent, elles sont détaillées dans le chapitre~\ref{chap:BetaPaires}, à partir de la page~\pageref{chap:BetaPaires}.
 Whittaker n'envisageait que la présence ou l'absence des espèces, mais leur abondance peut être prise en compte.
 
 Cette dissimilarité peut être analysée en fonction du gradient de référence. 
@@ -208,6 +208,7 @@ Cette propriété est souvent considérée comme importante \autocite{Wilson1984
 
 
 \subsection[Définitions de la diversité alpha]{Définitions de la diversité $\alpha$}
+\label{sec:defalpha}
 
 La diversité $\alpha$ est calculée pour chaque communauté, et notée $^q_iD_{\alpha}$ (l'entropie correspondante est notée $\xq{H}{q}{}{\alpha}{i}$). 
 La diversité $\alpha$ de la méta-communauté est intuitivement la moyenne de celle des communautés. 
@@ -261,7 +262,7 @@ La dépendance entre $\xq{D}{q}{}{\beta}{}$ et $\xq{D}{q}{}{\alpha}{}$ est le pr
 
 
 \chapter{Diversité de différentiation}
-\label{sec:BetaPaires}
+\label{chap:BetaPaires}
 
 \begin{Essentiel}
   La diversité $\beta$ de différentiation mesure la dissimilarité entre communautés, généralement considérées par paires.
@@ -487,7 +488,7 @@ Son complément $D_{nes}$ prend en compte la partie de la dissimilarité due à 
 
 Ces mesures de dissimilarité sont généralisées au-delà de deux communautés: les formules sont disponibles dans l'article de Baselga.
 
-Les mesures de diversité $\beta$ fondées sur l'entropie HCDT (chapitre \ref{chap:Beta}) ne permettent pas de distinguer directement emboîtement et substitution.
+Les mesures de diversité $\beta$ fondées sur l'entropie HCDT (chapitre \ref{chap:DedompHCDT}) ne permettent pas de distinguer directement emboîtement et substitution.
 La variabilité des contributions $\xq{H}{q}{}{\beta}{i}$ des communautés à l'entropie $\beta$ augmente avec l'emboîtement, mais cette voie n'a pas été explorée.
 
 
@@ -653,6 +654,7 @@ La moyenne des dissimilarités $D_n$ ou des compléments à 1 des similarités d
 
 
 \section{Tests de significativité}
+\label{sec:TestBetaDiff}
 
 \subsection{Test de non-nullité}
 
@@ -1101,12 +1103,11 @@ Une interprétation géométrique de la décomposition est la suivante \autocite
 Les espèces peuvent être placées dans un espace multidimensionnel construit par une Analyse en Coordonnées Principales \autocite{Gower1966} de la matrice de dissimilarité $\Delta$ (les distances dans l'espace multidimensionnel sont $\sqrt{2d_{s's''}}$; autrement dit: la dissimilarité entre deux espèces est la moitié du carré de la distance entre elles dans la représentation géométrique).
 Chaque communauté se trouve au centre de gravité des espèces qu'elle contient, pondérées par leur fréquence.
 La moitié du carré de la distance entre deux communautés dans ce même espace est le coefficient de dissimilarité entre communautés de Rao.
-La distance entre communautés est donc interprétable directement comme une mesure de diversité $\beta$ \autocite{Ricotta2015}, dans la tradition de l'utilisation de la dissimilarité entre paires de communautés (chapitre~\ref{chap:DivPaires}).
+La distance entre communautés est donc interprétable directement comme une mesure de diversité $\beta$ \autocite{Ricotta2015}, dans la tradition de l'utilisation de la dissimilarité entre paires de communautés (chapitre~\ref{chap:BetaPaires}).
 
 Cette partition suppose que les poids des communautés sont proportionnels à leur nombre d'individus \autocite{Rao1982, Villeger2008}. 
 \textcite{Hardy2007} décomposent (par différence entre $\gamma$ et $\alpha$) l'indice de Rao de communautés de poids égaux. 
-\textcite{Hardy2008} montrent que les deux pondérations sont valides mais l'absence de cadre général assurant que la diversité $\gamma$ de Rao est supérieure à la diversité $\alpha$ \autocite{DeBello2010} motive \textcite{Guiasu2011} à proposer une alternative à l'indice de Rao, l'indice de Gini-Simpson quadratique pondéré, dont la concavité est démontrée (ce qui implique que $\gamma\ge \alpha$). 
-Il sera traité dans le chapitre consacré à la diversité de paires (page~\pageref{chap:DivPaires}). 
+\textcite{Hardy2008} montrent que les deux pondérations sont valides mais l'absence de cadre général assurant que la diversité $\gamma$ de Rao est supérieure à la diversité $\alpha$ \autocite{DeBello2010} motive \textcite{Guiasu2011} à proposer une alternative à l'indice de Rao, l'indice de Gini-Simpson quadratique pondéré (page~\pageref{eq:Guiasu}), dont la concavité est démontrée (ce qui implique que $\gamma\ge \alpha$). 
 La pondération peut en fait être quelconque tant que la matrice dont les éléments sont la racine carré des éléments de la matrice de dissimilarité est euclidienne \autocite{Champely2002}.
 Ce résultat a été obtenu pour les arbres ultramétriques dans le cadre plus général de la décomposition de l'entropie phylogénétique (voir chapitre~\ref{chap:DedompHCDT} page~\pageref{chap:DedompHCDT}).
 
@@ -1399,6 +1400,8 @@ Le partitionnement de la diversité fonctionnelle de la méta-communauté \code{
 
 \lettrine{L}{a diversité} $\beta$ calculée entre plusieurs échantillons successifs d'une même communauté n'est pas nulle: par simple fluctuation des effectifs due au hasard, les distributions des échantillons ne sont pas identiques.
 Des tests statistiques ont été développés pour rejeter cette hypothèse nulle à partir de données d'inventaires.
+
+Ce chapitre ne traite pas de la diversité de différentiation: les tests correspondants ont été présentés page~\pageref{sec:TestBetaDiff}.
 
 \section{Test de non-nullité}
 

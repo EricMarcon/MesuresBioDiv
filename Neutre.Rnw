@@ -1178,7 +1178,7 @@ Une revue est fournie par \textcite{Maasoumi1993}.
 
 Considérons une expérience dont les résultats possibles sont $\left\{r_1,r_2,\dots ,\ r_S\right\}$. 
 La probabilité d'obtenir $r_s$ est $p_s$, et\break
-$\vectorsym{p}\allowbreak=\left\{p_1,p_2,\dots,p_S\right\}$. 
+$\vectorsym{p}=(p_1,p_2,\dots,p_S)$ est le vecteur composé des probabilités d'obtenir chaque résultat. 
 Les probabilités sont connues \emph{a priori}. 
 Tout ce qui suit est vrai aussi pour des valeurs de $r$ continues, dont on connaîtrait la densité de probabilité.
 
@@ -1312,7 +1312,7 @@ L'entropie d'ordre $q$ de Rényi est:
 \xq{R}{q}{}{}{} =\frac{1}{1-q\ln\sum^S_{q=1}{p^q_s}}
 \end{equation}
 
-Rényi pose également les axiomes pour une mesure d'entropie $R\left(\vectorsym{p}\right)$, où $\vectorsym{p}=\left\{p_1,p_2,\dots,p_S\right\}$:
+Rényi pose également les axiomes pour une mesure d'entropie $R\left(\vectorsym{p}\right)$, où $\vectorsym{p}=(p_1,p_2,\dots,p_S)$:
 \begin{itemize}
   \item  La symétrie: les espèces doivent être interchangeables, aucune n'a de rôle particulier et leur ordre est indifférent;
   \item  La mesure doit être continue par rapport aux probabilités;
@@ -1352,7 +1352,7 @@ Les nombres de Hill sont des \og nombres effectifs\fg{} ou \og nombres équivale
 Le concept a été défini rigoureusement par Gregorius\autocite{Gregorius1991}, d'après \textcite{Wright1931} (qui avait le premier défini la taille effective d'une population): étant donné une variable caractéristique (ici, l'entropie) fonction seulement d'une variable numérique (ici, le nombre d'espèces) dans un cas idéal (ici, l'équiprobabilité des espèces), le nombre effectif est la valeur de la variable numérique pour laquelle la variable caractéristique est celle du jeu de données. 
 
 \textcite{Gregorius2014} montre que de nombreux autres indices de diversité sont acceptables dans le sens où ils vérifient les axiomes précédents et, de plus, que la diversité d'un assemblage de communautés est obligatoirement supérieure à la diversité moyenne de ces communautés (l'égalité n'étant possible que si les communautés sont toutes identiques). 
-Cette dernière propriété sera traitée en détail au chapitre~\ref{chap:Beta}. 
+Cette dernière propriété sera traitée en détail dans la partie~\ref{part:Beta}. 
 Ces indices doivent vérifier deux propriétés: leur fonction d'information doit être décroissante, et ils doivent être une fonction strictement concave de $p_s$. 
 Parmi les possibilités, $I(p_s) = \cos{(p_s \nicefrac{\pi}{2})}$ est envisageable par exemple: le choix de la fonction d'information est virtuellement illimité, mais seules quelques unes seront interprétables clairement.
 
@@ -1361,6 +1361,7 @@ Un nombre équivalent d'espèces existe pour tous ces indices, il est toujours �
 \begin{equation}
   D = \frac{1}{I^{-1}\left(\sum^S_{s=1}{p_s I(p_s)}\right)}
 \end{equation}
+
 
 
 \section{Entropie HCDT}
@@ -1384,7 +1385,7 @@ Là encore:
 
 L'entropie HCDT est particulièrement attractive parce que sa relation avec la diversité au sens strict est simple, après introduction du formalisme adapté (les logarithmes déformés). 
 Son biais d'estimation peut être corrigé globalement, et non seulement pour les cas particuliers (nombre d'espèces, Shannon, Simpson). 
-Enfin, sa décomposition sera présentée en détail dans le chapitre~\ref{Decomposition}.
+Enfin, sa décomposition sera présentée en détail dans le chapitre~\ref{chap:DedompHCDT}.
 
 \subsection{Logarithmes déformés}
 
@@ -1533,7 +1534,7 @@ Diversity(Ps, q)
 
 Les propriétés mathématiques de la diversité ne sont pas celles de l'entropie. 
 L'entropie doit être une fonction concave des probabilités comme on l'a vu plus haut, mais pas la diversité (un exemple de confusion est fourni par \textcite{Gadagkar1989}, qui reproche à $\xq{D}{2}{}{}{}$ de ne pas être concave). 
-L'entropie est une moyenne pondérée par les probabilités de la fonction d'information, c'est donc une fonction linéaire des probabilités, propriété importante pour définir l'entropie $\alpha$ (chapitre~\ref{chap:Beta}) comme la moyenne des entropies de plusieurs communautés, ou l'entropie phylogénétique (chapitre~\ref{chap:Phylodiversite}) comme la moyenne de l'entropie sur les périodes d'un arbre. 
+L'entropie est une moyenne pondérée par les probabilités de la fonction d'information, c'est donc une fonction linéaire des probabilités, propriété importante pour définir l'entropie $\alpha$ (section~\ref{sec:defalpha}) comme la moyenne des entropies de plusieurs communautés, ou l'entropie phylogénétique (chapitre~\ref{chap:Phyloentropie}) comme la moyenne de l'entropie sur les périodes d'un arbre. 
 La diversité n'est pas une fonction linéaire des probabilités: la diversité moyenne n'est en général pas la moyenne des diversités.
 
 
@@ -1621,6 +1622,7 @@ En revanche, il ne prend pas en compte les espèces non observées.
 
 $\tilde{h}_q$ peut ensuite être utilisé pour l'estimation de l'entropie HCDT:
 \begin{equation}
+  \label{eq:HqZhang}
   \xq{\tilde{H}}{q}{}{}{}
   = \frac{1-\tilde{h}_q}{q-1} \\
 \end{equation}
@@ -1647,10 +1649,12 @@ Diversity(Paracou618.MC$Ns, q=1, Correction="ZhangGrabchak")
 
 \subsection{Chao et Jost}
 
-\textcite{Chao2015} complètent cet estimateur par une estimation du biais résiduel, selon la même démarche que pour l'entropie de Shannon \autocite{Chao2013} (voir page~\pageref{eq:Chao2013}):
+\textcite{Chao2015} complètent cet estimateur par une estimation du biais résiduel, selon la même démarche que pour l'entropie de Shannon \autocite{Chao2013} (voir page~\pageref{eq:Chao2013}).
+$h_q$ s'écrit sous la forme de la somme infinie des entropies de Simpson généralisées : $h_q = \sum_{k=0}^{\infty}{\binom{q-1}{k}(-1)^k\zeta_{1,k}}$.
+Alors que l'estimateur de Zhang et Grabchak ne prend en compte que les $n-1$ premiers termes de la somme pour un estimateur sans biais, \textcite[][eqn 5]{Chao2015} le complètent par une estimation, forcément biaisée, des termes suivants pour obtenir:
 
 \begin{multline}
-  \label{eq:HqZhang}
+  \label{eq:HqChaoJost}
   \xq{\tilde{H}}{q}{}{}{}
   = \frac{1}{q-1} \\
   \left[ 1 -\tilde{h}_q -\frac{\xq{s}{}{}{1}{}}{n} {\left( 1-A \right)}^{1-n} \left( A^{q-1} -\sum^{n-1}_{r=0}{ \binom{q-1}{r} {\left(A-1\right)}^r} \right) \right]
@@ -1679,11 +1683,18 @@ Le deuxième terme de la somme est estimé en posant $\hat{p}_s = \hat{\alpha}_0
 Alors, $\sum_s{p_s}$ est estimé par $\hat{\alpha}_0 {\xq{s}{}{n}{0}{}} = \frac{\xq{s}{}{n}{1}{}}{n}(1 - \hat{\alpha}_1)$ et $(1-p_s)^m$ par $(1-\hat{\alpha}_0)^m$.
 Les deux estimateurs $\hat{\alpha}_1$ et $\hat{\alpha}_0$ sont égaux à $A$ si le nombre d'espèces non échantillonnées est estimé par l'estimateur Chao1. On obtient:
 
-\begin{equation} 
+\begin{eqnarray} 
+  {\mathbb E}\left(\xq{C}{}{n+m}{}{} \right)
+  & = & 1-\frac{\xq{s}{}{n}{1}{}}{n} 
+    \left[ \frac{\left(n-1\right)\xq[]{s}{}{n}{1}{}}{\left(n-1\right)\xq[]{s}{}{n}{1}{}+2\xq[\,]{s}{}{n}{2}{}} \right]^{n+m} \\
+  & = & 1-\frac{\xq{s}{}{n}{1}{}}{n} \left( 1-A \right)^{m+1}
   \label{eq:Cnm}
-  \hat{C}^{n+m}= 1-\frac{\xq{s}{}{n}{1}{}}{n} 
-    \left[ \frac{\left(n-1\right)\xq[]{s}{}{n}{1}{}}{\left(n-1\right)\xq[]{s}{}{n}{1}{}+2\xq[\,]{s}{}{n}{2}{}} \right]^{n+m}
-\end{equation}
+\end{eqnarray}
+
+L'espérance du taux de couverture est directement liée à l'indice de Simpson généralisé \autocite{Good1953}: ${\mathbb E}(\xq{C}{}{n+m}{}{}) = 1 - \zeta_{1,n+m}$.
+L'estimateur de $h_q$ est obtenu en remplaçant les termes $\zeta_{1,k}$ de la somme infinie $\sum_{k=n}^{\infty}{\binom{q-1}{k}(-1)^k \zeta_{1,k}}$ par la valeur de $1 -{\mathbb E}(\xq{C}{}{n+m}{}{})$
+calculée dans l'équation~\eqref{eq:Cnm}.
+La formule obtenue contient le développement en série entière de $[1 - (1-A)^{q-1}]$, ce qui permet d'éliminer la somme infinie et d'obtenir l'estimateur de l'équation~\eqref{eq:HqChaoJost} après simplifications \textcite[][Appendix S1, Theorem S1.2d]{Chao2015}.
 
 
 \subsection{Autres méthodes}

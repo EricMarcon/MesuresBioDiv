@@ -100,7 +100,7 @@ Une méthode pour dater une phylogénie est fournie par \textcite{Chave2007}
 Dans tous les cas, la distance est une mesure de la divergence évolutive. 
 Du point de vue de la biologie de la conservation, chaque espèce accumule une quantité d'évolution, interprétée comme une quantité d'information \autocite{Crozier1997} dont le maximum doit être préservé.
 
-L'entropie phylogénétique (voir page~\pageref{sec:Phyloentropie}) utilise un arbre phylogénétique pour mesurer la diversité.
+L'entropie phylogénétique (voir page~\pageref{chap:Phyloentropie}) utilise un arbre phylogénétique pour mesurer la diversité.
 
 
 
@@ -270,36 +270,6 @@ La richesse fonctionnelle est l'intégrale des valeurs maximales de $f_s$ dans l
 \end{equation}
 
 
-\subsubsection{Volume de niches}
-
-Les indices FAD et MFAD sont des mesures de divergence non pondérées.
-
-FAD a été proposé par \textcite{Walker1999}, à partir d'une matrice de distances dans l'espace des traits. 
-$d_{s,t}$ est la distance entre deux espèces indicées par $s$ et $t$, alors:
-
-\begin{equation}
-  \mathit{FAD}=\sum_s{\sum_t{d_{s,t}}}
-\end{equation}
-
-FAD est très sensible au nombre d'espèces.
-Sa version normalisée, MFAD \autocite{Schmera2009} est:
-
-\begin{equation}
-  \mathit{MFAD}=\frac{\sum_s{\sum_t{d_{s,t}}}}{S}
-\end{equation}
-
-Les deux indices violent l'axiome de jumelage.
-\`A un facteur de normalisation près, ce sont des cas particuliers de l'indice de Rao pour des effectifs égaux.
-
-Le calcul sous R est simple avec un arbre au format \code{phylog} d'\emph{ADE4} :
-
-<<MFAD>>=
-Tree <- Paracou618.Taxonomy
-(FAD <- sum(Tree$Wdist^2/2))
-(MFAD <- FAD/length(Tree$leaves))
-@
-
-
 Après transformation de la matrice de distance en dendrogramme fonctionnel, éventuellement sous la forme d'un arbre-consensus\autocite{Mouchet2008}, la longueur totale des branches (FD)\autocite{Petchey2002} est une autre mesure de richesse multidimensionnelle.
 
 
@@ -350,6 +320,32 @@ Quand un seul trait est considéré, la mesure la plus simple est sa variance.
 Ils transforment finalement le résultat en son arc-tangente pour qu'il soit compris entre 0 et 1.
 
 Schleuter et al. proposent d'utiliser la différence entre le troisième et le premier quartile de la valeur du trait, normalisée par son étendue maximale possible.
+
+FAD a été proposé par \textcite{Walker1999}, à partir d'une matrice de distances dans l'espace des traits. 
+$d_{s,t}$ est la distance entre deux espèces indicées par $s$ et $t$, alors:
+
+\begin{equation}
+  \mathit{FAD}=\sum_s{\sum_t{d_{s,t}}}
+\end{equation}
+
+FAD est très sensible au nombre d'espèces.
+Sa version normalisée, MFAD \autocite{Schmera2009} est:
+
+\begin{equation}
+  \mathit{MFAD}=\frac{\sum_s{\sum_t{d_{s,t}}}}{S}
+\end{equation}
+
+Les deux indices violent l'axiome de jumelage.
+\`A un facteur de normalisation près, ce sont des cas particuliers de l'indice de Rao pour des effectifs égaux.
+
+Le calcul sous R est simple avec un arbre au format \code{phylog} d'\emph{ADE4} :
+
+<<MFAD>>=
+Tree <- Paracou618.Taxonomy
+(FAD <- sum(Tree$Wdist^2/2))
+(MFAD <- FAD/length(Tree$leaves))
+@
+
 
 \textcite{Kader2007} regroupent les valeurs de trait par catégories et calculent l'entropie de Simpson des catégories.
 
@@ -955,6 +951,7 @@ $\Delta$ est la matrice de dissimilarité dont les éléments sont $d_{s,t}$, la
 \textcite{Guiasu2011, Guiasu2012} proposent l'indice $\mathit{{GS}_{D}}$ pour ses propriétés mathématiques et fournissent sa décomposition:
 
 \begin{equation}
+  \label{eq:Guiasu}
   \mathit{{GS}_{D}}=\sum_{s}{\sum_{t}{d_{s,t}p_{s}}}p_{t}\left(1-p_{s}p_{t}\right)
 \end{equation}
 
@@ -1015,7 +1012,7 @@ Dans un arbre parfaitement régulier, toutes les branches sont de longueur 1 et 
 
 
 \chapter{Entropie phylogénétique}
-\label{sec:Phyloentropie}
+\label{chap:Phyloentropie}
 
 \begin{Essentiel}
   L'entropie phylogénétique est la moyenne de l'entropie HCDT le long d'un arbre phylogénétique.

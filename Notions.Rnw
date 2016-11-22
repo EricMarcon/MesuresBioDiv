@@ -10,6 +10,19 @@ par(mar=c(0,0,0,0))
 \sisetup{locale = FR}
 \chapter{Notions de Diversité}
 
+\figureSC{Composantes}
+{
+  Importance de la richesse (en haut) et de l'équitabilité (en bas) pour la définition de la diversité. 
+  Ligne du haut: toutes choses égales par ailleurs, une communauté de 7 espèces semble plus diverse qu'une communauté de 2 espèces. 
+  Ligne du bas: à richesse égale, une communauté moins équitable (à gauche) semble moins diverse. 
+  Colonne de gauche: une communauté moins riche (en haut) peut sembler plus diverse si elle est plus équitable. 
+  Colonne de droite: \emph{idem} pour la communauté du bas.
+}
+{
+  \includegraphics[width=.5\maxwidth]{Composantes}
+}
+
+
 \lettrine{L}{e terme} \foreignlanguage{english}{\emph{biodiversity}} est attribué \autocite{Meine2006} à Walter Rosen, un membre du \emph{National Research Council} américain, qui a commencé à contracter les termes \foreignlanguage{english}{\emph{biological diversity}} pendant la préparation d'un colloque dont les actes seront publiés sous le titre \foreignlanguage{english}{\og Biodiversity\fg{}} \autocite{Wilson1988}.
 La question de la diversité biologique intéressait les écologues bien avant l'invention de la biodiversité, mais le néologisme a connu un succès fulgurant \autocite{Blandin2014} en même temps qu'il devenait une notion floue, dans lequel chacun peut placer ce qu'il souhaite y trouver, au point de lui retirer son caractère scientifique \autocite{Delord2014}. 
 Une cause de ce glissement est que la biodiversité a été nommée pour attirer l'attention sur son érosion, en lien avec la biologie de la conservation. 
@@ -45,18 +58,7 @@ La question est loin d'être épuisée, et fait toujours l'objet d'une recherche
 
 Une communauté comprenant beaucoup d'espèces mais avec une espèce dominante n'est pas perçue intuitivement comme plus diverse qu'une communauté avec moins d'espèces, mais dont les effectifs sont proches (Figure~\ref{Composantes}, colonne de gauche). 
 La prise en compte de deux composantes de la diversité, appelées richesse et équitabilité, est nécessaire \autocite{Whittaker1965}.
-
-\figureSC{Composantes}
-{
-  Importance de la richesse (en haut) et de l'équitabilité (en bas) pour la définition de la diversité. 
-  Ligne du haut: toutes choses égales par ailleurs, une communauté de 7 espèces semble plus diverse qu'une communauté de 2 espèces. 
-  Ligne du bas: à richesse égale, une communauté moins équitable (à gauche) semble moins diverse. 
-  Colonne de gauche: une communauté moins riche (en haut) peut sembler plus diverse si elle est plus équitable. 
-  Colonne de droite: \emph{idem} pour la communauté du bas.
-}
-{
-  \includegraphics[width=.5\maxwidth]{Composantes}
-}
+\clearpage
 
 
 \subsection{Richesse}
@@ -169,7 +171,7 @@ Le choix de la définition modifie considérablement sur la quantification de la
 Des problèmes méthodologiques s'ajoutent aux problèmes conceptuels \autocite{Hey2001} : la séparation ou le regroupement de plusieurs populations ou morphotypes en un nombre plus ou moins grand d'espèces est un choix qui reflète les connaissances du moment et peut évoluer \autocite{Barberousse2014}.
 
 L'impact du problème de l'espèce sur la mesure de la diversité reste sans solution à ce stade, si ce n'est d'utiliser les mêmes définitions si des communautés différentes doivent être comparées. 
-L'approche phylogénétique (page~\pageref{sec:Phyloentropie}) règle le problème : si deux taxons très semblables apportent à peine plus de diversité qu'un seul taxon, le choix de les distinguer ou non n'est pas critique.
+L'approche phylogénétique (page~\pageref{chap:Phyloentropie}) règle le problème : si deux taxons très semblables apportent à peine plus de diversité qu'un seul taxon, le choix de les distinguer ou non n'est pas critique.
 
 
 
@@ -353,7 +355,7 @@ En se limitant à $\nu=1$, l'estimateur se réduit à celui de Good.
 Où $t^{n}_{1-\alpha/2}$ est le quantile d'une loi de Student à $n$ degrés de libertés au seuil de risque $\alpha$, classiquement 1,96 pour $n$ grand et $\alpha=5\%$.
 
 
-Un autre estimateur est utilisé dans le logiciel SPADE \autocite{Chao2010a} et son portage sous R, le package \emph{spadeR} \cite{Chao2016c}.
+Un autre estimateur est utilisé dans le logiciel SPADE \autocite{Chao2010a} et son portage sous R, le package \emph{spadeR} \autocite{Chao2016c}.
 Il est la base des estimateurs d'entropie de Chao et Jost (page~\pageref{sec:BiaisHCDT}).
 L'estimation de l'équation~(\ref{eq:CsansBiais}) donne la relation:
 \begin{equation}
