@@ -494,7 +494,7 @@ La variabilité des contributions $\xq{H}{q}{}{\beta}{i}$ des communautés à l'
 
 \section{Données d'abondance}
 
-La distance la plus évidente entre communautés quand les effectifs des espèces sont connus est simplement la distance euclidienne (Figure~\ref{BCIPCAFig}), éventuellement normalisée par le nombre d'espèces (Dissimilarité $D_1$ de \textcite{Gower1986}).
+La distance la plus évidente entre communautés quand les effectifs des espèces sont connus est simplement la distance euclidienne, éventuellement normalisée par le nombre d'espèces (Dissimilarité $D_1$ de \textcite{Gower1986}).
 Son problème principal est qu'elle est très sensible aux ordres de grandeurs relatifs des variables.
 
 La dissimilarité de Steinhaus \autocite{Motyka1947}, plus connue sous le nom de Bray-Curtis \autocite{Odum1950, Bray1957} (voir l'analyse historique de \textcite[][note de bas de page, eq. 7.58]{Legendre2012}) est très utilisée (par défaut dans plusieurs analyses du package \emph{vegan} par exemple):
@@ -591,9 +591,13 @@ Celui d'Ochiai par:
 
 Ces quatre similarités permettent une représentation des communautés par PCoA de la même façon que l'indice de Jaccard traité plus haut.
 
+
+
+\section{Distance entre paires de communautés et diversité $\beta$}
+
 \figureSC{BCIPCAFig}
 {Représentation des deux premiers axes factoriels de l'ACP des 50 carrés de BCI. 
-  Les données sont les nombres d'individus par espèce, ni centrées ni réduites pour l'ACP. 
+  Les données sont les probabilités des espèce, ni centrées ni réduites pour l'ACP. 
   Les carrés sont représentés avec les espèces. 
   Les carrés 35 et 40 ont une diversité faible et sont associés aux espèces \emph{Gustavia superba} et \emph{Alseis blackiana}.}
 {
@@ -602,14 +606,19 @@ Ces quatre similarités permettent une représentation des communautés par PCoA
   @
 }
 
-
-\section{Distance entre paires de communautés et diversité $\beta$}
-
 \textcite{terBraak1983} a le premier rapproché l'entropie de Simpson et l'Analyse en Composantes Principales \autocite{Pearson1901}. 
-En représentant les communautés dans l'espace des espèces, la norme du vecteur de la communauté $i$ est $({\sum_s{p_{s|i}}})^2$, c'est-à-dire 1 moins l'entropie de Simpson. 
+En représentant les communautés dans l'espace des espèces, la norme du vecteur de la communauté $i$ est ${\sum_s{p_{s|i}^2}}$, c'est-à-dire 1 moins l'entropie de Simpson. 
 La représentation graphique de l'ACP (non centrée, non réduite) montre les communautés les moins diverses (les plus éloignées de l'origine du repère). 
 Ter Braak \emph{définit} la diversité $\beta$ comme la distance entre deux communautés (et la moyenne des distances entre paires de communautés si leur nombre est supérieur à 2). 
 Cette \og définition\fg{} est valide puisque cette distance est la composante inter de la décomposition de l'entropie $\beta$ de Simpson (page~\pageref{eq:SimpsonNei}).
+
+L'ACP non centrée des 50 carrés de BCI est en figure~\ref{BCIPCAFig}
+\verbfootnote{Code R pour la figure:
+  <<BCIPCACode, eval=FALSE>>=
+  pcaBCI <- dudi.pca(BCI/rowSums(BCI), scannf = FALSE, nf = 2, center = FALSE, scale = FALSE)
+  scatter(pcaBCI, posieig = "bottomleft")
+  @
+}. 
 
 \figureSC{BCIPCA2Fig}
 {ACP centrée des 50 carrés de BCI pour visualiser la diversité $\beta$.}
@@ -619,17 +628,10 @@ Cette \og définition\fg{} est valide puisque cette distance est la composante i
   @
 }
 
-L'ACP non centrée des 50 carrés de BCI est en figure~\ref{BCIPCAFig}
-\verbfootnote{Code R pour la figure:
-  <<BCIPCACode, eval=FALSE>>=
-  pcaBCI <- dudi.pca(BCI, scannf = FALSE, nf = 2, center = FALSE, scale = FALSE)
-  scatter(pcaBCI, posieig = "bottomleft")
-  @
-}. 
 L'ACP centrée (mais non réduite, figure~\ref{BCIPCA2Fig})
 \verbfootnote{Code R:
   <<BCIPCA2Code, eval=FALSE>>=
-  pcaBCI <- dudi.pca(BCI, scannf = FALSE, nf = 2, center = TRUE, scale = FALSE)
+  pcaBCI <- dudi.pca(BCI/rowSums(BCI), scannf = FALSE, nf = 2, center = TRUE, scale = FALSE)
   scatter(pcaBCI, clab.col = 0)
   @
 } permet de mieux représenter la diversité $\beta$ : la distance de chaque carré au centre du repère est sa contribution.
@@ -712,7 +714,7 @@ La méthode de permutation originale est inappropriée et donc corrigée \autoci
 \end{Essentiel}
 
 
-\lettrine{Ce}{chapitre} traite de la diversité proportionnelle, qui mesure à quel point les communautés diffèrent de leur assemblage.
+\lettrine{C}{e chapitre} traite de la diversité proportionnelle, qui mesure à quel point les communautés diffèrent de leur assemblage.
 Dans la littérature, la diversité $\beta$ est généralement une mesure \emph{dérivée} \autocite{Ellison2010a}, c'est-à-dire calculée à partir des diversités $\alpha$ et $\gamma$, d'où un abondant débat sur l'indépendance souhaitée mais pas toujours observée entre les valeurs de diversité $\alpha$ et $\beta$ \autocite{Baselga2010a, Jost2010a, Veech2010a}. 
 Un forum a été consacré à la question dans la revue \emph{Ecology}, conclu par \textcite{Chao2012a}, et une revue a été faite par \textcite{Tuomisto2010a, Tuomisto2010b}.
 
