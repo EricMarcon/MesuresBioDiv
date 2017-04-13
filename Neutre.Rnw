@@ -746,6 +746,11 @@ Tout d'abord, la probabilité que deux individus soient de la même espèce, sou
   D =\sum^{S}_{s=1}{p^2_s}
 \end{equation}
 
+L'indice de Simpson est parfois considéré comme une mesure d'équitabilité \autocite{Olszewski2004} mais il varie avec la richesse: cette approche est donc erronnée.
+\textcite{Hurlbert1971} l'a divisé par sa valeur maximale $1-{1}/{S}$ pour obtenir une mesure d'équitabilité valide généralisée plus tard par \textcite{Mendes2008} (voir page~\pageref{sec:Mendes}).
+Le nombre d'espèces doit être estimé par les méthodes présentées plus haut, pour ne pas dépendre de la taille de l'échantillon.
+
+
 L'estimateur du maximum de vraisemblance de l'indice est:
 
 \begin{equation}
@@ -2253,9 +2258,10 @@ $J$ est compris entre 0 (une seule espèce a une probabilité de 1) et 1 (toutes
 \section{Généralisation de l'indice de Pielou}
 
 \subsection{Mendes et al.}
+\label{sec:Mendes}
 
 \textcite{Mendes2008} généralisent l'indice de Pielou en remplaçant l'indice de Shannon par l'entropie de Tsallis. 
-Ils définissent:
+Ils définissent
 
 \begin{equation}
   \xq{J}{q}{*}{}{} = \frac{\xq{H}{q}{}{}{}}{^{q}H_{\max}} = \frac{\xq{H}{q}{}{}{}}{\ln_q{S}}
@@ -2263,6 +2269,8 @@ Ils définissent:
 
 et tracent des profils d'équitabilité, c'est-à-dire la valeur de $\xq{J}{q}{*}{}{}$ en fonction de $q$. 
 Ils observent que l'équitabilité est minimale pour une valeur particulière de $q$ qu'ils notent $q^*$ et montrent sur des exemples simulés que $q^*$ diminue avec la richesse de la communauté, mais sans en explorer complètement les propriétés.
+
+$\xq{J}{2}{*}{}{}$ est l'indice d'équitabilité dérivé de l'indice de diversité de Simpson par \textcite{Hurlbert1971}.
 
 \subsection{Tuomisto}
 
@@ -2289,7 +2297,7 @@ L'idée fondamentale de la notion d'équitabilité est que la mesure de la diver
   @
 }
 
-Jost montre que l'indépendance est impossible dans le cadre de la décomposition multiplicative: si $\xq{E}{q}{}{}{}={\xq{D}{q}{}{}{}/{S}}$, sa valeur minimale est contrainte par le nombre d'espèces, une communauté pauvre ne peut pas être aussi inéquitable qu'une communauté riche (propriété déjà montrée par \textcite{Sheldon1969} ou \textcite{Alatalo1981}).
+\textcite{Jost2010} montre que l'indépendance est impossible dans le cadre de la décomposition multiplicative: si $\xq{E}{q}{}{}{}={\xq{D}{q}{}{}{}/{S}}$, sa valeur minimale est contrainte par le nombre d'espèces, une communauté pauvre ne peut pas être aussi inéquitable qu'une communauté riche (propriété déjà montrée par \textcite{Sheldon1969} ou \textcite{Alatalo1981}).
 En revanche, la richesse peut être partitionnée de façon indépendante en diversité et inéquitabilité: $S={\xq{D}{q}{}{}{}}/{\xq{E}{q}{}{}{}}$.
 
 L'inéquitabilité $1/{\xq{E}{q}{}{}{}}$ (Figure~\ref{ProfilIneqFig}
@@ -2348,3 +2356,145 @@ Un profil d'équitabilité calculé de cette façon est présenté Figure~\ref{B
   lwd=2, xlab="q", ylab="Indice de Pielou", main="")
   @
 }.
+
+
+
+\section{Relations empiriques entre richesse et équitabilité}
+
+
+Au-delà de la question des contraintes mathématiques entre richesse et équtabilité traitées précédemment, il s'agit ici des relations entre les deux aspects de la diversité dans des communautés réelles.
+
+\textcite{Wilsey2005} passent en revue l'argument selon lequel richesse et équitabilité seraient toujours positivement corrélés.
+S'il est valide, la richesse peut être considérée comme une mesure suffisante de la diversité.
+\`A partir d'inventaires de prairies, ils montrent la très faible relation entre les deux valeurs.
+Le suivi temporel de communautés de papillons \autocite{MacDonald2016} met en évidence une relation négative.
+Les auteurs de l'étude critiquent un peu naïvement l'utilisation des nombres de Hill pour mesurer la diversité parce qu'ils confondent les effets de la richesse et de l'équitabilité: c'est justement leur but.
+
+D'un point de vue plus théorique, \textcite{DeBenedictis1973} étudie les contraintes numériques sur l'intervalle des valeurs possibles de l'entropie de Shannon et de l'équitabilité en fonction de la richesse.
+Il ne prouve pas de corrélation entre ces valeurs pour des communautés réelles mais simplement un lien positif quand les échantillons sont de petite taille et l'effectif minimum de chaque espèce égal à 1: ces contraintes se relâchent si les donnnées sont des probabilités, pouvant tendre vers 0 pour les espèces rares, ou des abondances dans de grands échantillons.
+Cette approche est similaire à celle de \textcite{Jost2010}, plus aboutie.
+
+\textcite{May1975} montre que dans le cadre d'une distribution log-normale, la richesse, l'entropie de Simpson et l'équitabilité de Pielou sont positivement corrélées.
+Ce résultat a été étendu par \autocite{Stirling2001} aux distributions en log-séries et testé dans des communautés réelles avec des conclusions contrastées, notamment des corrélations négatives ntre richesse et équitabilité dans des communautés très riches.
+
+Des simulations permettent de comprendre les corrélations dans des cas simples.
+La figure~\ref{SJLogNormale}
+\verbfootnote{Code R pour réaliser la figure:
+  <<SJLogNormaleHCode, eval=FALSE>>=
+  # Communautés de 30 à 300 espèces
+  S <- 30:300
+  # Tirage de communautés log-normales de 10000 individus
+  rcl <- lapply(S, function(S) rCommunity(1, 10000, S=S))
+  # Richesse et Shannon
+  Sobs <- sapply(rcl, Richness)
+  H <- sapply(rcl, Shannon)
+  plot(log(S), H)
+  @
+  <<SJLogNormaleJCode, eval=FALSE>>=
+  # Equitabilité de Pielou
+  J <- H/log(S)
+  plot(S, J)
+  @
+  <<SJLogNormaleECode, eval=FALSE>>=
+  E <- sapply(rcl, Simpson)
+  plot(S, E)
+  @
+  <<SJLogNormaleJ2Code, eval=FALSE>>=
+  J2 <- E/(1-1/S)
+  plot(S, J2)
+  @
+} montre que l'entropie et l'équitabilité sont corrélées positivement à la richesse dans des communautés log-normales de même variance.
+
+\figureFW{SJLogNormale}
+{Relation entre l'entropie de Shannon (a), l'indice d'équitabilité de Pielou (b), l'entropie de Simpson (c), l'équitabilité de Hurlbert (d) et la richesse de communautés log-normales similaires (même écart-type des probabilités, seule la richesse varie).}
+{
+  \subfloat[Entropie de Shannon en fonction de la richesse.\label{SJLogNormaleH}]
+  {
+    <<SJLogNormaleHFig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<SJLogNormaleHCode>>
+    @
+  }
+  \hfill
+  \subfloat[Indice de Pielou en fonction de la richesse.\label{SJLogNormaleJ}]
+  {
+    <<SJLogNormaleJFig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<SJLogNormaleJCode>>
+    @
+  }
+  \\
+   \subfloat[Entropie de Simpson en fonction de la richesse\label{SJLogNormaleE}]
+  {
+    <<SJLogNormaleEFig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<SJLogNormaleECode>>
+    @
+  }
+  \hfill
+  \subfloat[\'Equitabilité de Hurlbert en fonction de la richesse\label{SJLogNormaleJ2}]
+  {
+    <<SJLogNormaleJ2Fig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<SJLogNormaleJ2Code>>
+    @
+  }
+}
+
+En revanche, dans une communauté log-normale de richesse fixe mais insuffisamment échantillonnée, les corrélations sont négatives (figure~\ref{NJLogNormale}
+\verbfootnote{Code R pour réaliser la figure:
+  <<NJLogNormaleHCode, eval=FALSE>>=
+  # Communautés de taille 10 à 1000 individus; 300 sp.
+  rmc <- MetaCommunity(sapply(10:1000, function(n) rCommunity(1, n)))
+  # Richesse et Shannon
+  S <- apply(rmc$Psi, 2, Richness)
+  H <- apply(rmc$Psi, 2, Shannon)
+  plot(log(S), H)
+  @
+  <<NJLogNormaleJCode, eval=FALSE>>=
+  # Equitabilité de Pielou
+  J <- H/log(S)
+  plot(S, J)
+  @
+  <<NJLogNormaleECode, eval=FALSE>>=
+  E <- apply(rmc$Psi, 2, Simpson)
+  plot(S, E)
+  @
+  <<NJLogNormaleJ2Code, eval=FALSE>>=
+  J2 <- E/(1-1/S)
+  plot(S, J2)
+  @
+}).
+Le sous-échantillonnage a un effet plus sévère sur la richesse que sur les entropies d'ordres supérieurs.
+La non observation des espèces les plus rares augmente aussi l'équitabilité.
+
+\figureFW{NJLogNormale}
+{Relation entre l'entropie de Shannon (a), l'indice d'équitabilité de Pielou (b), l'entropie de Simpson (c), l'équitabilité de Hurlbert (d) et la richesse d'échantillons de taille variable d'une même communauté log-normale.}
+{
+  \subfloat[Entropie de Shannon en fonction de la richesse.\label{NJLogNormaleH}]
+  {
+    <<NJLogNormaleHFig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<NJLogNormaleHCode>>
+    @
+  }
+  \hfill
+  \subfloat[Indice de Pielou en fonction de la richesse.\label{NJLogNormaleJ}]
+  {
+    <<NJLogNormaleJFig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<NJLogNormaleJCode>>
+    @
+  }
+  \\
+  \subfloat[Entropie de Simpson en fonction de la richesse\label{NJLogNormaleE}]
+  {
+    <<NJLogNormaleEFig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<NJLogNormaleECode>>
+    @
+  }
+  \hfill
+  \subfloat[\'Equitabilité de Hurlbert en fonction de la richesse\label{NJLogNormaleJ2}]
+  {
+    <<NJLogNormaleJ2Fig, echo=FALSE, results='hide', message=FALSE, out.width='.45\\maxwidth'>>=
+    <<NJLogNormaleJ2Code>>
+    @
+  }
+}
+
+La corrélation entre richesse et équitabilité est donc positive si la richesse varie entre communautés, mais négative si ce n'est qu'un effet de l'échantillonnage.
+Les résultats sont similaires avec des communautés en log-séries: la corrélation est positive quand $\alpha$ varie, négative quand l'échantillonnage varie.
