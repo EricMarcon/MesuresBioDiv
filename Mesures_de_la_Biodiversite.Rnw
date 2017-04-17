@@ -29,12 +29,18 @@
 
 \author{Eric Marcon}
 \title{Mesures \\ de la Biodiversité}
-\date{18 novembre 2016}
+\date{16 avril 2017}
 
 
 %%%------------------------------------------------------------------------------
 \begin{document}
 <<Declarations, echo=FALSE, include=FALSE>>=
+# Install necessary packages
+InstallPackages <- function(Packages) {
+  sapply(Packages, function(Package) if (!Package %in% installed.packages()[, 1]) {install.packages(Package)})
+}
+InstallPackages(c("ade4", "adespatial", "entropart", "entropy", "EntropyEstimation", "gplots", "knitr", "sp", "SPECIES", "untb", "vegan"))
+# knitr and document format options
 library("knitr")
 opts_knit$set(concordance=TRUE)
 # set global chunk options

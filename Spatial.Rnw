@@ -2,6 +2,8 @@
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
+# Graphiques postscript
+setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
 library("entropart")
 data(Paracou618)
@@ -71,7 +73,7 @@ La densité de probabilité de $np_s$ est notée $f(\lambda)$, où $\lambda=np_s
 La probabilité ${\pi}_{n_s}$ d'observer $n_s$ individus d'une espèce donnée est donc la moyenne sur toutes les valeurs possibles de $\lambda$ de la loi de Poisson:
 
 \begin{equation}
-\pi_{n_s} = \int^{+\infty}_{0}{\frac{{\lambda}^{n_s}e^{-\lambda}}{n_s!} f(\lambda)\mathop{d\lambda}}
+\pi_{n_s} = \int^{+\infty}_{0}{\frac{{\lambda}^{n_s}e^{-\lambda}}{n_s!} f(\lambda)\mathop{d\lambda}}.
 \end{equation}
 
 La distribution de $\lambda$ retenue par Fisher est une loi gamma, ce qui implique que ${\pi}_{n_s}$ suit une loi binomiale négative de paramètres $p$ et $k$.
@@ -84,18 +86,18 @@ En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui
 Dans ce cas, l'espérance du nombre d'espèces représentées par $l$ individus est, en posant $x=\nicefrac{p}{p+1}$ et $\alpha$ une constante:
 
 \begin{equation}
-  s_l = \frac{\alpha}{l} x^l
+  s_l = \frac{\alpha}{l} x^l.
 \end{equation}
 
 Le nombre total d'individus en est donc la somme pour toutes les valeurs de $l$:
 \begin{equation}
-  n = \sum_{l=1}^{\infty}{\alpha x^l} = \frac{\alpha x}{1-x}
+  n = \sum_{l=1}^{\infty}{\alpha x^l} = \frac{\alpha x}{1-x}.
 \end{equation}
 
 La combinaison des deux équations permet d'éliminer $x$ et d'obtenir l'espérance du nombre d'espèces observées en fonction de la taille de l'échantillon:
 
 \begin{equation}
-{\mathbb E}\left( \xq{{S}}{}{n}{}{} \right) = \alpha\ln \left( 1 + \frac{n}{\alpha} \right)
+  {\mathbb E}\left( \xq{{S}}{}{n}{}{} \right) = \alpha\ln \left( 1 + \frac{n}{\alpha} \right).
 \label{eq:AlphaFisher}
 \end{equation}
 
@@ -128,17 +130,17 @@ Dans le cadre de l'approximation précédente, il est égal à $\alpha$.
 
 \section{Variantes}
 
-\textcite{Schulte2005} ont étendu le modèle de Fisher pour prendre en compte un nombre d'espèces fini $S$ et une distribution non indépendante des individus, prise en compte par un paramètre d'agrégation spatiale $c$ valable pour toutes les espèces.
+\textcite{Schulte2005} ont étendu le modèle de Fisher pour prendre en compte un nombre d'espèces fini $S$ et une distribution non indépendante des individus, prise en compte par un paramètre d'agrégation spatiale $c$ valable pour toutes les espèces:
 
 \begin{equation} 
-\xq{S}{}{n}{}{} = \frac{\alpha}{c} \ln\left(\frac{1+ n^c\,q}{1+ n^c\,q\,e^{-cS/\alpha}}\right)
+  \xq{S}{}{n}{}{} = \frac{\alpha}{c} \ln\left(\frac{1+ n^c\,q}{1+ n^c\,q\,e^{-cS/\alpha}}\right),
 \label{eq:Schulte}
 \end{equation}
 
 où
 
 \begin{equation} 
-q =\frac{e^{c/\alpha}-1}{1-e^{c\left(1-S\right)/\alpha}}
+  q =\frac{e^{c/\alpha}-1}{1-e^{c\left(1-S\right)/\alpha}}.
 \end{equation}
 
 Si $S = \infty$ et $c = 1$, l'équation (\ref{eq:Schulte}) se simplifie pour retrouver l'équation (\ref{eq:AlphaFisher}).
@@ -156,7 +158,7 @@ Si $S = \infty$ et $c = 1$, l'équation (\ref{eq:Schulte}) se simplifie pour ret
 
 \figureSC{Schulte2005a}
 {Comparaison \autocite{Schulte2005} entre le modèle de Fisher et le modèle étendu dans trois parcelles forestières connues. 
-  Les modèles sont ajustés aux données observées par \textcite{Condit1996}
+  Les modèles sont ajustés aux données observées par \textcite{Condit1996}.
   Les courbes légendées \emph{Equation 4} correspondent au modèle de Fisher étendu, équation (\ref{eq:Schulte}), alors que l'\emph{Equation 5} est le modèle intermédiaire, supposant le nombre total d'espèces infini.}
 {\includegraphics[width=\maxwidth]{Schulte2005a}}
 
@@ -276,7 +278,7 @@ Pour une surface donnée, le nombre d'individus est une variable aléatoire.
 Dans ce cas, la SAC (dépendant de la surface) est différente de la courbe de raréfaction (fonction du nombre d'individus) de Gotelli et Colwell, que \textcite{Coleman1981} nomme \og courbe du collecteur \fg{}.
 
 La SAC théorique en fonction de la surface contient une incertitude concernant le nombre d'individus.
-Si la densité $\lambda_s$ (nombre d'individus par unité de surface) des espèces peut être connue (estimée en comptant les individus) ou si les probabilités $p_s$ sont issues d'un modèle (log-séries, log-normal\dots), le nombre d'individus observés de l'espèce $s$ suit une loi de Poisson d'espérance $A\hat{\lambda}_s$ ou, de façon équivalente \autocite[][pages 204-205]{Pielou1969}, $np_s$ (dans ce deuxième cas, $n$ est l'estimateur de $N$, la variable aléatoire correspondant à la taille de l'échantillon).
+Si la densité $\lambda_s$ (nombre d'individus par unité de surface) des espèces peut être connue (estimée en comptant les individus) ou si les probabilités $p_s$ sont issues d'un modèle (log-séries, log-normal...), le nombre d'individus observés de l'espèce $s$ suit une loi de Poisson d'espérance $A\hat{\lambda}_s$ ou, de façon équivalente \autocite[][pages 204-205]{Pielou1969}, $np_s$ (dans ce deuxième cas, $n$ est l'estimateur de $N$, la variable aléatoire correspondant à la taille de l'échantillon).
 
 La SAC théorique en fonction du nombre d'individus ne contient pas cet aléa.
 Le nombre d'individus de l'espèce $s$ suit alors une loi binomiale d'espérance $np_s$ et la distribution d'un échantillon de taille $n$ suit la loi multinomiale correspondante.
@@ -324,17 +326,17 @@ $F_s(r)$ est la fonction d'espace vide de l'espèce $s$, dont l'argument est la 
 Le nombre d'espèces peut être écrit comme la somme des fonctions $F_s$:
 
 \begin{equation}
-{\mathbb E}\left( \xq{{S}}{}{A}{}{} \right)  = \sum_s{F_s\left( r \right) }
+{\mathbb E}\left( \xq{{S}}{}{A}{}{} \right)  = \sum_s{F_s\left( r \right) }.
 \label{eq:SARF}
 \end{equation}
 
 La fonction $F_s(r)$ est connue pour les processus ponctuels courants \autocite{Cressie1993, Stoyan1994}.
 Le processus de Poisson place les individus indépendamment les uns des autres avec la même probabilité partout.
 Son seul paramètre est l'intensité $\lambda_s$, qui donne l'espérance du nombre d'individus de l'espèce $s$ par unité de surface.
-Si toutes les espèces sont distribuées selon un processus de Poisson, la courbe aire-espèce est décrite par:
+Si toutes les espèces sont distribuées selon un processus de Poisson, la courbe aire-espèce est décrite par
 
 \begin{equation}
-{\mathbb E}\left( \xq{{S}}{}{A}{}{} \right)  = \sum_s{e^{-\lambda_sA}}
+{\mathbb E}\left( \xq{{S}}{}{A}{}{} \right)  = \sum_s{e^{-\lambda_sA}}.
 \label{eq:SARPoisson}
 \end{equation}
 
@@ -353,11 +355,11 @@ Les formules se compliquent quand la distribution spatiale n'est pas poissonnien
 
 Enfin, il est possible de prendre en compte les espèces non observées.
 La relation aire-espèce (\ref{eq:SARF}) s'entend pour toutes les espèces.
-Elle peut être réécrite sous la forme:
+Elle peut être réécrite sous la forme
 \begin{equation}
-{\mathbb E}\left( \xq{{S}}{}{A}{}{} \right) 
-= \sum_{s=1}^{\xq{S}{}{}{\ne 0}{}}{F_s\left( r \right)}
-+ \sum_{s=\xq{S}{}{}{\ne 0}{}+1}^{S}{F_s\left( r \right)}
+  {\mathbb E}\left( \xq{{S}}{}{A}{}{} \right) 
+  = \sum_{s=1}^{\xq{S}{}{}{\ne 0}{}}{F_s\left( r \right)}
+    + \sum_{s=\xq{S}{}{}{\ne 0}{}+1}^{S}{F_s\left( r \right)}.
 \end{equation}
 
 Le premier terme de la somme correspond aux espèces observées, le deuxième aux espèces non observées.
@@ -401,7 +403,7 @@ Il ne s'agit donc pas d'estimer un nombre d'espèces asymptotique pour une commu
 \textcite{Arrhenius1921} a établi le modèle de base, dit \emph{loi de puissance} :
 
 \begin{equation} 
-\xq{S}{}{A}{}{} = c A^{z}
+\xq{S}{}{A}{}{} = c A^{z}.
 \end{equation}
 
 $A$ est la surface, $\xq{S}{}{A}{}{}$ est le nombre d'espèces dans $A$, $c$ et $z$ des paramètres.
@@ -420,7 +422,7 @@ Le paramètre le plus variable de la loi de puissance reste donc $c$, un facteur
 Représentée en logarithmes, la relation est une droite (Figure~\ref{Williamson2001}):
 
 \begin{equation}
-\ln \xq{S}{}{A}{}{} = \ln c + z\ln A
+  \ln \xq{S}{}{A}{}{} = \ln c + z\ln A.
 \end{equation}
 
 \subsection{Le modèle de Plotkin}
@@ -458,7 +460,7 @@ L'approximation de degré 0 est la loi de puissance.
 Celle de degré 1 est retenue par les auteurs pour estimer le nombre d'espèces rencontrées sur la surface $A$:
 
 \begin{equation}
-  \xq{\hat{S}}{}{A}{}{} = cA^z e^{-kA}
+  \xq{\hat{S}}{}{A}{}{} = cA^z e^{-kA}.
 \end{equation}
 
 \figureSC{Plotkin2000b}
@@ -485,7 +487,7 @@ Les travaux ultérieurs lui donneront tort \autocite{Williamson2001}.
 Gleason propose une relation dans laquelle le nombre d'espèces (et non son logarithme) croît avec le logarithme de la surface:
 
 \begin{equation} 
-\xq{S}{}{A}{}{} = \ln{c} + z \ln{A}
+  \xq{S}{}{A}{}{} = \ln{c} + z \ln{A}.
 \end{equation}
 
 \textcite{Williams1964} reprend ce modèle et affirme sa validité à partir d'arguments sur la variabilité de l'habitat quand la surface d'échantillonnage augmente (par opposition à la relation d'Arrhenius applicable dans un habitat homogène, et due à la distribution log-normale des espèces selon Preston). 
@@ -510,9 +512,9 @@ En concurrence au modèle de \textcite{Preston1962} prédisant une SAR en forme 
 Plusieurs îles (communautés locales) de taille relative  $\{p_i\}$ appartiennent à un ensemble (méta-communautés) dans lequel la distribution des espèces $\{n_s\}$, est considéré comme connu.
 Chaque individu d'une espèce donnée peut se placer sur une quelconque des îles, avec une probabilité égale à $p_i$.
 La probabilité qu'un individu au moins de l'espèce $s$ se trouve sur l'île $i$ est $1-(1-p_i)^{n_s}$ (1 moins la probabilité que tous les individus de l'espèce se trouve sur une autre île, elle-même égale à $1-p_i$ pour tous les individus).
-L'espérance du nombre d'espèces représentées sur l'île $i$ est donc:
+L'espérance du nombre d'espèces représentées sur l'île $i$ est donc
 \begin{equation}
-{\mathbb E}\left( \xq{S}{}{i}{\ne 0}{}\right) = S - \sum_{s}{\left( 1- p_i \right)^{n_s}}
+  {\mathbb E}\left( \xq{S}{}{i}{\ne 0}{}\right) = S - \sum_{s}{\left( 1- p_i \right)^{n_s}}.
 \end{equation}
 
 Ce modèle ne fait aucune hypothèse sur la distribution de la probabilité des espèces et n'assume que l'indépendance des individus et la proportionnalité entre la probabilité de présence et la surface.
@@ -532,7 +534,7 @@ La relation d'Arrhenius est plus robuste que celle de Gleason, selon les résult
 Dans le modèle de Fisher, ce paramètre est l'inverse de la variabilité de l'espérance du nombre d'individus observés par espèce, qui tend vers 0 car la variabilité est très grande.
 Il perd son sens quand il devient négatif mais l'espérance du nombre d'espèces en fonction de la surface a une forme plus générale \autocite{Engen1977}:
 \begin{equation}
-{\mathbb E}\left( \xq{{S}}{}{n}{}{} \right) = \frac{\alpha}{k} \left[ 1 - \left(\frac{\alpha}{\alpha + n}\right)^k \right]
+  {\mathbb E}\left( \xq{{S}}{}{n}{}{} \right) = \frac{\alpha}{k} \left[ 1 - \left(\frac{\alpha}{\alpha + n}\right)^k \right].
 \label{eq:AlphaEngen}
 \end{equation}
 
@@ -592,10 +594,10 @@ c'est-à-dire le nombre d'espèces dans la surface $A_0$ plus petite multipliée
 La valeur de $z$ est constante pour des variations de surface limitées. 
 L'idée est donc de procéder par étapes, en partant du nombre d'espèces mesuré sur les petites placettes, et extrapolant vers une surface plus grande. 
 Cette surface est ensuite prise pour référence pour une nouvelle extrapolation avec une nouvelle valeur de $z$. 
-En indiçant les surfaces de 0 à $n$, on obtient:
+En indiçant les surfaces de 0 à $n$, on obtient
 
 \begin{equation}
-\xq{S}{}{A_n}{}{} = {\left({A_n}/{A_{n-1}}\right)}^{z_{n-1}}{\left({A_{n-1}}/{A_{n -2}}\right)}^{z_{n-2}} \dots{\left({A_1}/{A_0}\right)}^{z_0}\xq[\,]{S}{}{A_0}{}{}
+\xq{S}{}{A_n}{}{} = {\left({A_n}/{A_{n-1}}\right)}^{z_{n-1}}{\left({A_{n-1}}/{A_{n -2}}\right)}^{z_{n-2}} \dots{\left({A_1}/{A_0}\right)}^{z_0}\xq[\,]{S}{}{A_0}{}{}.
 \end{equation}
 
 Il reste à évaluer les différentes valeurs de $z$. 
@@ -638,14 +640,14 @@ Une décomposition due à \textcite{Nei1973} reprise par \textcite{Chave2007} mo
 Notons $E_{i,j}$ la probabilité que deux individus tirés respectivement dans les parcelles $i$ et $j$ soient d'espèces différentes:
 
 \begin{equation}
-E_{i,j} = 1-\sum_{s}{p_{s|i}}{p_{sj}}
+  E_{i,j} = 1-\sum_{s}{p_{s|i}}{p_{sj}}.
 \end{equation}
 
 $E_{ii}$ est l'entropie de Simpson calculée dans la parcelle $i$. 
-L'entropie $\beta$ de Simpson (équation~\ref{eq:SimpsonNei}, dans le cadre de la décomposition de la variance) pour des parcelles de poids égal vaut:
+L'entropie $\beta$ de Simpson (équation~\ref{eq:SimpsonNei}, dans le cadre de la décomposition de la variance) pour des parcelles de poids égal vaut
 
 \begin{equation}
-E_{\beta} = \frac{1}{I^2} \sum_{i}\sum_{j\ne i}\left({E_{i,j}-\frac{E_{ii}+E_{jj}}{2}}\right)
+  E_{\beta} = \frac{1}{I^2} \sum_{i}\sum_{j\ne i}\left({E_{i,j}-\frac{E_{ii}+E_{jj}}{2}}\right).
 \end{equation}
 
 En se limitant à deux parcelles $i$ et $j$ situées à distance $r$, le premier terme de la somme $E_{i,j}$ est l'indice de Simpson spatialement explicite, qui doit être corrigé du deuxième terme de la somme, l'entropie $\alpha$ de la paire de parcelle, pour obtenir l'entropie $\beta$ après la normalisation nécessaire ($E_{i,j}=E_{j,i}$ est compté deux fois dans la somme mais divisé par $I^2=4$).
@@ -661,19 +663,19 @@ Les espèces sont inventoriées dans des parcelles de taille identique, en prés
 Les distances entre parcelles sont regroupées par classes. 
 L'indicatrice ${\mathbf 1}_{s|i}$ vaut 1 si l'espèce $s$ est présente dans la parcelle $i$, 0 sinon. 
 $n_r$ est le nombre de paires de parcelles $i$ et $j$ situées dans la classe de distances dont la valeur centrale est $r$ (leur distance exacte est $d(i,j)$).
-La semi-variance empirique à distance $r$ de la variable indicatrice de la présence de l'espèce $s$ est:
+La semi-variance empirique à distance $r$ de la variable indicatrice de la présence de l'espèce $s$ est
 \begin{equation}
-\hat{\gamma}_{s}(r) = \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{({\mathbf 1}_{s|i} - {\mathbf 1}_{s,j})^2}
+  \hat{\gamma}_{s}(r) = \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{({\mathbf 1}_{s|i} - {\mathbf 1}_{s,j})^2}.
 \end{equation}
 
 Chaque terme de la somme vaut 1 si l'espèce est présente sur une seule des deux parcelles: $\hat{\gamma}_{s}(r)$ estime donc la probabilité que l'espèce ne soit présente que sur une seule parcelle.
 Le variogramme de la variable indicatrice est obtenue en traçant la valeur de $\hat{\gamma}_{s}(r)$ en fonction de $r$.
 Ce variogramme univarié, classique en géostatistique, est généralisé aux données multivariées: le vecteur de présence des espèces $\vectorsym{S_i}$ dont chaque terme est ${\mathbf 1}_{s|i}$.
-La semi-variance de ce vecteur de composition spécifique est :
+La semi-variance de ce vecteur de composition spécifique est
 \begin{equation}
-\hat{\gamma}(r) 
-= \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{\| \vectorsym{S_i}-\vectorsym{S_j} \|^2}
-= \sum_{s}{\hat{\gamma}_{s}(r)}
+  \hat{\gamma}(r) 
+  = \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{\| \vectorsym{S_i}-\vectorsym{S_j} \|^2}
+  = \sum_{s}{\hat{\gamma}_{s}(r)}.
 \end{equation}
 
 $\| \vectorsym{S_i}-\vectorsym{S_j} \|$ est la distance euclidienne entre les deux vecteurs.
@@ -692,14 +694,14 @@ $\hat{\gamma}(r)$ n'est pas une forme de l'indice de Simpson parce que la somme 
 Le variogramme peut être standardisé en divisant toutes les valeurs par la valeur attendue du palier, $\sum_s{{\mathbb E}({\mathbf 1}_{s})[1-{\mathbb E}({\mathbf 1}_{s})]}$, pour éliminer l'effet de la diversité et se concentrer sur la structuration spatiale.
 
 Le variogramme peut être complété par un covariogramme.
-La covariance entre les indicatrices de présence des espèces $s$ et $t$ est:
+La covariance entre les indicatrices de présence des espèces $s$ et $t$ est
 \begin{equation}
-\hat{\gamma}_{s,t}(r) = \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{({\mathbf 1}_{s,i} - {\mathbf 1}_{s,j})({\mathbf 1}_{t,i} - {\mathbf 1}_{t,j})}
+  \hat{\gamma}_{s,t}(r) = \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{({\mathbf 1}_{s,i} - {\mathbf 1}_{s,j})({\mathbf 1}_{t,i} - {\mathbf 1}_{t,j})}.
 \end{equation}
 
-Wagner montre que l'estimateur de la variance de la richesse spécifique par parcelle est:
+Wagner montre que l'estimateur de la variance de la richesse spécifique par parcelle est
 \begin{equation}
-\hat{\Var}(S) = \sum_r{\frac{n_r}{\sum_r{n_r}}} \sum_{s,t}{\hat{\gamma}_{s,t}(r)}
+  \hat{\Var}(S) = \sum_r{\frac{n_r}{\sum_r{n_r}}} \sum_{s,t}{\hat{\gamma}_{s,t}(r)}.
 \end{equation}
 
 Si les espèces sont distribuées indépendamment les unes des autres, la covariance est nulle pour toutes les paires d'espèces à toutes les distances.

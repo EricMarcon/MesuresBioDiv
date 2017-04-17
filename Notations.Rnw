@@ -2,6 +2,8 @@
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
+# Graphiques postscript
+setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
 @
 
@@ -12,6 +14,24 @@ par(mar=c(0,0,0,0))
 \chapter{Notations}
 
 \lettrine{L}{es} notations peuvent différer de celles de la littérature citée pour l'homogénéité de ce document.
+
+Les matrices sont notées en caractères gras et majuscules: $\matrixsym{X}$.
+Les éléments de la matrice $\matrixsym{X}$ sont notés $x_{i,j}$.
+
+Les vecteurs sont notés en gras minuscule: $\vectorsym{p}$.
+Les nombres sont notés en minuscules, $n$, et les variables aléatoires en majuscules: $N$.
+Les valeurs maximales des énumérations font exception: elles sont notées en majuscules pour les distinguer des indices: $\sum_{s=1}^{S}{p_s}=1$.
+
+Le produit matricel de $\matrixsym{X}$ et $\matrixsym{Y}$ est noté $\matrixsym{X}\matrixsym{Y}$. Dans les scripts R, l'opérateur est \code{\%*\%}.
+Le produit de Hadamard (terme à terme) est noté $\matrixsym{X}\circ\matrixsym{Y}$ (opérateur \code{*} dans R).
+De même $\matrixsym{X}^n$ indique la puissance $n$ au sens du produit matriciel d'une matrice carrée (opérateur \code{\%$\wedge$\%} du package \emph{expm}), alors que $\matrixsym{X}^{\circ n}$ est la matrice dont chaque terme est celui de $\matrixsym{X}$ à la puissance $n$ (opérateur \code{$\wedge$} de R).
+La matrice transposée de $\matrixsym{X}$ est notée $\matrixsym{X'}$.
+
+Les notations sont les suivantes:
+
+\noindent ${\mathbf 1}(\cdot)$: la fonction indicatrice, qui vaut 1 si la condition dans la parenthèse est vraie, 0 sinon.
+
+\noindent $\vectorsym{1}_s$: le vecteur de longueur $s$ composé uniquement de 1. $\vectorsym{1}_s\vectorsym{1}_s'=\matrixsym{J}_s$ où $\matrixsym{J}_s$ est la matrice carré de taille $s$ ne contenant que des 1.
 
 \noindent $A$: l'aire d'étude, et, selon le contexte, sa surface.
 
@@ -24,13 +44,13 @@ $\xq{C}{}{n}{}{}$ est le taux de couverture correspondant à un échantillon de 
 $\xq{D}{q}{}{\alpha}{i}$ est la diversité $\alpha$ mesurée dans la communauté $i$. 
 $\xq{\bar{D}}{q}{}{}{}\left(T\right)$ est la diversité phylogénétique.
 
-\noindent $\Delta$: la matrice de dissimilarité dont les éléments sont $d_{s,t}$, la dissimilarité entre l'espèce $s$ et l'espèce $t$.
+\noindent $\matrixsym{\Delta}$: la matrice de dissimilarité dont les éléments sont $\delta_{s,t}$, la dissimilarité entre l'espèce $s$ et l'espèce $t$.
 
 \noindent ${\mathbb E}\left(X\right)$: l'espérance de la variable aléatoire $X$.
 
 \noindent $\xq{H}{q}{}{}{}$: l'entropie de Tsallis (ou HCDT). 
 $\xq{H}{q}{}{\alpha}{i}$ est l'entropie $\alpha$ mesurée dans la communauté $i$. 
-Si nécessaire, le vecteur des probabilités servant au calcul est précisé sous la forme $\xq{H}{q}{}{}{}(\vectorsym{q})$ ou $\xq{H}{q}{}{}{}(\{p_s\})$.
+Si nécessaire, le vecteur des probabilités servant au calcul est précisé sous la forme $\xq{H}{q}{}{}{}(\vectorsym{p})$.
 $\xq{\bar{H}}{q}{}{}{}(T)$ est l'entropie phylogénétique.
 
 \noindent $I$: le nombre de communautés qui constituent une partition de la méta-communauté dans le cadre de la décomposition de la diversité. 
@@ -38,6 +58,8 @@ Les communautés sont indexées par $i$.
 
 \noindent $I(p_s)$: l'information apportée par l'observation d'un évènement de probabilité $p_s$. 
 $I(q_s,p_s)$ est le gain d'information apporté par l'expérience ($q_s$ est observé) par rapport aux probabilités $p_s$ attendues.
+
+\noindent $\matrixsym{I}_s$: la matrice identité de rang $s$: matrice carrée de taille $s\times s$ dont la diagonale ne comporte que des 1 et les autres élements sont nuls. 
 
 \noindent $N$: le nombre (aléatoire) d'individus se trouvant dans l'aire d'étude. 
 $N_s$ est la même variable aléatoire, mais restreinte aux individus de l'espèce $s$.
@@ -72,3 +94,10 @@ $\xq{s}{}{n}{\nu}{}$ peut être considéré comme une réalisation de $\xq{S}{}{
 
 \noindent $t^{n}_{1-\alpha/2}$: le quantile d'une loi de Student à $n$ degrés de liberté au seuil de risque $\alpha$, classiquement 1,96 pour $n$ grand et $\alpha=5\%$.
 
+\noindent $\matrixsym{Z}$: la matrice de similarité entre espèces dont les éléments sont $z_{s,t}$, la similarité entre l'espèce $s$ et l'espèce $t$.
+
+\noindent $\mathrm{\Gamma}(\cdot)$: la fonction gamma.
+
+\noindent $\mathrm{\Psi}(\cdot)$: la fonction digamma.
+
+\noindent $\binom{n}{k}$: le nombre de combinaisons de $k$ éléments parmi $n$. $$\binom{n}{k}=\frac{n!}{k!\,(n-k)!}$$

@@ -2,6 +2,8 @@
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
+# Graphiques postscript
+setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
 library("entropart")
 data(Paracou618)
@@ -82,17 +84,18 @@ Elles sont présentées ici après leur propriété mathématique fondamentale: 
 
 \subsection{Entropie de Shannon}
 
-L'entropie de Shannon (et ses multiples) sont les seules fonctions $H$ telles que : 
+L'entropie de Shannon (et ses multiples) sont les seules fonctions $H$ telles que 
 
 \begin{equation}
 \label{eq:Recursivite1}
 H\left(\{p_{s,i}\}\right)-H\left(\{p_i\}\right) 
 = \sum_i{p_i H\left(\{\frac{p_{s,i}}{p_i}\}\right)}
 \end{equation}
+et
 \begin{equation}
 \label{eq:Recursivite2}
 H\left(\{p_{s,i}\}\right)-H\left(\{p_s\}\right) 
-= \sum_s{p_s H\left(\{\frac{p_{s,i}}{p_s}\}\right)}
+= \sum_s{p_s H\left(\{\frac{p_{s,i}}{p_s}\}\right)}.
 \end{equation}
 
 Cette propriété est appelée récursivité \autocite{Bacaro2013}. 
@@ -116,15 +119,16 @@ Si les colonnes sont les classes de diamètre par exemple, les informations four
 
 \subsection{Entropie HCDT}
 
-\textcite{Baez2011} généralisent la récursivité à l'entropie HCDT et montrent que :
+\textcite{Baez2011} généralisent la récursivité à l'entropie HCDT et montrent que
 
 \begin{equation}
 \xq{H}{q}{}{}{}\left(\{p_{s,i}\}\right)-\xq{H}{q}{}{}{}\left(\{p_i\}\right) 
 = \sum_i{{p_i^q} \xq[\,]{H}{q}{}{}{}\left(\{\frac{p_{s,i}}{p_i}\}\right)}
 \end{equation}
+et
 \begin{equation}
 \xq{H}{q}{}{}{}\left(\{p_{s,i}\}\right)-\xq{H}{q}{}{}{}\left(\{p_s\}\right) 
-= \sum_s{{p_s^q} \xq[\,]{H}{q}{}{}{}\left(\{\frac{p_{s,i}}{p_s}\}\right)}
+= \sum_s{{p_s^q} \xq[\,]{H}{q}{}{}{}\left(\{\frac{p_{s,i}}{p_s}\}\right)}.
 \end{equation}
 
 Par le même raisonnement que pour l'entropie de Shannon, on trouve donc que l'entropie entre les classes est l'opposée de l'information mutuelle calculée dans le cadre de l'entropie HCDT, à condition de définir les poids des classes égaux à $p_i$ et l'entropie intraclasse comme la somme des entropies des classes pondérées par leur poids à la puissance $q$.
@@ -138,14 +142,16 @@ L'entropie intra-lignes (respectivement intra-colonnes) est définie comme la mo
 Les lignes et les colonnes jouent un rôle interchangeable.
 
 \begin{equation}
-\xq{H}{q}{}{\mathit{intra}}{} = \sum_i{p^q_{i}\xq[\,]{H}{q}{}{}{}(\{p_{s,i}\})}
+\xq{H}{q}{}{\mathit{intra}}{} = \sum_i{p^q_{i}\xq[\,]{H}{q}{}{}{}(\{p_{s,i}\})},
 \end{equation}
+
 \begin{equation}
 \xq{H}{q}{}{\mathit{inter}}{}
 =-\left[\xq{H}{q}{}{}{}\left(\{p_{s,i}\}\right) - \xq{H}{q}{}{}{}\left(\{p_{s}\}\right) - \xq{H}{q}{}{}{}\left(\{p_{i}\}\right)\right]
 \end{equation}
+et
 \begin{equation}
-\xq{H}{q}{}{\mathit{marginale}}{} = \xq{H}{q}{}{}{}\left(\{p_{s}\}\right)
+\xq{H}{q}{}{\mathit{marginale}}{} = \xq{H}{q}{}{}{}\left(\{p_{s}\}\right).
 \end{equation}
 
 
@@ -162,7 +168,7 @@ L'information mutuelle de l'entropie HCDT n'a donc qu'un intérêt limité pour 
 \textcite{Allan1975} présente plusieurs décompositions de l'entropie jointe (de Shannon) fondées sur l'information mutuelle, dans une matrice en trois dimensions: microhabitats $\times$ sites $\times$ espèces.
 
 Après \textcite{Levins1968}, \textcite{Colwell1971} et \textcite{Pielou1972}, Allan s'intéresse notamment à la taille de la niche (\foreignlanguage{english}{\emph{niche width}}) des espèces.
-Si les classes de la matrice espèces-classes \ref{table:Notations2} sont des habitats distincts les uns des autres, la diversité des habitats occupés par une espèce est la taille de sa niche, et la diversité $\gamma$ mesurée sur l'ensemble des habitats peut être comprise comme le chevauchement des niches \autocite{Pielou1972}.
+Si les classes de la matrice espèces-classes (Table \ref{table:Notations2}) sont des habitats distincts les uns des autres, la diversité des habitats occupés par une espèce est la taille de sa niche, et la diversité $\gamma$ mesurée sur l'ensemble des habitats peut être comprise comme le chevauchement des niches \autocite{Pielou1972}.
 La taille de la niche peut être mesurée par l'entropie de Shannon, mais aussi le nombre de Hill d'ordre 2, qui est donc le nombre effectif d'habitats de Simpson \autocite{Levins1968}.
 
 Cette approche est très similaire à celle des économistes qui utilisent l'indice de Theil comme mesure de concentration spatiale, en intégrant une signification écologique si les localisations possibles correspondent à des habitats différents: une espèce présente dans tous les habitats avec la même probabilité est aussi généraliste que possible.
@@ -255,11 +261,11 @@ La diversité $\alpha$ est le nombre d'espèces équifréquentes nécessaires da
 \item L'ubiquité des espèces est le nombre effectif de communautés dans lesquelles les espèces sont présentes.
 \end{itemize}
 
-La décomposition complète de la diversité jointe s'écrit:
+La décomposition complète de la diversité jointe s'écrit
 \begin{equation}
 \label{eq:DecJointe}
 \xq{D}{q}{}{}{}\left(\{p_{s,i}\}\right)
-= \xq{D}{q}{}{\alpha}{} \xq{D}{q}{}{\beta}{} \xq{D}{q}{}{I|S}{}
+= \xq{D}{q}{}{\alpha}{} \xq{D}{q}{}{\beta}{} \xq{D}{q}{}{I|S}{}.
 \end{equation}
 
 La méta-communauté suivante illustre cette décomposition: elle contient $D_{I|S}=3$ répliques identiques de $D_{\beta}=2$ communautés équiprobables totalement distinctes, comprenant chacune $D_{\beta}=2$ espèces équiprobables (Figure~\ref{DifferentiationFig}). 
@@ -290,15 +296,15 @@ La définition de la diversité $\alpha$ de \textcite{Chiu2014} (page~\pageref{C
 \begin{equation}
 \xq{D}{q}{}{\alpha}{}
 = \frac{1}{I} {\left(\sum_s{\sum_i{{\left(w_i p_{s|i}\right)}^q}}\right)}^{{1}/{\left(1-q\right)}}
-= \frac{1}{I} \xq[\,]{D}{q}{}{}{}(\{p_{s,i}\})
+= \frac{1}{I} \xq[\,]{D}{q}{}{}{}(\{p_{s,i}\}).
 \end{equation}
 
-En introduisant cette définition dans la décomposition de la diversité jointe, équation~\ref{eq:DecJointe}, il vient:
+En introduisant cette définition dans la décomposition de la diversité jointe, équation~\ref{eq:DecJointe}, il vient
 
 \begin{equation}
 \xq{D}{q}{}{\beta}{}
 = \frac{\xq{D}{q}{}{\gamma}{}}{\xq{D}{q}{}{\alpha}{}}
-= \frac{I}{\xq{D}{q}{}{I|S}{}}
+= \frac{I}{\xq{D}{q}{}{I|S}{}}.
 \end{equation}
 
 
@@ -311,14 +317,14 @@ Il est calculé symétriquement à $D_{I|S}$, en divisant la diversité jointe p
 
 \begin{equation}
 \xq{D}{q}{}{S|I}{}
-= \frac{\xq{D}{q}{}{}{}\left(\{p_{s,i}\}\right)}{\xq{D}{q}{}{}{}\left(\{p_{i}\}\right)}
+= \frac{\xq{D}{q}{}{}{}\left(\{p_{s,i}\}\right)}{\xq{D}{q}{}{}{}\left(\{p_{i}\}\right)}.
 \end{equation}
 
 Gregorius montre que $\xq{D}{q}{}{S|I}{}$ égale la diversité $\alpha$ selon Jost (page~\pageref{JostAlpha}):
 
 \begin{equation}
 \xq{D}{q}{}{S|I}{}
-= {\left(\sum_s{\sum_i{\frac{p^q_i}{\sum_i{p^q_i}}p^q_{s|i}}}\right)}^{{1}/{\left(1-q\right)}}
+= {\left(\sum_s{\sum_i{\frac{p^q_i}{\sum_i{p^q_i}}p^q_{s|i}}}\right)}^{{1}/{\left(1-q\right)}}.
 \end{equation}
 
 La diversité $\alpha$ au sens de Jost donc est elle aussi une diversité de différenciation.

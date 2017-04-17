@@ -3,7 +3,7 @@ set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
 # Graphiques postscript
-seteps(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
+setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
 @
 
@@ -29,7 +29,7 @@ par(mar=c(0,0,0,0))
 La question de la diversité biologique intéressait les écologues bien avant l'invention de la biodiversité, mais le néologisme a connu un succès fulgurant \autocite{Blandin2014} en même temps qu'il devenait une notion floue, dans lequel chacun peut placer ce qu'il souhaite y trouver, au point de lui retirer son caractère scientifique \autocite{Delord2014}. 
 Une cause de ce glissement est que la biodiversité a été nommée pour attirer l'attention sur son érosion, en lien avec la biologie de la conservation. 
 Cette érosion concernant potentiellement de nombreux aspects du monde vivant, la définition de la biodiversité fluctue selon les besoins: \textcite{DeLong1996} en recense 85 dans les dix premières années de littérature. 
-Les indicateurs de la biodiversité peuvent englober bien d'autres choses que la diversité du vivant : le nombre d'espèces menacées (par exemple la liste rouge de l'IUCN), la taille des populations ou la surface des écosystèmes préservés, la dégradation des habitats, la menace pesant sur des espèces emblématiques\dots
+Les indicateurs de la biodiversité peuvent englober bien d'autres choses que la diversité du vivant : le nombre d'espèces menacées (par exemple la liste rouge de l'IUCN), la taille des populations ou la surface des écosystèmes préservés, la dégradation des habitats, la menace pesant sur des espèces emblématiques...
 Une mesure rigoureuse et cohérente de la diversité peut pourtant être construite pour clarifier beaucoup (mais pas tous) des concepts qui constituent la biodiversité. 
 
 Dans l'introduction du premier chapitre des actes de ce qui était devenu le \og Forum sur la Biodiversité\fg{}, Wilson utilise le mot dans le sens étroit de nombres d'espèces. 
@@ -42,7 +42,7 @@ La déclaration de Michel Loreau, président du du comité scientifique de la co
 Aujourd'hui encore, le terme \emph{biodiversité} concerne le plus souvent la richesse en espèces d'un écosystème. 
 Pour simplifier la présentation, le niveau d'étude dans ce document sera en général celui des espèces (autre concept flou\autocite{Hey2001}).
 La prise en compte de la totalité des êtres vivants est généralement hors de portée.
-La mesure de diversité est alors limitée à un taxocène, c'est-à-dire un sous-ensemble des espèces d'une communauté reliées taxonomiquement: les papillons, les mammifères, les arbres (la délimitation du sous-ensemble n'est pas forcément strictement taxonomique)\dots
+La mesure de diversité est alors limitée à un taxocène, c'est-à-dire un sous-ensemble des espèces d'une communauté reliées taxonomiquement: les papillons, les mammifères, les arbres (la délimitation du sous-ensemble n'est pas forcément strictement taxonomique)...
 
 Un objet privilégié des études sur la biodiversité est, depuis le Forum, la forêt tropicale parce qu'elle est très diverse et un enjeu pour la conservation. 
 La plupart des exemples concerneront ici les arbres de la forêt tropicale, qui ont l'avantage d'être clairement définis en tant qu'individus (donc simples à compter) et posent des problèmes méthodologiques considérables pour l'estimation de leur diversité à partir de données réelles.
@@ -294,10 +294,10 @@ Les SAD nécessaires à la compréhension de la suite sont:
 \subsection{Formule des fréquences de Good-Turing}
 
 La relation fondamentale entre les fréquences des espèces est due à Turing et a été publiée par \textcite{Good1953}.
-En absence de toute information sur la loi de distribution des espèces, en supposant seulement que les individus sont tirés indépendamment les uns des autres selon une loi multinomiale respectant ces probabilités, la formule de Good-Turing relie la probabilité moyenne $\alpha_\nu$ d'une espèce représentée $\nu$ fois (c'est-à-dire par $\nu$ individus) au rapport entre les nombres d'espèces représentées $\nu+1$ fois et $\nu$ fois.
+En absence de toute information sur la loi de distribution des espèces, en supposant seulement que les individus sont tirés indépendamment les uns des autres selon une loi multinomiale respectant ces probabilités, la formule de Good-Turing relie la probabilité moyenne $\alpha_\nu$ d'une espèce représentée $\nu$ fois (c'est-à-dire par $\nu$ individus) au rapport entre les nombres d'espèces représentées $\nu+1$ fois et $\nu$ fois:
 
 \begin{equation}
-  \alpha_\nu \approx \frac{(\nu+1)}{n} \frac{\xq{s}{}{n}{\nu+1}{}}{\xq{s}{}{n}{\nu}{}}
+  \alpha_\nu \approx \frac{(\nu+1)}{n} \frac{\xq{s}{}{n}{\nu+1}{}}{\xq{s}{}{n}{\nu}{}}.
 \end{equation}
 
 Les singletons ($\xq{s}{}{n}{1}{}$: le nombre d'espèces observées une seule fois) et les doubletons ($\xq{s}{}{n}{2}{}$: le nombre d'espèces observées deux fois) ont une importance centrale.
@@ -306,10 +306,10 @@ Pour $\nu=0$, l'ignorance du nombre d'espèces non échantillonnées ${\xq{s}{}{
 Ces relations sont le fondement des estimateurs de richesse de Chao présentées ci-dessous.
 
 La relation a été précisée \autocite[][eq. 6 et 7a]{Chiu2014a} en limitant les approximations dans les calculs.
-La seule nécessaire est que les probabilités des espèces représentées le même nombre de fois $\nu$ varient peu et puissent être considérées toutes égales à $\alpha_\nu$. Alors, $\alpha_\nu$ est estimé par:
+La seule nécessaire est que les probabilités des espèces représentées le même nombre de fois $\nu$ varient peu et puissent être considérées toutes égales à $\alpha_\nu$. Alors, $\alpha_\nu$ est estimé par
 \begin{equation}
   \label{eq:GoodTuring2014}
-  \hat{\alpha}_\nu = \frac{\left(\nu+1 \right) \xq{s}{}{n}{\nu+1}{}}{\left(n-\nu \right) \xq{s}{}{n}{\nu}{} + \left(\nu+1 \right) \xq{s}{}{n}{\nu+1}{}}
+  \hat{\alpha}_\nu = \frac{\left(\nu+1 \right) \xq{s}{}{n}{\nu+1}{}}{\left(n-\nu \right) \xq{s}{}{n}{\nu}{} + \left(\nu+1 \right) \xq{s}{}{n}{\nu+1}{}}.
 \end{equation}
 
 Ce nouvel estimateur est à la base de l'estimateur de Chao amélioré et des estimateurs d'entropie de Chao et Jost (pages~\pageref{sec:BiaisShannon} et \pageref{sec:BiaisHCDT}).
@@ -317,7 +317,9 @@ Ce nouvel estimateur est à la base de l'estimateur de Chao amélioré et des es
 \subsection{Taux de couverture et déficit de couverture}
 \label{sec:DefCouverture}
 
-\textcite{Good1953} définit le taux de couverture (\foreignlanguage{english}{\emph{sample coverage}}) de l'échantillonnage comme la proportion des espèces découvertes $C=\sum^S_{s=1}{{\mathbf 1}\left(n_s>0\right)p_s}$ où ${\mathbf 1}(\cdot)$ est la fonction indicatrice. 
+\textcite{Good1953} définit le taux de couverture (\foreignlanguage{english}{\emph{sample coverage}}) de l'échantillonnage comme la proportion des espèces découvertes,
+$$C=\sum^S_{s=1}{{\mathbf 1}\left(n_s>0\right)p_s},$$
+où ${\mathbf 1}(\cdot)$ est la fonction indicatrice. 
 Son complément à 1 est appelé déficit de couverture (\foreignlanguage{english}{\emph{coverage deficit}}).
 
 Le taux de couverture augmente avec l'effort d'échantillonnage. 
@@ -329,21 +331,21 @@ L'estimateur du taux de couverture, que Good attribue à Turing, est selon la re
 
 \begin{equation}
   \label{eq:CGood}
-  \hat{C} = 1-\frac{\xq{s}{}{n}{1}{}}{n}
+  \hat{C} = 1-\frac{\xq{s}{}{n}{1}{}}{n}.
 \end{equation}
 
-Cet estimateur est biaisé \autocite{Zhang2007}. En réalité:
+Cet estimateur est biaisé \autocite{Zhang2007}. En réalité,
 \begin{equation}
   \label{eq:CsansBiais}
-  C = 1-\frac{{\mathbb E}(\xq{S}{}{n}{1}{}) - \pi_1}{n}
+  C = 1-\frac{{\mathbb E}(\xq{S}{}{n}{1}{}) - \pi_1}{n}.
 \end{equation}
 
 L'estimateur de Good néglige le terme $\pi_1$, la somme des probabilités des espèces observées une fois. Ce terme peut être estimé avec un biais plus petit.
-\textcite{Chao1988} puis Zhang et Huang proposent l'estimateur suivant, qui utilise toute l'information disponible et a le plus petit biais possible:
+\textcite{Chao1988} puis \textcite{Zhang2007} proposent l'estimateur suivant, qui utilise toute l'information disponible et a le plus petit biais possible:
 
 \begin{equation}
   \label{eq:CZhang}
-  \hat{C}=1-\sum^{n}_{\nu=1}{\left(-1\right)}^{\nu+1}{\binom{n}{\nu}}^{-1}\xq[\,]{s}{}{n}{\nu}{}
+  \hat{C}=1-\sum^{n}_{\nu=1}{\left(-1\right)}^{\nu+1}{\binom{n}{\nu}}^{-1}\xq[\,]{s}{}{n}{\nu}{}.
 \end{equation}
 
 Les termes de la somme décroissent très vite avec $\nu$.
@@ -352,7 +354,7 @@ En se limitant à $\nu=1$, l'estimateur se réduit à celui de Good.
 \textcite{Esty1983}, complété par \textcite{Zhang2009}, a montré que l'estimateur était asymptotiquement normal et a calculé l'intervalle de confiance de $\hat{C}$:
 
 \begin{equation}
-  C=\hat{C}\pm t^{n}_{1-\alpha/2} \frac{\sqrt{\xq{s}{}{n}{1}{}\left(1-\frac{\xq{s}{}{n}{1}{}}{n}\right)+2\xq[\,]{s}{}{n}{2}{}}}{n} 
+  C=\hat{C}\pm t^{n}_{1-\alpha/2} \frac{\sqrt{\xq{s}{}{n}{1}{}\left(1-\frac{\xq{s}{}{n}{1}{}}{n}\right)+2\xq[\,]{s}{}{n}{2}{}}}{n}.
 \end{equation}
 
 Où $t^{n}_{1-\alpha/2}$ est le quantile d'une loi de Student à $n$ degrés de libertés au seuil de risque $\alpha$, classiquement 1,96 pour $n$ grand et $\alpha=5\%$.
@@ -360,9 +362,9 @@ Où $t^{n}_{1-\alpha/2}$ est le quantile d'une loi de Student à $n$ degrés de 
 
 Un autre estimateur est utilisé dans le logiciel SPADE \autocite{Chao2010a} et son portage sous R, le package \emph{spadeR} \autocite{Chao2016c}.
 Il est la base des estimateurs d'entropie de Chao et Jost (page~\pageref{sec:BiaisHCDT}).
-L'estimation de l'équation~(\ref{eq:CsansBiais}) donne la relation:
+L'estimation de l'équation~(\ref{eq:CsansBiais}) donne la relation
 \begin{equation}
-  \hat{C} = 1-\frac{\xq{s}{}{n}{1}{} - \hat{\pi}_1}{n}
+  \hat{C} = 1-\frac{\xq{s}{}{n}{1}{} - \hat{\pi}_1}{n}.
 \end{equation}
 
 Or, $\hat{\pi}_1 = \xq{s}{}{n}{1}{} \hat{\alpha}_1$.
@@ -372,7 +374,7 @@ Alors:
 \begin{equation} 
   \label{eq:CChao}
   \hat{C} = 1-\frac{\xq{s}{}{n}{1}{}}{n}(1 - \hat{\alpha}_1)
-  = 1-\frac{\xq{s}{}{n}{1}{}}{n}\left[\frac{\left(n-1\right)\xq[]{s}{}{n}{1}{}}{\left(n-1\right)\xq[]{s}{}{n}{1}{}+2\xq[\,]{s}{}{n}{2}{}}\right]
+  = 1-\frac{\xq{s}{}{n}{1}{}}{n}\left[\frac{\left(n-1\right)\xq[]{s}{}{n}{1}{}}{\left(n-1\right)\xq[]{s}{}{n}{1}{}+2\xq[\,]{s}{}{n}{2}{}}\right].
 \end{equation}
 
 
@@ -384,13 +386,13 @@ Coverage(Paracou618.MC$Ns)
 @
 
 
-\textcite{Chao2012b} montrent que la pente de la courbe d'accumulation donnant l'espérance du nombre d'espèces en fonction du nombre d'individus (courbe de raréfaction de la Figure~\ref{Gotelli2001}) est égale au déficit de couverture:
+\textcite{Chao2012b} montrent que la pente de la courbe d'accumulation donnant l'espérance du nombre d'espèces en fonction du nombre d'individus (courbe de raréfaction de la Figure~\ref{Gotelli2001}) est égale au déficit de couverture,
 
 \begin{equation}
-  1-{\mathbb E}\left(\xq{C}{}{n}{}{}\right)={\mathbb E}\left(\xq{S}{}{n+1}{}{}\right)-{\mathbb E}\left(\xq{S}{}{n}{}{}\right)
+  1-{\mathbb E}\left(\xq{C}{}{n}{}{}\right)={\mathbb E}\left(\xq{S}{}{n+1}{}{}\right)-{\mathbb E}\left(\xq{S}{}{n}{}{}\right),
 \end{equation}
 
-Où $\xq{C}{}{n}{}{}$ est le taux de couverture d'un échantillon de taille $n$ et $\xq{{S}}{}{n}{}{}$ le nombre d'espèces découvertes dans cet échantillon.
+où $\xq{C}{}{n}{}{}$ est le taux de couverture d'un échantillon de taille $n$ et $\xq{{S}}{}{n}{}{}$ le nombre d'espèces découvertes dans cet échantillon.
 
 
 Les estimateurs présentés ici supposent une population de taille infinie (de façon équivalente, les individus sont tirés avec remise).
@@ -400,3 +402,15 @@ Le cas des populations de taille finie est traité par \textcite{Chao2012} et \t
 
 La complétude de l'échantillonnage est la proportion du nombre d'espèces observées: $\xq{s}{}{n}{\ne 0}{}/{S}$.
 Elle compte simplement les espèces et ne doit pas être confondue avec la couverture qui somme leurs probabilités: le taux de complétude est toujours très inférieur au taux de couverture parce que les espèces non échantillonnées sont les plus rares.
+
+La complétude du même échantillon d'arbres de forêt tropicale que dans l'exemple précédent peut être estimée en divisant le nombre d'espèces observées par le nombre d'espèces estimées (voir page~\ref{sec:Richesse}):
+
+<<Completeness>>=
+# Espèces observées
+(Obs <- Richness(Paracou618.MC$Ps))
+# Richesse estimée
+(Est <- Richness(Paracou618.MC$Ns, Correction = "Jackknife"))
+# Complétude
+as.numeric(Obs/Est)
+@
+
