@@ -1,3 +1,5 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = fr-classique
 <<Conclusion-parent, echo=FALSE, cache=FALSE>>=
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
@@ -17,7 +19,9 @@ data(Paracou618)
 \lettrine{L}{a} biodiversité peut être mesurée de nombreuses façons. 
 La dualité entropie-diversité fournit un cadre clair et rigoureux pour le faire.
 D'autres mesures de diversité ont été présentées ici, d'autres encore peuvent être trouvées dans la littérature. 
-Elles ont en général un moins bon support mathématique, surtout les mesures de diversité $\beta$, elles ne peuvent pas être décomposées, corrigées ou interprétées. 
+Elles ont en général un moins bon support mathématique, surtout les mesures de diversité $\beta$, elles ne peuvent pas % !TeX encoding = UTF-8
+% !TeX spellcheck = fr-classique
+être décomposées, corrigées ou interprétées. 
 La diversité de Hurlbert possède toutes ses propriétés et une correction très efficace du biais d'estimation, mais elle n'est pas généralisée à la diversité phylogénétique.
 
 
@@ -27,7 +31,7 @@ La diversité de Hurlbert possède toutes ses propriétés et une correction tr�
 {Généralisation des mesures classiques de diversité. 
   La figure présente les mesures d'entropie, qui peuvent toutes être transformées en mesures de diversité au sens strict. 
   Toutes ces entropies sont des cas particuliers de l'entropie de Ricotta et Szeidl, qui peut être transformée en diversité de Leinster et Cobbold.}
-{\includegraphics[width=\maxwidth]{Conclusion}}
+{\includegraphics[width=\maxwidth]{ConclusionFig}}
 
 L'entropie est la surprise moyenne fournie par les individus d'une communauté. 
 Le choix de la fonction d'information qui mesure cette surprise à partir des probabilités d'occurrence des espèces (ou d'autres catégories) permet de définir les mesures de diversités neutres, fonctionnelles ou phylogénétique présentées ici. 

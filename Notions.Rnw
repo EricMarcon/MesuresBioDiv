@@ -1,3 +1,5 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = fr-classique
 <<Notions-parent, echo=FALSE, cache=FALSE>>=
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
@@ -11,19 +13,6 @@ par(mar=c(0,0,0,0))
 \selectlanguage{french}
 \sisetup{locale = FR}
 \chapter{Notions de Diversité}
-
-\figureSC{Composantes}
-{
-  Importance de la richesse (en haut) et de l'équitabilité (en bas) pour la définition de la diversité. 
-  Ligne du haut: toutes choses égales par ailleurs, une communauté de 7 espèces semble plus diverse qu'une communauté de 2 espèces. 
-  Ligne du bas: à richesse égale, une communauté moins équitable (à gauche) semble moins diverse. 
-  Colonne de gauche: une communauté moins riche (en haut) peut sembler plus diverse si elle est plus équitable. 
-  Colonne de droite: \emph{idem} pour la communauté du bas.
-}
-{
-  \includegraphics[width=.5\maxwidth]{Composantes}
-}
-
 
 \lettrine{L}{e terme} \foreignlanguage{english}{\emph{biodiversity}} est attribué \autocite{Meine2006} à Walter Rosen, un membre du \emph{National Research Council} américain, qui a commencé à contracter les termes \foreignlanguage{english}{\emph{biological diversity}} pendant la préparation d'un colloque dont les actes seront publiés sous le titre \foreignlanguage{english}{\og Biodiversity\fg{}} \autocite{Wilson1988}.
 La question de la diversité biologique intéressait les écologues bien avant l'invention de la biodiversité, mais le néologisme a connu un succès fulgurant \autocite{Blandin2014} en même temps qu'il devenait une notion floue, dans lequel chacun peut placer ce qu'il souhaite y trouver, au point de lui retirer son caractère scientifique \autocite{Delord2014}. 
@@ -58,9 +47,20 @@ La question est loin d'être épuisée, et fait toujours l'objet d'une recherche
 
 \section{Composantes}
 
+\figureSC{Composantes}
+{
+  Importance de la richesse (en haut) et de l'équitabilité (en bas) pour la définition de la diversité. 
+  Ligne du haut: toutes choses égales par ailleurs, une communauté de 7 espèces semble plus diverse qu'une communauté de 2 espèces. 
+  Ligne du bas: à richesse égale, une communauté moins équitable (à gauche) semble moins diverse. 
+  Colonne de gauche: une communauté moins riche (en haut) peut sembler plus diverse si elle est plus équitable. 
+  Colonne de droite: \emph{idem} pour la communauté du bas.
+}
+{
+  \includegraphics[width=.5\maxwidth]{Composantes}
+}
+
 Une communauté comprenant beaucoup d'espèces mais avec une espèce dominante n'est pas perçue intuitivement comme plus diverse qu'une communauté avec moins d'espèces, mais dont les effectifs sont proches (Figure~\ref{Composantes}, colonne de gauche). 
 La prise en compte de deux composantes de la diversité, appelées richesse et équitabilité, est nécessaire \autocite{Whittaker1965}.
-\clearpage
 
 
 \subsection{Richesse}

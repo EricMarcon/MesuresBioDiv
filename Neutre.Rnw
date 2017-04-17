@@ -1,3 +1,5 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = fr-classique
 <<Neutre-parent, echo=FALSE, cache=FALSE>>=
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
@@ -1780,6 +1782,8 @@ Par simulation à partir d'une distribution connue, il est possible de tirer un 
 La distribution de la valeur de l'échantillon permet de juger ses performances : son biais moyen (mesuré par rapport à la valeur de référence calculée à partir des probabilités choisies), et sa variabilité (évaluée par sa variance empirique sur les simulations).
 Un estimateur performant doit être peu biaisé mais aussi peu variable.
 L'erreur quadratique moyenne, somme du carré du biais et de la variance, ou sa racine carrée dont la dimension est celle des données (\foreignlanguage{english}{\emph{root mean square error}}: RMSE), est un bon critère de test \autocite[Voir par exemple][figure 1]{Chao2013}.
+
+\clearpage
 
 \textcite{Haegeman2013} proposent deux estimateurs de la diversité $\xq{D}{q}{}{}{}$ à partir des courbes de raréfaction et d'extrapolation du nombre d'espèces.
 Les deux estimateurs bornent la vraie valeur de $\xq{D}{q}{}{}{}$ (leur variabilité n'est pas prise en compte, mais elle est négligeable dans le cadre utilisé).

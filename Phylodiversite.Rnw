@@ -1,3 +1,5 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = fr-classique
 <<Phylodiversite-parent, echo=FALSE, cache=FALSE>>=
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
@@ -488,19 +490,19 @@ La diversité FD de Faith (section~\ref{sec:PDFD}), égale à la somme des longu
 
 \subsubsection{Equitabilité phylogénétique}
 
+Les branches terminales de l'arbre phylogénétique sont ici à la base de la définition de l'équitabilité.
+Figure~\ref{ArbreA3}, les branches $b_{1,s}$ sont les segments terminés par une feuille (au bas de l'arbre), c'est-à-dire que leur longueur est la partie de l'arbre que les espèces ne partagent pas.
+La mesure d'équitabilité est
+\begin{equation}
+  \mathit{PAE} = \frac{\mathit{PD} + \sum_s{l(b_{1,s})(n_s-1)}}{\mathit{PD} + (\frac{n}{S}-1)\sum_s{l(b_{1,s})} }.
+\end{equation}
+
 \figureMargin{ArbreA3}
 {Arbre phylogénétique ou fonctionnel hypothétique. 
   Rappel de la figure \ref{Arbre}(a).
 }
 {\includegraphics[width=\maxwidth]{ArbreA}
 }
-
-Les branches terminales de l'ar\-bre phylogénétique sont ici à la base de la définition de l'équitabilité.
-Figure~\ref{ArbreA3}, les branches $b_{1,s}$ sont les segments terminés par une feuille (au bas de l'arbre), c'est-à-dire que leur longueur est la partie de l'arbre que les espèces ne partagent pas.
-La mesure d'équitabilité est
-\begin{equation}
-  \mathit{PAE} = \frac{\mathit{PD} + \sum_s{l(b_{1,s})(n_s-1)}}{\mathit{PD} + (\frac{n}{S}-1)\sum_s{l(b_{1,s})} }.
-\end{equation}
 
 $\mathit{PAE}$ vaut 1 quand les espèces sont sont distribuées équitablement pour la longueur des branches.
 Une valeur plus grande est obtenue quand les espèces sont concentrées au bout des longues branches, et inversement si $0<\mathit{PAE}<1$.
