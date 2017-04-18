@@ -802,7 +802,7 @@ Rao(Ps, Paracou618.Taxonomy)
 Le package \emph{ADE4} permet le calcul avec la fonction \code{divc} qui utilise un format différent pour les probabilités et surtout la matrice des racines carrées du double des distances de l'objet \code{phylog} (chaque élément de \code{\$Wdist} vaut $\sqrt{2\delta_{s's''}}$.
 Cette particularité d'\emph{ADE4} vient de l'analyse multivariée \autocite{Champely2002}: l'entropie quadratique de Rao peut être représentée dans l'espace euclidien engendré par une matrice de distances $\matrixsym{D}$ entre espèces (par une Analyse en Composantes Principales, PCoA).
 L'inertie des points représentants les espèces, précisément la moyenne des carrés des distances entre les espèces et leur centre de gravité (les probabilités $\vectorsym{p}$ des espèces constituent leur poids), est alors égale à l'entropie de Rao $H_{\matrixsym{\Delta}}\left(\vectorsym{p}\right)$, où la matrice de distances $\matrixsym{\Delta}$ est $\dfrac{\matrixsym{D}^{\circ2}}{2}$: les valeurs de  $\matrixsym{\Delta}$ valent la moitié du carré de celles de $\matrixsym{D}$.
-Cette représentation est étendue dans la double analyse en composantes principales de \textcite{Pavoine2004} (page \ref{sec:RaoDisc}).
+Cette représentation est étendue dans la double analyse en composantes principales de \textcite{Pavoine2004} (page~\pageref{sec:RaoDisc}).
 
 Dans \emph{ADE4}, les arbres phylogénétiques sont donc stockés sous la forme d'objets de type \code{phylog} où la matrice des distances (\code{\$Wdist}) est $\matrixsym{D}$ mais les longueurs des branches de l'arbre (\code{\$droot}) correspondent aux valeurs de $\matrixsym{\Delta}$.
 

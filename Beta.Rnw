@@ -1180,8 +1180,9 @@ Les notations sont celles de la présentation de l'indice de Rao, page~\pageref{
 La diversité de la méta-communauté, peut être décomposée en une somme (pondérée) de diversités intra et une diversité inter \autocite{Pavoine2004} en définissant une dissimilarité entre les communautés $i$ et $j$:
 
 \begin{equation}
-D_{H_{\Delta }}\left(\vectorsym{p}_i,\vectorsym{p}_j\right)
-= 2 H_{\Delta}\left(\frac{\vectorsym{p}_{i}+\vectorsym{p}_j}{2}\right)-H_{\Delta}\left(\vectorsym{p}_j\right)-H_{\Delta}\left(\vectorsym{p}_j\right).
+  D_{H_{\Delta }}\left(\vectorsym{p}_i,\vectorsym{p}_j\right)
+  = 2 H_{\Delta}\left(\frac{\vectorsym{p}_{i}+\vectorsym{p}_j}{2}\right)
+  -H_{\Delta}\left(\vectorsym{p}_i\right)-H_{\Delta}\left(\vectorsym{p}_j\right).
 \end{equation}
 
 Elle est définie par Rao comme la différence entre l'entropie quadratique du mélange des deux communautés et celles des deux communautés prises individuellement. 
@@ -1251,7 +1252,7 @@ disc(effectifs[names(phyf$leaves), ], phyf$Wdist)
 @
 
 Une interprétation géométrique de la décomposition est la suivante \autocite{Pavoine2004}.
-Les espèces peuvent être placées dans un espace multidimensionnel construit par une Analyse en Coordonnées Principales \autocite{Gower1966} de la matrice de dissimilarité $\Delta$ (les distances dans l'espace multidimensionnel sont $\sqrt{2d_{s's''}}$; autrement dit: la dissimilarité entre deux espèces est la moitié du carré de la distance entre elles dans la représentation géométrique).
+Les espèces peuvent être placées dans un espace multidimensionnel construit par une Analyse en Coordonnées Principales \autocite{Gower1966} de la matrice de dissimilarité $\matrixsym{D}$ telle que $\matrixsym{\Delta}=\dfrac{\matrixsym{D}^{\circ2}}{2}$ (les distances dans l'espace multidimensionnel sont $\sqrt{2\delta_{s's''}}$; autrement dit: la dissimilarité entre deux espèces est la moitié du carré de la distance entre elles dans la représentation géométrique).
 Chaque communauté se trouve au centre de gravité des espèces qu'elle contient, pondérées par leur fréquence.
 La moitié du carré de la distance entre deux communautés dans ce même espace est le coefficient de dissimilarité entre communautés de Rao.
 La distance entre communautés est donc interprétable directement comme une mesure de diversité $\beta$ \autocite{Ricotta2015}, dans la tradition de l'utilisation de la dissimilarité entre paires de communautés (chapitre~\ref{chap:BetaPaires}).
@@ -1441,7 +1442,7 @@ Les surfaces des deux rectangles sont identiques.}
   @
   }
 
-La décomposition de l'entropie phylogénétique (au sens d'\textcite{Allen2009}), c'est-à-dire dans la cas particulier $q=1$, a été établie par \textcite{Mouchet2011}.
+La décomposition de l'entropie phylogénétique au sens d'\textcite{Allen2009}, c'est-à-dire dans la cas particulier $q=1$, a été établie par \textcite{Mouchet2011}.
 
 La fonction \code{DivPart} de \emph{entropart} permet de décomposer l'entropie. 
 Les résultats contiennent la valeur de la diversité:
