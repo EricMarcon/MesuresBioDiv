@@ -39,7 +39,7 @@ Le choix de la fonction d'information qui mesure cette surprise à partir des pr
 L'entropie est transformée en diversité au sens strict par une fonction croissante (l'exponentielle déformée), ce qui simplifie son interprétation en tant que nombre équivalent d'espèces, dans une distribution idéale dans laquelle toutes les espèces seraient équifréquentes.
 
 \textcite{Chao2014a} proposent un cadre fondé exclusivement sur les nombres de Hill sans référence à l'entropie. 
-Les principales différences avec celui présenté ici concernent la définition de la diversité $\alpha$ et donc celle de la diversité $\beta$ et l'absence d'estimateurs à biais réduit.
+Les principales différences avec celui présenté ici concernent la définition de la diversité $\alpha$ et donc celle de la diversité $\beta$.
 
 L'entropie phylogénétique généralise les indices de diversité classique (Figure~\ref{ConclusionFig}), intègre si nécessaire la distance entre espèces, peut être décomposée et corrigée des biais d'estimation. 
 Sa transformation en diversité au sens strict permet d'interpréter les valeurs sous une forme unique: un nombre équivalent d'espèces et un nombre équivalent de communautés. 
@@ -91,8 +91,9 @@ Les principales limites des mesures de diversité sont d'ordre conceptuel et pra
 L'axiome de symétrie interdit de donner un rôle particulier à une espèce: il n'est donc pas possible conceptuellement de prendre en compte les espèces focales \autocite{Zacharias2001} dans la quantification de la diversité (espèces emblématiques, espèces clé de voûte \autocite{Paine1969}, espèces parapluie \autocite{Roberge2004}, espèces ingénieures\autocite{Jones1994}...). 
 Leur présence peut être décisive pour la conservation, mais il s'agit clairement d'une question distincte de celle de la diversité.
 
-Sur le plan pratique, la mesure de la diversité se réduit souvent à un groupe biologique (dans ce document, les arbres). 
-Estimer la biodiversité totale est un objectif hors d'atteinte. 
+Sur le plan pratique, la mesure de la diversité se réduit souvent à un groupe biologique (dans ce document, les arbres).
+Estimer la biodiversité totale est un objectif hors d'atteinte.
+L'étendue spatiale à laquelle des données d'abondance sont accessibles est souvent trop réduite \autocite{Chiarucci2011}.
 Si la diversité à prendre en compte est au-delà des données disponibles, il est nécessaire d'utiliser des \emph{indicateurs} \autocite{Balmford2003} qui peuvent être la diversité d'un ou quelques groupes représentatifs, voire la présence d'espèces indicatrices \autocite{Clements1916}. 
 Des indicateurs indirects sont la diversité des habitats ou même l'étendue de certains habitats reconnus comme les plus favorables à un haut niveau de diversité. 
 Une réflexion en cours \autocite{Pereira2013} consiste à établir une liste de variables pertinentes (\foreignlanguage{english}{\emph{Essential biodiversity variables}}) qui puissent constituer des indicateurs standardisés à l'échelle globale pour permettre la comparaison des données.

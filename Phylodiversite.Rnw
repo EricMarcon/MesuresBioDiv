@@ -123,6 +123,7 @@ La première étape consiste donc à choisir un ensemble de traits pertinents et
 Toute la stratégie relative à la photosynthèse peut être par exemple assez bien résumée par la masse surfacique des feuilles \autocite{Wright2004}, mais, en forêt tropicale, ce trait est décorrélé de la densité du bois \autocite{Baraloto2010}. 
 Les valeurs manquantes peuvent être complétées en utilisant toute l'information disponible par MICE (\foreignlanguage{english}{\emph{multiple imputation by chained equations}}) \autocite{VanBuuren2006}, disponible sous R dans le package \code{mice} \autocite{VanBuuren2011}.
 
+\label{Gower}
 La prise en compte de variables qualitatives ou de rang et la possibilité de données manquantes pose un problème pratique de construction de la matrice de dissimilarité, traité par \textcite{Gower1971}. 
 La formule de Gower, étendue par \textcite{Podani1999} puis \textcite{Pavoine2009b} à d'autres types de variables, calcule la dissimilarité entre deux espèces par la moyenne des dissimilarités calculées pour chaque trait, dont la valeur est comprise entre 0 et 1:
 
@@ -379,6 +380,11 @@ L'indice est
 \end{equation}
 
 Sa forme lui permet d'être compris entre 0 et 1.
+
+\textcite{Laliberte2010} généralisent $\mathit{FD}_{m}$ en proposant l'usage de n'importe quelle dissimilarité entre espèces, obtenue à partir de la méthode de Gower (vue page \pageref{Gower}), autorisant des variables qualitatives et des données manquantes, au-delà de la seule distance euclidienne entre traits quantitatifs.
+Ils fournissent le package \emph{FD} pour calculer leur indice $\mathit{FDis}$ et ceux de 
+\textcite{Villeger2008a}.
+
 
 
 \section{Originalité, richesse et équitabilité phylogénétique}

@@ -633,6 +633,23 @@ Sa version non pondérée (U pour \foreignlanguage{english}{\emph{unweighted}}) 
   d_{\mathit{CU}} = \frac{\sum_s{\min{d_{s,2}}} + \sum_t{\min{d_{t,1}}}}{2s_{1,1}+s_{1,0}+s_{0,1}}.
 \end{equation}
 
+Ces mesures sont des évolutions de mesures plus anciennes, avec des pondérations différentes.
+Dans l'indice de \textcite{Clarke1998}, la moyenne est calculée dans chaque communauté, sans pondération:
+\begin{equation}
+  d_{\mathit{CW}} = \frac{1}{2}\left( \frac{\sum_s{\min{d_{s,2}}}}{s_{1,1}+s_{1,0}} + \frac{\sum_t{\min{d_{t,1}}}}{s_{1,1}+s_{0,1}} \right),
+\end{equation}
+
+mais avec pondération par l'abondance des espèces chez \textcite{Ricotta2008}:
+\begin{equation}
+  d_{\mathit{RB}} = \frac{1}{2}\left( \sum_s{p_{s|1}\min{d_{s,2}}} + \sum_t{p_{t|2}\min{d_{t,1}}} \right),
+\end{equation}
+
+alors qu'elle l'est globalement dans l'indice de \textcite{Izsak2001}:
+\begin{equation}
+  d_{\mathit{IP}} = \frac{\sum_s{\min{d_{s,2}}} + \sum_t{\min{d_{t,1}}}}{s_{1,1}+s_{1,0}+s_{1,1}+s_{0,1}},
+\end{equation}
+
+redécouvert et nommé \emph{COMDISTNN} par \textcite{Webb2008}.
 
 
 \subsection{Similarité moyenne entre individus}
@@ -676,6 +693,23 @@ celui d'Ochiai par:
 
 Ces quatre similarités permettent une représentation des communautés par PCoA de la même façon que l'indice de Jaccard traité plus haut.
 
+D'autres similarités ont été proposées mais ont des propriétés qui empêchent de les utiliser \autocite{Ricotta2014b}: leur valeur n'est pas toujours nulle pour deux communautés identiques.
+Ce sont l'indice proposé par \textcite{Rao1982},
+\begin{equation}
+  Q_{\mathit{12}} = \sum_{s,t}{p_s q_t z_{s,t}},
+\end{equation}
+
+comme les indices de \textcite{Swenson2011}:
+\begin{equation}
+  d_{\mathit{pw}} = \frac{1}{2}\left( \frac{\sum_s{\bar{d_{s,2}}}}{s_{1,1}+s_{1,0}} + \frac{\sum_t{\bar{d_{t,1}}}}{s_{1,1}+s_{0,1}} \right),
+\end{equation}
+
+et
+\begin{equation}
+  d_{\mathit{pw}}' = \frac{1}{2}\left( \sum_s{p_{s|1}\bar{d_{s,2}}} + \sum_t{p_{t|2}\bar{d_{t,1}}} \right), 
+\end{equation}
+
+où $\bar{d_{s,2}}$ est la dissimilarité moyenne entre l'espèce $s$ de la communauté 1 et toutes les espèces de la communauté 2.
 
 
 \section[Distance entre paires de communautés et diversité beta]{Distance entre paires de communautés et diversité $\beta$}
@@ -762,7 +796,7 @@ La distance de corde (Figure \ref{CordeFig}) est obtenue par la transformation
 Les communautés sont représentées dans l'espace des espèces par un vecteur dont les composantes sont proportionnelles aux probabilités des espèces mais dont la norme est 1.
 La distance entre communautés est donc la longueur de la corde qui relie les extrêmités de leurs vecteurs sur la sphère à $S$ dimensions de rayon 1.
 
-La distance de Hellinger est obbtenue par
+La distance de Hellinger est obtenue par
 \begin{equation}
   y_{s|i} = \sqrt{p_{s|i}}.
   \label{eq:Hellinger}
