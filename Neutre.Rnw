@@ -238,7 +238,7 @@ L'estimateur jackknife n'a pas de support théorique solide \autocite{Cormack198
 
 L'estimateur du bootstrap \autocite{Smith1984} est
 \begin{equation} 
-  \hat{S}_\mathit{b} = {\xq{s}{}{n}{\ne 0}{}} + \sum_s{(1-P_s)^n}.
+  \hat{S}_\mathit{b} = {\xq{s}{}{n}{\ne 0}{}} + \sum_s{(1-p_s)^n}.
 \end{equation}
 
 Il est peu utilisé parce que le jackknife est plus performant \autocite{Colwell1994}. 
@@ -1384,6 +1384,12 @@ Un nombre équivalent d'espèces existe pour tous ces indices, il est toujours �
 \begin{equation}
   D = \frac{1}{I^{-1}\left(\sum^S_{s=1}{p_s I(p_s)}\right)}.
 \end{equation}
+
+D'autres entropies ont été utlisées, avec plus ou moins de succès.
+Par exemple, \textcite{Ricotta2003c} proposent d'utiliser la fonction d'information $I(p_s)=-\ln(k_s)$ où $k_s$ est la dissimilarité totale de l'espèce $s$ avec les autres (par exemple, la somme des distances aux autres espèces dans un arbre phylogénétique, voir page~\pageref{sec:Dphylo}), normalisée pour que $\sum_s{k_s}=1$.
+Ainsi, les espèces les plus originales apportent peu d'information, ce qui n'est pas très intuitif.
+Les auteurs montrent que leur mesure est la somme de l'entropie de Shannon et de la divergence de Kullback-Leibler entre les probabilités et les dissimilarités des espèces.
+\textcite{Ricotta2006b} ont défini plus tard une entropie augmentant avec l'originalité de chaque espèce, présentée au chapitre~\ref{sec:LeinsterCobbold}).
 
 
 

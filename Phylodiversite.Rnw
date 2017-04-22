@@ -91,6 +91,7 @@ La façon exacte de mesurer les longueurs de branche est illustrée par la Figur
 La distance est la hauteur du premier n\oe ud commun.
 
 \section{Distance phylogénétique}
+\label{sec:Dphylo}
 
 La façon la plus évidente de définir une distance entre espèces est d'utiliser la taxonomie \autocite{Clarke2001, Warwick2001}, en attribuant une distance arbitraire (par exemple 1) à deux espèces du même genre, une autre (par exemple 2) à deux espèces de la même famille, etc. 
 La distance définie est ultramétrique.

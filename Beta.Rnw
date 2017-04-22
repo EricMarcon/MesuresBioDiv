@@ -33,12 +33,7 @@ Pour simplifier l'exposé, les individus seront échantillonnés dans des commun
 Le Tableau~\ref{table:Notations} résume les notations.
 
 Des exemples montrent comment calculer cette diversité, principalement à l'aide du package \emph{entropart}. 
-Le package contient les données d'inventaire de deux hectares du dispositif de Paracou:
-
-<<entropartRappel>>=
-<<entropart>>
-@
-
+Le package contient les données d'inventaire de deux hectares du dispositif de Paracou.
 Les données sont organisées dans le package sous la forme d'un objet \code{MetaCommunity} qui contient notamment la matrice des $n_{s,i}$. 
 Les parcelles de Paracou sont dans l'objet \code{Paracou618.MC}.
 
@@ -693,6 +688,13 @@ celui d'Ochiai par:
 
 Ces quatre similarités permettent une représentation des communautés par PCoA de la même façon que l'indice de Jaccard traité plus haut.
 
+\textcite{Ricotta2014b} ont aussi proposé de mesurer la dissimilarité par la somme des différences (en valeur absolue) de banalité des espèces des deux communautés, normalisée par la banalité totale:
+\begin{equation}
+  D_{\mathit{RBP}} 
+  = \frac{\sum_{s}{|\sum_{t}{(p_s-q_t)z_{s,t}}}|}{\sum_{s}{\sum_{t}{(p_s+q_t)z_{s,t}}}}.
+\end{equation}
+
+
 D'autres similarités ont été proposées mais ont des propriétés qui empêchent de les utiliser \autocite{Ricotta2014b}: leur valeur n'est pas toujours nulle pour deux communautés identiques.
 Ce sont l'indice proposé par \textcite{Rao1982},
 \begin{equation}
@@ -706,7 +708,7 @@ comme les indices de \textcite{Swenson2011}:
 
 et
 \begin{equation}
-  d_{\mathit{pw}}' = \frac{1}{2}\left( \sum_s{p_{s|1}\bar{d_{s,2}}} + \sum_t{p_{t|2}\bar{d_{t,1}}} \right), 
+  d_{\mathit{pw}}' = \frac{1}{2}\left( \sum_s{p_s\bar{d_{s,2}}} + \sum_t{q_t\bar{d_{t,1}}} \right), 
 \end{equation}
 
 où $\bar{d_{s,2}}$ est la dissimilarité moyenne entre l'espèce $s$ de la communauté 1 et toutes les espèces de la communauté 2.
