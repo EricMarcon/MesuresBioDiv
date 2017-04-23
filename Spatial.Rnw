@@ -85,15 +85,16 @@ On notera que la distribution de ${\pi}_{n_s}$ n'est pas celle de $p_s$.
 La courbe représentant $n_s$ en fonction de son rang n'est pas un vrai diagramme rang-abondance, mais un \og pseudo-RAC\fg{} \autocite{Izsak2012}.
 
 En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui correspond à une distribution comprenant de nombreuses espèces de fréquences très variables, donc un pseudo-RAC décroissant rapidement, et retient cette propriété pour la suite de son raisonnement. 
-Dans ce cas, l'espérance du nombre d'espèces représentées par $l$ individus est, en posant $x=\nicefrac{p}{p+1}$ et $\alpha$ une constante:
+Dans ce cas, l'espérance du nombre d'espèces représentées par $\nu$ individus est, en posant $x=\nicefrac{p}{p+1}$ et $\alpha$ une constante:
 
 \begin{equation}
-  s_l = \frac{\alpha}{l} x^l.
+  s_\nu = \frac{\alpha}{\nu} x^\nu.
 \end{equation}
 
-Le nombre total d'individus en est donc la somme pour toutes les valeurs de $l$:
+Le nombre total d'individus en est donc la somme pour toutes les valeurs de $\nu$:
 \begin{equation}
-  n = \sum_{l=1}^{\infty}{\alpha x^l} = \frac{\alpha x}{1-x}.
+\label{eq:nalpha}
+  n = \sum_{\nu=1}^{\infty}{\alpha x^\nu} = \frac{\alpha x}{1-x}.
 \end{equation}
 
 La combinaison des deux équations permet d'éliminer $x$ et d'obtenir l'espérance du nombre d'espèces observées en fonction de la taille de l'échantillon:
@@ -104,8 +105,12 @@ La combinaison des deux équations permet d'éliminer $x$ et d'obtenir l'espéra
 \end{equation}
 
 $\alpha$ est un indicateur de la biodiversité qui peut être interprété comme le nombre d'espèces nouvelles découvertes quand le nombre d'individus échantillonnés est multiplié par $e$: c'est en effet la pente de la courbe de $\xq{S}{}{n}{}{}$ en fonction de $\ln n$, qui se stabilise à partir d'une valeur de $n$ suffisante. 
+C'est aussi le nombre de singletons attendus dans l'échantillon de taille $n$ comme le montre l'équation \ref{eq:nalpha}, sachant que $x \approx 1$.
 
 $\alpha$ est aussi égal à $\theta$, le nombre fondamental de la biodiversité de Hubbell quand le nombre d'espèces est grand \autocite{Alonso2004} : la SAD de la méta-communauté (pas celle de la communauté locale si la dispersion est limitée) du modèle neutre est en log-séries.
+$\alpha$ est le produit du nombre total d'individus de la méta-communauté, noté classiquement $J_m$, et du taux de spéciation individuel noté $\nu$.
+$x$ est le rapport entre les taux de naissance $b$ et de mortalité $d$ dans la métacommunauté, très légèrement inférieur à 1 parce que les espèces existantes sont appelées à disparaître par dérive, et remplacées par les nouvelles espèces: $\nicefrac{b+\nu]{d]=1$.
+
 
 Dans R, les fonctions \code{fisher.alpha} de la librairie \emph{vegan} et \code{fishers.alpha} de la librairie \emph{untb} \autocite{Hankin2007} effectuent une résolution numérique de l'équation~\ref{eq:AlphaFisher} pour estimer $\alpha$.
 La fonction \code{optimal.theta} dans \emph{untb} évalue la valeur de $\theta$ par la méthode du maximum de vraisemblance \autocite[page 122]{Hubbell2001}, en utilisant toute l'information de la distribution.

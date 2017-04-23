@@ -728,6 +728,8 @@ Il est obtenu par extrapolation de la relation du nombre de taxons d'un niveau �
 
 
 En se limitant aux arbres, l'estimation se monte à \SI{16000} espèces pour l'Amazonie \autocite{TerSteege2013}, de l'ordre de 5000 pour l'Afrique et entre 40000 et 53000 pour l'ensemble des tropiques \autocite{Slik2015} (donc pour l'ensemble de la planète, le nombre d'espèces non-tropicales étant négligeable).
+Ces estimations sont obtenues par extrapolation du modèle en log-séries (capitre~\ref{chap:Fisher}) et sont sujettes au paradoxe de Fisher: les espèces représentées par un très petit nombre d'individu dans le modèle, notamment les singletons, sont les plus nombreuses.
+Une discussion approfondie est donnée par \textcite{Hubbell2015}: les espèces récemment apparues au sens du modèle ne sont pas détectables avant plusieurs générations, créant un décalage entre le nombre d'espèces reconnues par la taxonomie et modèle.
 
 \textcite{Wilson2012} compilent les relevés du nombre d'espèces de plantes vasculaires en fonction de la surface et retiennent uniquement les plus riches à chaque échelle spatiale (du millimètre carré à l'hectare).
 Ces relevés sont tous situés en forêt tropicale ou en prairie tempérée gérée (les perturbations régulières et modérées y favorisent la diversité, conformément à la théorie de la perturbation intermédiaire \autocite{Connell1978}).
