@@ -88,12 +88,12 @@ En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui
 Dans ce cas, l'espérance du nombre d'espèces représentées par $\nu$ individus est, en posant $x=\nicefrac{p}{p+1}$ et $\alpha$ une constante:
 
 \begin{equation}
+\label{eq:nalpha}
   s_\nu = \frac{\alpha}{\nu} x^\nu.
 \end{equation}
 
 Le nombre total d'individus en est donc la somme pour toutes les valeurs de $\nu$:
 \begin{equation}
-\label{eq:nalpha}
   n = \sum_{\nu=1}^{\infty}{\alpha x^\nu} = \frac{\alpha x}{1-x}.
 \end{equation}
 
@@ -109,7 +109,7 @@ C'est aussi le nombre de singletons attendus dans l'échantillon de taille $n$ c
 
 $\alpha$ est aussi égal à $\theta$, le nombre fondamental de la biodiversité de Hubbell quand le nombre d'espèces est grand \autocite{Alonso2004} : la SAD de la méta-communauté (pas celle de la communauté locale si la dispersion est limitée) du modèle neutre est en log-séries.
 $\alpha$ est le produit du nombre total d'individus de la méta-communauté, noté classiquement $J_m$, et du taux de spéciation individuel noté $\nu$.
-$x$ est le rapport entre les taux de naissance $b$ et de mortalité $d$ dans la métacommunauté, très légèrement inférieur à 1 parce que les espèces existantes sont appelées à disparaître par dérive, et remplacées par les nouvelles espèces: $\nicefrac{b+\nu]{d]=1$.
+$x$ est le rapport entre les taux de naissance $b$ et de mortalité $d$ dans la méta-communauté, très légèrement inférieur à 1 parce que les espèces existantes sont appelées à disparaître par dérive, et remplacées par les nouvelles espèces: $\nicefrac{(b+\nu)}{d}=1$.
 
 
 Dans R, les fonctions \code{fisher.alpha} de la librairie \emph{vegan} et \code{fishers.alpha} de la librairie \emph{untb} \autocite{Hankin2007} effectuent une résolution numérique de l'équation~\ref{eq:AlphaFisher} pour estimer $\alpha$.
@@ -549,7 +549,7 @@ L'équation~\ref{eq:AlphaFisher} en est la limite pour $k \to 0$.
 Pour $-1<k<0$, avec $A$ suffisamment grand, l'équation~\ref{eq:AlphaEngen} revient à la relation d'Arrhenius, où $z=-k$.
 Les deux relations peuvent donc être obtenues à partir du même modèle mathématique dont seul le paramètre $k$ diffère, mais aucune interprétation biologique sur le choix du paramètre n'est possible.
 
-Empiriquement, il est difficile d'estimer lequel des modèles est le plus adapté aux données: sur 35 jeux de données, Connor et McCoy montrent que les régressions de $S$ ou $\ln S$ en fonction de $A$ ou $\ln A$ ont des performances similaires en termes de qualité d'ajustement ($R^2$), mais \textcite{Triantis2012} valident largement le modèle d'Arrhenius pour des SAR insulaires.
+Empiriquement, il est difficile d'estimer lequel des modèles est le plus adapté aux données: sur 35 jeux de données, \textcite{Connor1979} montrent que les régressions de $S$ ou $\ln S$ en fonction de $A$ ou $\ln A$ ont des performances similaires en termes de qualité d'ajustement ($R^2$), mais \textcite{Triantis2012} valident largement le modèle d'Arrhenius pour des SAR insulaires.
 Ce résultat est conforme à celui de \textcite{Dengler2009} qui a testé 23 types de SAR et conclu que la loi de puissance est le modèle le plus universel.
 
 \textcite{Preston1960} argumente en faveur du modèle d'Arrhenius (et en défaveur de celui de Gleason) aux échelles intermédiaires et montre que la courbe aire-espèces est triphasique (Figure~\ref{Grilli2012}). 
@@ -677,15 +677,15 @@ La semi-variance empirique à distance $r$ de la variable indicatrice de la pré
 
 Chaque terme de la somme vaut 1 si l'espèce est présente sur une seule des deux parcelles: $\hat{\gamma}_{s}(r)$ estime donc la probabilité que l'espèce ne soit présente que sur une seule parcelle.
 Le variogramme de la variable indicatrice est obtenue en traçant la valeur de $\hat{\gamma}_{s}(r)$ en fonction de $r$.
-Ce variogramme univarié, classique en géostatistique, est généralisé aux données multivariées: le vecteur de présence des espèces $\vectorsym{S_i}$ dont chaque terme est ${\mathbf 1}_{s|i}$.
+Ce variogramme univarié, classique en géostatistique, est généralisé aux données multivariées: le vecteur de présence des espèces $\vectorsym{s_i}$ dont chaque terme est ${\mathbf 1}_{s|i}$.
 La semi-variance de ce vecteur de composition spécifique est
 \begin{equation}
   \hat{\gamma}(r) 
-  = \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{\| \vectorsym{S_i}-\vectorsym{S_j} \|^2}
+  = \frac{1}{2 n_r} \sum_{i,j;d(i,j)\approx r}{\| \vectorsym{s_i}-\vectorsym{s_j} \|^2}
   = \sum_{s}{\hat{\gamma}_{s}(r)}.
 \end{equation}
 
-$\| \vectorsym{S_i}-\vectorsym{S_j} \|$ est la distance euclidienne entre les deux vecteurs.
+$\| \vectorsym{s_i}-\vectorsym{s_j} \|$ est la distance euclidienne entre les deux vecteurs.
 Puisque $\hat{\gamma}(r)$ est la somme des semi-variances spécifiques, c'est un estimateur de l'espérance du nombre d'espèces présentes sur une seule parcelle de chaque paire.
 Le variogramme de la composition spécifique est appelé \og variogramme de complémentarité \fg{} pour cette raison.
 

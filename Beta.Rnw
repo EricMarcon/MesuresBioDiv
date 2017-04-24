@@ -112,13 +112,15 @@ Une variation sur le modèle T2 consiste à le représenter sous la forme d'un m
 L'indice de Simpson spatialement explicite (page~\pageref{sec:SimpsonSpatial}) entre dans ce cadre bien qu'il soit construit différemment.
 
 Les mesures de variation (Figure~\ref{Anderson2011b}, V1) concernent la dissimilarité entre plusieurs communautés ou entre chaque communauté et la méta-communauté.
-L'équivalence de ces deux concepts n'est pas évidente: elle a été montrée pour les mesures de dissimilarité entre paires de communautés par \textcite{Legendre1999, Legendre2001, Legendre2005}, pour l'entropie de Rao par \textcite{Pavoine2004} et pour l'entropie HCDT par \textcite{Marcon2014a}.
+L'équivalence de ces deux concepts n'est pas évidente: elle a été montrée pour les mesures de dissimilarité entre paires de communautés par \textcite{Legendre1999, Legendre2001, Legendre2005} et pour l'entropie de Rao par \textcite{Pavoine2004} mais reste une question ouverte pour l'entropie HCDT en général.
+
 La diversité $\beta$ peut être mesurée pour un assemblage de communautés au choix comme la moyenne des dissimilarités entre les paires de communautés  ou à partir des diversités $\gamma$ et $\alpha$, c'est-à-dire en tant que mesure dérivée.
-Cette dernière approche est traitée dans ce chapitre, où il sera montré que la mesure dérivée est aussi une dissimilarité moyenne entre communautés.
+Cette dernière approche est traitée dans ce chapitre, où il sera montré que la mesure dérivée est aussi une dissimilarité moyenne entre communautés et méta-communauté.
 
 Si la diversité est mesurée comme moyenne des dissimilarités, elle peut être analysée par des méthodes d'ordination indirectes (Figure~\ref{Anderson2011b}, V2) ou directes (V3). Elle peut aussi être comparée entre méta-communautés ou modélisée en fonction d'un gradient environnemental (V4), de façon similaire au modèle T6.
 
 La diversité $\beta$ peut être décomposée en niveaux hiérarchiques emboîtés (V5). Des tests statistiques sont nécessaires pour comparer les niveaux: par exemple, montrer que la diversité (inter) entre des communautés supposées différentes est significativement plus grande que celle (intra) des placettes d'échantillonnage de chacune d'entre elles, à la manière d'une analyse de variance (V6).
+D'autres analyses sont bien sûr envisageables, comme la comparaison de la forme de la courbe de dissimilarité moyenne entre paires de communautés en fonction de la distance à des patrons connus, issus de simulation de processus à identifier \autocite{Rejou-Mechain2011}.
 
 
 \section{Typologie des mesures}
@@ -714,7 +716,9 @@ et
 où $\bar{d_{s,2}}$ est la dissimilarité moyenne entre l'espèce $s$ de la communauté 1 et toutes les espèces de la communauté 2.
 
 
-\section[Distance entre paires de communautés et diversité beta]{Distance entre paires de communautés et diversité $\beta$}
+\section[Distance entre paires de communautés et diversité beta proportionnelle]{Distance entre paires de communautés et diversité $\beta$ proportionnelle}
+
+Dans certains cas présentés ici, la diversité de différentiation est parfaitement conciliable avec la diversité proportionnelle.
 
 \subsection{Diversité de Simpson}
 
