@@ -133,6 +133,7 @@ et
 = \sum_s{{p_s^q} \xq[\,]{H}{q}{}{}{}\left(\{\frac{p_{s,i}}{p_s}\}\right)}.
 \end{equation}
 
+Ce résultat avait déjà été obtenu par \textcite{Suyari2004}, corrigé par \textcite{Ilic2013}.
 Par le même raisonnement que pour l'entropie de Shannon, on trouve donc que l'entropie entre les classes est l'opposée de l'information mutuelle calculée dans le cadre de l'entropie HCDT, à condition de définir les poids des classes égaux à $p_i$ et l'entropie intraclasse comme la somme des entropies des classes pondérées par leur poids à la puissance $q$.
 
 \subsection{Intérêt de l'information mutuelle}

@@ -77,7 +77,8 @@ Une présentation détaillée du problème et des limites à sa résolution est 
 
 Dans un échantillon de taille $n$ résultant d'un tirage indépendant des individus, la probabilité que l'espèce $s$ soit observée $\nu$ fois suit une loi binomiale.
 L'espérance du nombre d'espèces observées $\nu$ fois, ${\mathbb E}(\xq{s}{}{n}{\nu}{})$, est obtenue en écrivant la probabilité d'observer l'espèce $s$ $\nu$ fois, sommée pour toutes les espèces et multipliée par le nombre de façons de choisir les $\nu$ individus parmi les $n$ échantillonnés:
-\begin{equation} 
+\begin{equation}
+\label{eq:Esnnu}
   {\mathbb E}\left( \xq{s}{}{n}{\nu}{} \right) = \binom{n}{\nu} \sum_s{p_s^\nu \left( 1-p_s \right)^{n-\nu}}.
 \end{equation}
 
@@ -114,10 +115,17 @@ L'estimateur est obtenu en remplaçant les espérances par les valeurs observée
 
 où $\xq{s}{}{n}{\ne 0}{}$ est le nombre d'espèces différentes observé.
 
-Il s'agit d'un estimateur minimum: l'espérance du nombre d'espèces est supérieure ou égale au nombre estimé. 
+Il s'agit d'un estimateur minimum: l'espérance du nombre d'espèces est supérieure ou égale au nombre estimé.
+
+\textcite{Beguinot2014} a montré que l'estimateur est sans biais si le nombre d'espèces non observées décroît exponentiellement avec la taille de l'échantillon:
+\begin{equation}
+  \label{eq:BiaisChao}
+  \xq{s}{}{n}{0}{} = S e^{-kn},
+\end{equation}
+où $k$ est un réel strictement positif.
+Cette relation est cohérente avec un échantillonnage poissonien dans lequel la densité des individus est constante: voir le chapitre~\ref{chap:Accumulation}.
 
 Si aucune espèce n'est observée deux fois, l'estimateur est remplacé par
-
 \begin{equation}
   \label{eq:Chao1sansf2}
   {\hat{S}}_\mathit{Chao1} = \xq{s}{}{n}{\ne 0}{} + \frac{\left(n-1\right){\xq{s}{}{n}{1}{}}\left(\xq{s}{}{n}{1}{}-1\right)}{2n}.
@@ -172,6 +180,9 @@ où
   + \frac{\xq{s}{}{n}{3}{}}{4\xq[\,]{s}{}{n}{4}{}}\,
   \max\left(\xq{s}{}{n}{1}{}-\frac{\xq{s}{}{n}{2}{}\xq[\,]{s}{}{n}{3}{}}{2\xq[\,]{s}{}{n}{4}{}};0\right).
 \end{equation}
+
+\textcite{Chao2017} étendent l'applicabilité de l'estimateur Chao2 à des données dans lesquelles les espèces sont notées uniquement comme singletons ou doubletons et plus, sans distinction entre doubletons et espèces plus fréquentes.
+Une relation entre le nombre de doubletons et les données disponibles est fourni; sa résolution numérique (le code R nécessaire est fourni avec l'article) permet d'estimer $\xq{s}{}{n}{2}{}$ et de l'injecter dans l'estimateur Chao2.
 
 
 
@@ -232,7 +243,114 @@ La variance du jackknife d'ordre 1 est \autocite{Heltshe1983}
   = \frac{n-1}{n} \left( \sum_{j=1}^{n}{j^2 \xq{s}{}{n}{j}{}} - \frac{\left( \xq{s}{}{n}{\ne 0}{} \right)^2}{n} \right).
 \end{equation}
 
-L'estimateur jackknife n'a pas de support théorique solide \autocite{Cormack1989} mais est efficace en pratique, notamment parce que son ordre peut être adapté aux données.
+L'estimateur est construit à partir de l'hypothèse selon laquelle le nombre d'espèces non observées est de la forme
+$$\xq{s}{}{n}{0}{} = \sum_{i=1}^{\infty}{\frac{a_i}{n^i}}.$$
+
+Pour cette raison, \textcite{Cormack1989} affirme qu'il n'a pas de support théorique solide.
+L'espérance du nombre d'espèces non observées est (équation~\ref{eq:Esnnu}) $\sum_s{(1-p_s)^n}$, qui décroît beaucoup plus rapidement que $\sum_{i}{\nicefrac{a_i}{n^i}}$: l'hypothèse est bien fausse.
+En revanche, pour une gamme de $n$ fixée (de la taille de l'inventaire à une taille suffisante pour approcher la richesse asymptotique par exemple), il est toujours possible d'écrire le nombre d'espèces non observées sous la forme d'une série de puissances négatives de $n$, comme dans l'illustration ci-dessous.
+
+Une communauté log-normale, similaire à BCI (300 espèces, écart-type égal à 2) est simulée et un échantillon de 1000 individus est tiré.
+
+<<BiaisJack1>>=
+# Ecart-type
+sdlog <- 2
+# Nombre d'espèces
+S <- 300
+# Tirage des probabilités log-normales
+Ps <- as.ProbaVector(rlnorm(S, 0, sdlog))
+# Taille de l'échantillon
+N <- 1000
+# Tirage d'un échantillon
+Ns <- rCommunity(1, size = N, NorP = Ps)
+@
+
+L'échantillon est présenté en Figure~\ref{BiaisJack1Fig}
+\verbfootnote{
+Code R:
+<<BiaisJack1Code, eval=FALSE>>=
+plot(Ns, Distribution="lnorm")
+@
+}.
+
+\figureMargin{BiaisJack1Fig}
+{
+  Echantillon de 1000 individus tiré dans une communauté log-normale.
+}
+{
+<<BiaisJack1Fig, echo=FALSE, results='hide', out.width='\\maxwidth'>>=
+<<BiaisJack1Code>>
+@
+}
+
+Il est possible de vérifier que l'espérance du nombre d'espèces non observées correspond bien à la moyenne des observations.
+
+<<BiaisJack2>>=
+# Espérance des espèces non vues
+E0 <- (1-Ps)^N
+(f0 <- sum(E0))
+# Tirage de 1000 échantillons, nombre moyen d'espèces observées
+(Sn <- mean(colSums(rmultinom(1000, N, Ps)>0)))
+# Vérification: nombre d'espèces observées en moyenne et non observées
+Sn+f0
+# Nombre total d'espèces dans la communauté
+(S <- length(Ps))
+@
+
+Le nombre d'espèces non observées peut être écrit sous la forme d'une série de puissances négatives de $n$, comme le prévoit le jackknife, entre deux valeurs de $n$ fixées.
+
+<<BiaisJack3>>=
+# Echantillonnage de 500 à 5000 individus
+n.seq <- 500:5000
+# Calcul du nombre d'espèces non observées
+Bias <- sapply(n.seq, function(n) sum((1-Ps)^n))
+@
+
+Le nombre d'espèces non observées, qui est le biais de l'estimateur de la richesse, est présenté en Figure~\ref{BiaisJack3Fig}
+\verbfootnote{
+Code R:
+<<BiaisJack3Code, eval=FALSE>>=
+plot(x=n.seq , y=Bias, type="l")
+lines(x=n.seq, y=predict(lm1), col="red", lty=2)
+lines(x=n.seq, y=predict(lm2), col="orange", lty=2)
+lines(x=n.seq, y=predict(lm4), col="blue", lty=2)
+@
+}.
+
+La courbe peut être approchée par une série de puissances négatives de $n$ dont quelques termes sont présentés sur la figure.
+
+<<BiaisJack4>>=
+# Ordre 1
+summary(lm1 <- lm(Bias ~ 0 +I(1/n.seq)))
+# Ordre 2
+summary(lm2 <- lm(Bias ~ 0 +I(1/n.seq) + I(1/n.seq^2)))
+# Ordre 4
+summary(lm4 <- lm(Bias ~ 0 +I(1/n.seq) + I(1/n.seq^2) + I(1/n.seq^3) + I(1/n.seq^4)))
+@
+
+\figureSC[t]{BiaisJack3Fig}
+{
+  Nombre d'espèces non obervées dans un échantillon de taille croissante et sa décomposition en séries de puissances négatives de $n$.
+  Le nombre d'espèces non observées est représenté par la courbe continue noire.
+  Les séries de puissances négatives d'ordre 1 (courbe rouge), 2 (courbe orange) et 4 (courbe bleue) sont représentées en pointillés.
+  Les courbes d'ordre 6 et plus sont confondues avec la courbe noire. 
+}
+{
+<<PhylogFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
+<<BiaisJack3Code>>
+@
+}
+
+L'ajustement est possible pour des valeurs de $n$ différentes mais les coefficients $a_i$ sont alors différents: la forme du biais n'est valide que pour une gamme de valeurs de $n$ fixée.
+
+
+\textcite{Beguinot2016} apporte un autre argument important en faveur du jackknife. 
+\`A condition que $n$ soit suffisamment grand, l'estimateur du nombre d'espèces non observées est une fonction linéaire du nombre d'espèces observées $\nu$ fois: $\xq{s}{}{n}{1}{}$ pour le jackknife 1, $2 \xq{s}{}{n}{1}{} - \xq{s}{}{n}{2}{}$ pour le jackknife 2 et ainsi de suite pour les ordres suivants, contrairement à l'estimateur de Chao.
+Grâce à cette propriété, l'estimateur du jackknife est additif quand plusieurs groupes d'espèces disjoints sont pris en compte: l'estimation du nombre d'espèces de papillons et de scarabées inventoriées ensemble est égale à la somme des estimations des deux groupes inventoriés séparément.
+Ce n'est pas le cas pour l'estimateur de Chao.
+
+L'estimateur du jackknife est très utilisé parce qu'il est efficace en pratique, notamment parce que son ordre peut être adapté aux données.
+
 
 \subsubsection{L'estimateur du bootstrap}
 
@@ -347,8 +465,14 @@ Quand l'échantillonnage est suffisant, les estimateurs de Chao ont l'avantage d
 Dans ce cas, les estimations du jackknife d'ordre 1 sont cohérentes avec celles de Chao.
 En revanche, quand l'échantillonnage est insuffisant, l'estimateur jackknife d'ordre supérieur à 1 permet de réduire le biais d'estimation, au prix d'une variance accrue \autocite{Marcon2015a}.
 
+Enfin, \textcite{Beguinot2015a, Beguinot2016} suggère d'utiliser en règle générale le jacknife 2 (mais ne traite pas les cas dans lesquels l'échantillonnage est trop faible pour justifier un ordre supérieur) tant que  le nombre de singletons est supérieur à $2-\sqrt(2) \approx 0,6$ fois le nombre de doubletons.
+Le ratio des singletons sur les doubletons diminue quand l'échantillonnage approche de l'exhaustivité.
+Quand le seuil de 0,6 est dépassé, la valeur de l'estimateur de Chao devient supérieur au jancknife 2 et doit être utilisé.
+Ce seuil est cohérent avec les règles de \textcite{Brose2003}.
+
 
 \subsubsection{Prédiction de la richesse d'un nouvel échantillon}
+\label{sec:Shen2003}
 
 La prédiction du nombre d'espèces $\hat{S'}$ découvert dans une nouvelle placette d'un habitat dans lequel on a déjà échantillonné est une question importante, par exemple pour évaluer le nombre d'espèces préservées dans le cadre d'une mise en réserve, ou évaluer le nombre d'espèces perdues en réduisant la surface d'une forêt.
 
@@ -390,6 +514,8 @@ La courbe obtenue est en Figure~\ref{NonObserve}
   curve(Sprime, 1, 10000)
   @
 }.
+
+La question de l'extrapolation de la richesse est traitée plus en détail dans les sections~\ref{sec:RarExtrapol} et \ref{sec:Extrapolation}.
 
 
 \subsection{Inférence du nombre d'espèces à partir de la SAD}
@@ -1925,6 +2051,7 @@ Ces méthodes ont l'avantage de fournir une distribution de probabilité des par
 
 
 \subsection{Raréfaction et extrapolation}
+\label{sec:RarExtrapol}
 
 \textcite{Chao2014} étendent l'approche de \textcite{Gotelli2001} aux nombres de Hill et fournissent les méthodes nécessaires au calcul de courbes de raréfaction et d'extrapolation de l'estimateur de $\xq{D}{q}{}{}{}$ en fonction de la taille de l'échantillon ou du taux de couverture.
 

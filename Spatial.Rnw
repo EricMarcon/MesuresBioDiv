@@ -257,6 +257,7 @@ La formulation exacte de la courbe de raréfaction et de sa variance est connue 
 La fonction \code{specaccum} de la librairie \emph{vegan} \autocite{Oksanen2012} permet de tracer les SAC (Figure~\ref{specaccumFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
   <<specaccumCode, eval=FALSE>>=
+  data(BCI)
   SAC <- specaccum(BCI, "random")
   plot(SAC, ci.type="poly", lwd=2, ci.lty=0, ci.col="lightgray")
   @
@@ -291,6 +292,9 @@ La SAC théorique en fonction du nombre d'individus ne contient pas cet aléa.
 Le nombre d'individus de l'espèce $s$ suit alors une loi binomiale d'espérance $np_s$ et la distribution d'un échantillon de taille $n$ suit la loi multinomiale correspondante.
 Les deux approches se réconcilient en fixant arbitrairement le nombre d'individus échantillonnés dans la courbe aire-espèce : conditionnellement au nombre total d'individus, la distribution des abondances des espèces issues de lois de Poisson de paramètres $\lambda_s$ suit une loi multinomiale \autocite{Steel1953} dont les probabilités sont proportionnelles à $\lambda_s$.
 
+La SAC définie en fonction du nombre d'individus est au sens strict une succession de points (à chaque valeur de $n$), pas une courbe continue.
+Elle est toutefois toujours présentée comme une courbe lissée passant par les points pour être continue et dérivable.
+
 Une difficulté supplémentaire consiste à prendre en compte les espèces non échantillonnées en appliquant des techniques statistiques pour réduire le biais qu'elles induisent \autocite{Colwell2012}.
 Dans ce but, la SAC théorique peut être construite \autocite{Chao2013} comme la somme des entropies de Simpson généralisées \autocite{Zhang2010} (présentées page~\pageref{eq:zeta}).
 
@@ -298,13 +302,218 @@ La courbe obtenue (Figure~\ref{SACzetaFig}
 \verbfootnote{Code R:
   <<SACzetaCode, eval=FALSE>>=
   library("EntropyEstimation")
+  data(BCI)
   Ns <- colSums(BCI)
-  gsValues <- sapply(1:(sum(Ns-1)), function(r) GenSimp.z(Ns, r))
+  gsValues <- sapply(1:(sum(Ns)-1), function(r) GenSimp.z(Ns, r))
   SAC <- cumsum(gsValues)
-  plot(0:sum(Ns-1), c(0, SAC), type="l", xlab="Nombre d'individus", ylab="Nombre d'espèces")
+  plot(0:(sum(Ns)-1), c(0, SAC), type="l", xlab="Nombre d'individus", ylab="Nombre d'espèces")
   @
 }) est la même que par raréfaction, sans les problèmes d'estimation.
 Son intervalle de confiance n'est pas représenté : l'estimation est sans biais et a une variance très petite; d'autre part, la variabilité de l'échantillonnage prise en compte dans la figure~\ref{specaccumFig} est ignorée ici. La fonction \code{GenSimp.z} est fournie par le package \emph{EntropyEstimation} \autocite{Cao2014}.
+
+
+\section{Extrapolation}
+\label{sec:Extrapolation}
+
+L'extrapolation de la SAC est un cas particulier de celle de la diversité, déjà vue en section~\ref{sec:RarExtrapol}, page~\pageref{sec:RarExtrapol}.
+
+\textcite{Beguinot2015} a une approche différente.
+Il considère la SAC comme une fonction continue et infiniment dérivable de la taille de l'échantillon.
+Le nombre d'espèces non observées dans un échantillon de taille $n$ est noté $\xq{s}{}{n}{0}{}$.
+Le nombre d'espèces observées dans la SAC est $\xq{s}{}{n}{>0}{} = S - \xq{s}{}{n}{0}{}$.
+Quand $n$ est assez grand, la pente de la SAC varie peu entre $n-1$ et $n+1$ individus.
+\textcite{Beguinot2014} approxime la dérivée de $\xq{s}{}{n}{0}{}$ par $\xq{s}{}{n}{0}{}-\xq{s}{}{n-1}{0}{}$.
+La dérivée est en réalité plus grande: la pente de la SAC, qui est l'opposée de la pente de $\xq{s}{}{n}{0}{}$, décroît avec $n$ mais l'approximation est acceptable quand $n$ est assez grand.
+De même, les dérivées successives, par exemple seconde, sont approchées par la variation de la dérivée d'ordre inférieur, par exemple première, entre $n-1$ et $n$.
+En combinant ces approximations avec l'espérance du nombre d'espèces observées $\nu$ fois dans un échantillon de taille $n$, équation~\ref{eq:Esnnu}, page~\pageref{eq:Esnnu}, on obtient:
+\begin{equation}
+\label{eq:Beguinot2014}
+  {\mathbb E}\left( \xq{s}{}{n}{\nu}{} \right) 
+  = \left(-1 \right)^{\nu-1} \binom{n}{\nu} \frac{\partial^\nu \xq{s}{}{n}{>0}{}}{\partial n^\nu}, \nu=1,2,\dots
+\end{equation}
+
+L'espérance du nombre d'espèces observées $\nu$ fois dépend directement de la dérivée $\nu$\ieme\ de la SAC.
+
+\textcite{Beguinot2015} écrit l'accroissement du nombre d'espèces observées quand l'échantillon augmente de $n$ à $n +\delta n$ sous la forme d'une série entière, qu'il combine avec l'équation précédente pour en obtenir une approximation :
+\begin{equation}
+  \xq{s}{}{n +\delta n}{}{}
+  \approx \xq{s}{}{n}{}{} + \sum_\nu {\left(-1 \right)^{\nu-1} \xq{s}{}{n}{\nu}{} \left(\frac{\delta n}{n}\right)^{\nu}}.
+\end{equation}
+
+La somme est infinie mais ses termes décroissent rapidement. 
+Le nombre de termes à prendre en compte est d'autant plus grand que $\nicefrac{\delta n}{n}$, le niveau d'extrapolation, est grand.
+L'auteur conseille de ne pas pousser l'extrapolation au delà du double de $n$.
+
+Cette méthode est comparée à l'extrapolation de la diversité d'ordre 0 (section~\ref{sec:RarExtrapol}) et à l'estimateur de \textcite{Shen2003} (section~\ref{sec:Shen2003}) dans l'illustration suivante.
+
+Une communauté théorique log-normale de 300 espèces est créée.
+Des inventaires de 1000 individus sont simulés et les trois méthodes d'extrapolation de la richesse spécifique sont appliquées pour estimer la richesse d'un échantillon de 1800 individus.
+Les résultats obtenus sont comparés à des inventaires directs de 1800 individus.
+
+<<Beguinot2015>>=
+# Ecart-type de la communauté log-normale
+sdlog <- 2
+# Nombre d'espèces
+S <- 300
+# Tirage des probabilités log-normales (l'espérance est sans importance)
+Ps <- as.ProbaVector(rlnorm(S, 0, sdlog))
+# Taille de l'inventaire
+n <- 1000
+# Niveau d'extrapolation
+extra <- 0.8
+# Nombre de simulations
+nSim <- 500
+# Création de nSim inventaires de n individus
+Samples <- rmultinom(nSim, n, Ps)
+# Richesse observée
+S0 <- colSums(Samples>0)
+# Fonction d'extrapolation selon Béguinot
+ExtrapolateB <- function(Ns) {
+  # Création d'un tableau contenant le nombre d'espèces par abondance
+  f <- AbdFreqCount(Ns)
+  # Calcul des termes de la somme
+  s <- sapply(1:nrow(f), function(i) (-1)^(f[i,1]-1)* f[i,2] * extra^f[i,1])
+  return(sum(s))
+}
+# Extrapolation des inventaires
+eB <- apply(Samples, 2, ExtrapolateB)+S0
+# Extrapolation par iNext
+library("iNEXT")
+ei <- iNEXT(as.data.frame(Samples), q=0, endpoint=n*(1+extra), knots=4, se=FALSE)$iNextEst
+# Extraction des résultats de l'objet obtenu
+ei <- sapply(ei, function(x) x[[4]][4])
+# Fonction d'extrapolation selon Shen et al.
+library("SPECIES")
+ExtrapolateS <- function(Ns) {
+  # Nombre d'espèces non observées
+  sink(tempfile()) # Suppression des messages de jacknife()
+  S0 <- jackknife(AbdFreqCount(Ns))$Nhat-sum(Ns>0)
+  sink() # restauration de l'affichage normal
+  # Taux de couverture
+  C <- Coverage(Ns)
+  # Espèces nouvelles
+  return(S0*(1-(1-(1-C)/S0)^(n*extra)))
+}
+# Extrapolation des inventaires
+eS <- apply(Samples, 2, ExtrapolateS)+S0
+# Tirage de nSim communautés de taille n(1+extra)
+Communities <- rmultinom(nSim, n*(1+extra), Ps)
+richCommunities <- colSums(Communities>0)
+# Distribution des résultats
+deCommunities <- density(richCommunities)
+deB <- density(eB)
+dei <- density(ei)
+deS <- density(eS)
+@
+
+\figureSC{Beguinot2015Fig}
+{
+  Distribution de la richesse obtenue par extrapolation à 1800 individus de 500 inventaires de 1000 individus selon les méthodes de \textcite{Shen2003} (pointillés alternés vert), \textcite{Beguinot2015} (tirets rouges) ou avec le package \emph{iNEXT} \autocite{Hsieh2014} (pointillés bleu).
+  La distribution de la richesse de 500 inventaires de même taille est représentée par la courbe noire.
+}
+{
+  <<Beguinot2015Fig, echo=FALSE, results='hide'>>=
+  <<Beguinot2015Code>>
+  @
+}
+
+La Figure~\ref{Beguinot2015Fig}
+\verbfootnote{Le code R nécessaire pour réaliser la figure est:
+  <<Beguinot2015Code, eval=FALSE>>=
+  Xlab <- "Nombre d'espèces"
+  Ylab <- "Densité de probabilité"
+  Xlim <- c(min(richCommunities, eB, ei, eS), max(richCommunities, eB, ei, eS))
+  Ylim <- c(min(deCommunities$y, deB$y, dei$y, deS$y), max(deCommunities$y, deB$y, dei$y, deS$y))
+  plot(deCommunities, main="", xlab=Xlab, ylab=Ylab, xlim=Xlim, ylim=Ylim)
+  lines(deB, lty=2, col="red")
+  lines(dei, lty=3, col="blue")
+  lines(deS, lty=4, col="darkgreen")
+  @
+} montre que les extrapolations sont bonnes et très similaires avec les trois méthodes.
+La distribution des 500 simulations d'extrapolation est proche de celle des 500 inventaires, avec une plus grande variabilité due à la quantiité plus faible de données disponibles.
+
+\textcite{Beguinot2015a} propose également une forme analytique de la SAC extrapolée en combinant l'équation \ref{eq:Beguinot2014} à l'estimateur jackknife d'ordre 2.
+Alors, dans le domaine de validité de l'estimateur jackknife 2, c'est-à-dire quand le nombre de singletons est supérieur à 0,6 fois le nombre de doubletons, la richesse pour $n$ individus est
+\begin{equation}
+\label{eq:Beguinot2015a}
+  \xq{s}{}{n}{}{}
+  = \xq{s}{}{n_0}{}{}
+  +2\xq{s}{}{n_0}{1}{}-\xq{s}{}{n_0}{2}{}
+  -\left(3\xq{s}{}{n_0}{1}{}-2\xq{s}{}{n_0}{2}{}\right)*\frac{n_0}{n}
+  -\left(\xq{s}{}{n_0}{2}{}-\xq{s}{}{n_0}{1}{}\right)*\left(\frac{n_0}{n}\right)^2,
+\end{equation}
+où $n_0$ est la taille de l'inventaire de départ.
+
+La méthode est testée ici sur la même communauté log-normale.
+500 inventaires de 5000 individus sont réalisés et chacun est extrapolé jusqu'à 25000 individus.
+
+<<Beguinot2015b>>=
+# Extrapolation jusqu'à
+Nmax <- 25000
+# SAC réelle, obtenue par la somme des entropies de Simpson généralisées
+# Calcul de p(1-p)^r pour toutes les espèces (en lignes) et tous les r (en colonnes)
+GSsr <- Ps*sapply(1:Nmax, function(r) (1-Ps)^r)
+# Simpson généralisé pour tous les r
+GSr <- colSums(GSsr)
+# SAC: somme cumulée des entropies de Simpson généralisées
+SAC <- cumsum(GSr)
+# Fonction d'extrapolation de la SAC                  
+ExtraSAC <- function(Ns, N) {
+  # Ns est le vecteur des abondances de l'échantillon,
+  # N est le vecteur des tailles à extrapoler 
+  n0 <- sum(Ns)
+  Sn0 <- sum(Ns>0)
+  f1 <- sum(Ns==1)
+  f2 <- sum(Ns==2)
+  # Extrapolation à chaque taille
+  vapply(N, function(n) Sn0+2*f1-f2-(3*f1-2*f2)*n0/n-(f2-f1)*(n0/n)^2, 0)
+}
+# Taille de l'échantillon
+n <- 5000
+# Tirage de nSim inventaires dans la communauté log-normale
+Samples <- rmultinom(nSim, n, Ps)
+# Extrapolation des inventaires
+ExtraSACs <- apply(Samples, 2, ExtraSAC, n:Nmax)
+# Moyenne et intervalle de confiance à 95%
+Moyenne <- apply(ExtraSACs, 1, mean)
+Max <- apply(ExtraSACs, 1, quantile, probs=.975)
+Min <- apply(ExtraSACs, 1, quantile, probs=.025)
+# Taille d'échantillon réduite
+nReduit <- 1000
+# Tirage de nSim inventaires dans la communauté log-normale
+Samples <- rmultinom(nSim, nReduit, Ps)
+# Extrapolation des inventaires
+ExtraSACs <- apply(Samples, 2, ExtraSAC, nReduit:Nmax)
+# Moyenne
+MoyenneReduit <- apply(ExtraSACs, 1, mean)
+@
+
+\`A titre de comparaison, l'extrapolation d'un seul inventaire de 1000 individus est également tentée.
+
+\figureSC{Beguinot2015aFig}
+{
+ Extrapolation de 500 inventaires de 5000 individus (valeurs moyenne en tireté rouge et enveloppe de confiance à 95\% en gris) superposée à la SAC réelle d'une communauté log-normale de 300 espèces.
+ L'extrapolation (en pointllés bleu) d'un inventaire limité à 1000 individus est sévèrement sous-estimée.
+}
+{
+  <<Beguinot2015aFig, echo=FALSE, results='hide'>>=
+  <<Beguinot2015aCode>>
+  @
+}
+
+L'extrapolation fonctionne assez bien (Figure~\ref{Beguinot2015aFig}
+\verbfootnote{Le code R nécessaire pour réaliser la figure est:
+  <<Beguinot2015aCode, eval=FALSE>>=
+  plot(0:Nmax, c(0, SAC), type = "n", xlab = "Nombre d'individus", 
+       ylab = "Nombre d'espèces", ylim=c(0,max(Max)))
+  polygon(c(n:Nmax,Nmax:n),c(Min,rev(Max)),col = "lightgray", border = FALSE)
+  lines(0:Nmax, c(0, SAC))
+  lines(n:Nmax, Moyenne, col="red", lty=2)
+  lines(nReduit:Nmax, MoyenneReduit, col="blue", lty=3)
+  @
+}) tant que l'échantillonnage n'est pas trop faible.
+Avec un inventaire de 5000 individus dans cet exemple, l'estimation de la richesse asymptotique par l'estimateur jackknife 2 est correcte, l'extrapolation de la SAC l'est aussi.
+En limitant l'inventaire à 1000 individus, l'information disponible est trop limitée.
 
 
 \section{Influence de la structure spatiale}
@@ -343,11 +552,9 @@ Son seul paramètre est l'intensité $\lambda_s$, qui donne l'espérance du nomb
 Si toutes les espèces sont distribuées selon un processus de Poisson, la courbe aire-espèce est décrite par
 
 \begin{equation}
-{\mathbb E}\left( \xq{{S}}{}{A}{}{} \right)  = \sum_s{e^{-\lambda_sA}}.
+  {\mathbb E}\left( \xq{{S}}{}{A}{}{} \right)  = S - \sum_s{e^{-\lambda_sA}}.
 \label{eq:SARPoisson}
 \end{equation}
-
-
 
 L'équation (\ref{eq:SARPoisson}) est identique au modèle de distribution aléatoire de Coleman en remplaçant la distribution observée des effectifs par espèce par l'intensité du processus de Poisson.
 Les formes de $F_s$ sont connues aussi pour des processus agrégatifs, notamment le processus de \textcite{Matern1960} ou des distributions régulières.
@@ -382,7 +589,7 @@ La distribution des espèces non observées peut maintenant être estimée dans 
 \end{Essentiel}
 
 \lettrine{E}{n forêt tempérée}, toutes les espèces d'un habitat sont rencontrées sur une surface inférieure à l'hectare. 
-L'\emph{aire minimale} est la surface nécessaire à échantillonner pour caractériser une \emph{association végétale}, dans l'approche de la phytosociologie fondée par \textcite{Braun-Blanquet1928} : elle ne contient pas toutes les espèces mais un sous-ensemble caractéristique. 
+L'\emph{aire minimale} est la surface nécessaire à échantillonner pour caractériser une \emph{association végétale}, dans l'approche de la phytosociologie fondée par \textcite{Braun-Blanquet1928} (et plus largement \autocite{Greig-Smith1983}, même si son intérêt est discuté \autocite{McGuinness1984}) : elle ne contient pas toutes les espèces mais un sous-ensemble caractéristique. 
 Elle est de l'ordre de \SI{200}{\meter\squared} en Europe \autocite{Chytry2003}.
 L'augmentation de la surface intègre de nouveaux habitats et ajoute donc la diversité $\beta$, par sauts successifs dans la situation idéale.
 
@@ -391,6 +598,9 @@ L'expérience montre que l'augmentation de l'aire d'échantillonnage n'est pas l
 L'intégration de la diversité $\beta$ due aux nouveaux habitats inventoriés se confond avec la progression de l'accumulation de la diversité locale.
 Dans le cas général, la SAR ne tend alors pas vers une asymptote, et nombre d'espèces augmente tant que la surface échantillonnée croît \autocite{Williamson2001}. 
 Il ne s'agit donc pas d'estimer un nombre d'espèces asymptotique pour une communauté, mais un nombre dépendant de la surface d'échantillonnage.
+
+Une revue historique des théories sur la forme de la SAR est fournie par \textcite{McGuinness1984}.
+
 
 
 \section{La relation d'Arrhenius}
@@ -431,6 +641,13 @@ Représentée en logarithmes, la relation est une droite (Figure~\ref{Williamson
 \begin{equation}
   \ln \xq{S}{}{A}{}{} = \ln c + z\ln A.
 \end{equation}
+
+La constante $c$ est ignorée par la majorité de la littérature \autocite{Gould1979} mais présente un intérêt pour la comparaison de courbes de même pente.
+La remarquable constance de la valeur de $z$ est donc utile ici.
+Le rapport des valeurs de la constante pour deux régions par exemple permet de comparer leur richesse: à taille identique, les îles Philippines ont 6 fois plus d'espèces d'oiseaux que l'archipel de Hawaï ($z=0,31$, $c$ vaut respectivement 12 et 2).
+Sur un même territoire, le rapport entre le nombre d'espèces de deux taxons est le rapport des constantes si $z$ est identique: par exemple, 1,5 espèces d'oiseaux par espèce de plante dans une partie de l'archipel d'Hawaï. 
+
+
 
 \subsection{Le modèle de Plotkin}
 
@@ -514,7 +731,7 @@ Gleason propose une relation dans laquelle le nombre d'espèces (et non son loga
   Un test de qualité d'ajustement montre que le modèle de placement aléatoire est le plus proche des données.}
 {\includegraphics[width=\maxwidth]{Coleman1982}}
 
-En concurrence au modèle de \textcite{Preston1962} prédisant une SAR en forme de loi de puissance, \textcite{Coleman1981, Coleman1982} proposent le modèle de placemant aléatoire (\foreignlanguage{english}{\emph{random placement}}).
+En concurrence au modèle de \textcite{Preston1962} prédisant une SAR en forme de loi de puissance, \textcite{Coleman1981, Coleman1982} proposent le modèle de placement aléatoire (\foreignlanguage{english}{\emph{random placement}}).
 
 Plusieurs îles (communautés locales) de taille relative  $\{p_i\}$ appartiennent à un ensemble (méta-communautés) dans lequel la distribution des espèces $\{n_s\}$, est considéré comme connu.
 Chaque individu d'une espèce donnée peut se placer sur une quelconque des îles, avec une probabilité égale à $p_i$.

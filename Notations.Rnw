@@ -1,3 +1,5 @@
+% !TeX encoding = UTF-8
+% !TeX spellcheck = fr-classique
 <<Notations-parent, echo=FALSE, cache=FALSE>>=
 set_parent('Mesures_de_la_Biodiversite.Rnw')
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
@@ -22,7 +24,7 @@ Les vecteurs sont notés en gras minuscule: $\vectorsym{p}$.
 Les nombres sont notés en minuscules, $n$, et les variables aléatoires en majuscules: $N$.
 Les valeurs maximales des énumérations font exception: elles sont notées en majuscules pour les distinguer des indices: $\sum_{s=1}^{S}{p_s}=1$.
 
-Le produit matricel de $\matrixsym{X}$ et $\matrixsym{Y}$ est noté $\matrixsym{X}\matrixsym{Y}$. Dans les scripts R, l'opérateur est \code{\%*\%}.
+Le produit matriciel de $\matrixsym{X}$ et $\matrixsym{Y}$ est noté $\matrixsym{X}\matrixsym{Y}$. Dans les scripts R, l'opérateur est \code{\%*\%}.
 Le produit de Hadamard (terme à terme) est noté $\matrixsym{X}\circ\matrixsym{Y}$ (opérateur \code{*} dans R).
 De même $\matrixsym{X}^n$ indique la puissance $n$ au sens du produit matriciel d'une matrice carrée (opérateur \code{\%$\wedge$\%} du package \emph{expm}), alors que $\matrixsym{X}^{\circ n}$ est la matrice dont chaque terme est celui de $\matrixsym{X}$ à la puissance $n$ (opérateur \code{$\wedge$} de R).
 La matrice transposée de $\matrixsym{X}$ est notée $\matrixsym{X'}$.
@@ -100,4 +102,4 @@ $\xq{s}{}{n}{\nu}{}$ peut être considéré comme une réalisation de $\xq{S}{}{
 
 \noindent $\mathrm{\Psi}(\cdot)$: la fonction digamma.
 
-\noindent $\binom{n}{k}$: le nombre de combinaisons de $k$ éléments parmi $n$. $$\binom{n}{k}=\frac{n!}{k!\,(n-k)!}$$
+\noindent $\binom{n}{k}$: le nombre de combinaisons de $k$ éléments parmi $n$: $$\binom{n}{k}=\frac{n!}{k!\,(n-k)!}$$.

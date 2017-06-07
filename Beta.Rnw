@@ -441,6 +441,10 @@ La distribution des valeurs de l'indice corrigé se trouve en figure~\ref{ChaoJa
 
 La majorité des paires de carrés a une similarité supérieure à 0,8 après correction.
 
+\textcite{Plotkin2002} founissent des estimateurs de la similarité de Sørensen pour les SAD les plus courantes: lognormale, broken-stick, géométrique, log-séries et même gamma, une généralisation de la distibution broken-stick.
+Ils traitent le cas d'un échantillonnage dans lequel les individus sont indépendants les uns des autres, et le cas de l'agrégation spatiale.
+Ils montrent que la similarité augmente beaucoup avec la taille des placettes échantillonnées et est nettement plus faible en cas d'agrégation spatiale.
+
 
 
 \subsection{Représentation graphique}
@@ -477,7 +481,7 @@ La matrice de distances n'est pas euclidienne à cause des approximations de l'e
 La distance la plus évidente entre communautés quand les effectifs des espèces sont connus est simplement la distance euclidienne, éventuellement normalisée par le nombre d'espèces (Dissimilarité $D_1$ de \textcite{Gower1986}).
 Son problème principal est qu'elle est très sensible aux ordres de grandeurs relatifs des variables.
 
-La dissimilarité de Steinhaus \autocite{Motyka1947}, plus connue sous le nom de Bray-Curtis \autocite{Odum1950, Bray1957} (voir l'analyse historique de \textcite[][note de bas de page, eq. 7.58]{Legendre2012}) est très utilisée (par défaut dans plusieurs analyses du package \emph{vegan} par exemple):
+La dissimilarité de Steinhaus \autocite{Motyka1947}, plus connue sous le nom de Bray-Curtis \autocite{Odum1950, Bray1957} (voir l'analyse historique de \textcite[][note de bas de page, eq. 7.58]{Legendre2012}), qui pourrait être attribuée à \autocite{Renkonen1938}, est très utilisée (par défaut dans plusieurs analyses du package \emph{vegan} par exemple):
 
 \begin{equation}
   \label{BrayCurtis}

@@ -691,7 +691,7 @@ Formellement, une fonction de similarité entre les espèces $s$ et $t$ est déf
 Cette fonction est décroissante entre 1 (quand la distance est nulle) et 0 (à distance infinie); par exemple $f(d_{s,t}) = e^{-u d_{s,t}}$ où $u$ est une constante strictement positive.
 La matrice $\matrixsym{Z}$ réunit les éléments $z_{s,t}$.
 
-On définit ensuite la variable binomiale $B_s$ (d'espérance $p_s$) qui vaut 1 si l'espèce $s$ est intéressante.
+On définit ensuite la variable de Bernoulli $B_s$ (d'espérance $p_s$) qui vaut 1 si l'espèce $s$ est intéressante.
 $z_{s,t}$ est, par construction du modèle, la corrélation entre $B_s$ et $B_t$: deux espèces très proches ont la même probabilité d'être intéressante, deux espèces très éloignées ont des probabilités indépendantes.
 La probabilité qu'au moins une espèce soit intéressante est minorée par $p^2 \matrixsym{1}_S' \matrixsym{Z}^{-1} \matrixsym{1}_S$, où $\matrixsym{1}_S$ est le vecteur de longueur $S$ ne contenant que des 1, $'$ indique la transposée et $\matrixsym{Z}^{-1}$ est la matrice inverse de $\matrixsym{Z}$ (son existence est garantie puisque $\matrixsym{Z}$ est une matrice de variance-covariance).
 La valeur de $p$ est incertaine et sans grand intérêt.
@@ -719,6 +719,7 @@ Les probabilités pour un individu d'appartenir à une feuille sont notées $u_{
 Si la dissimilarité entre les espèces est représentée par un dendrogramme, les indices de diversité les plus simples sont la diversité phylogénétique \autocite{Faith1992} et sa transposition, la diversité fonctionnelle \autocite{Petchey2002}.
 
 \'Etant donné un arbre contenant toutes les espèces ou tous les individus étudiés, PD ou FD sont égaux à la somme de la longueur des branches (Figure~\ref{Arbre}: $\mathit{PD}=5\times T_1 + 3\times T_2 + 2\times T_3)$.
+Si les n\oe uds de l'arbre phylogénétique sont datés, PD peut être considéré comme une accumulation de temps d'évolution par la communauté étudiée: \textcite{Sol2017} montrent par exemple que les milieux urbanisés ont un déficit de 450 millions d'années d'évolution dans les communautés d'oiseaux relativement aux environnements naturels voisins.
 
 Dans le cas particulier ou toutes les branches sont de longueur 1, c'est-à-dire que toutes les espèces sont liées à la même racine (on dira que l'arbre est parfaitement régulier), PD et FD sont égales à la richesse spécifique.
 
@@ -898,19 +899,19 @@ phyf <- hclust2phylog(hf)
 @
 
 
-Le résultat est en Figure~\ref{PhylogFig}
+Le résultat est en Figure~\ref{PhylogRaoFig}
 \verbfootnote{
-Code R:
-<<PhylogCode, eval=FALSE>>=
-table.phylog(pcaf$tab[names (phyf$leaves),], phyf)
-@
+  Code R:
+  <<PhylogRaoCode, eval=FALSE>>=
+  table.phylog(pcaf$tab[names (phyf$leaves),], phyf)
+  @
 }.
 
-\figureSC[t]{PhylogFig}
+\figureSC[t]{PhylogRaoFig}
   {Présentation de l'arbre phylogénétique avec la contribution de chacune des variables.}
   {
-<<PhylogFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
-<<PhylogCode>>
+<<PhylogRaoFig, echo=FALSE, results='hide', out.width='\\textwidth'>>=
+<<PhylogRaoCode>>
 @
   }
 
@@ -943,6 +944,11 @@ Sa représentation graphique est faite par \code{dotchart.phylog} :
 L'originalité ne repose que sur l'arbre, pas sur la fréquence des espèces.
 
 Si la distance utilisée n'est pas ultramétrique, il existe plusieurs distributions possibles d'espèces qui maximisent la diversité \autocite{Pavoine2009}, le concept d'originalité n'a pas de sens dans ce cas.
+
+La valeur de l'entropie quadratique dépend de la hauteur de l'arbre.
+Plusieurs normalisations ont été proposées: par sa valeur maximale ou par la diversité de Simpson (correspondant à un arbre dont toutes les espèces seraient équidistantes) \autocite{Ricotta2005c}, ou en fixant la hauteur de l'arbre à 1\autocite{Marcon2014b}.
+
+
 
 \section{Diversité et moyenne}
 
@@ -1006,6 +1012,9 @@ pour $q=1$.
 Le nombre effectif de paires est $[\xq{D}{q}{}{}{}(Q)]^2$. Le nombre effectif d'espèces est donc $\xq{D}{q}{}{}{}(Q)$.
 
 Le nombre effectif de paires est le nombres de paires équifréquentes dont la distance entre les deux espèces est $Q$. Le problème de cette approche est que les paires constituées de la même espèce doivent aussi avoir une distance $\delta_{s,s}$ égale à $Q$. Chiu et Chao considèrent ce point comme la possibilité de prendre en compte la variabilité intraspécifique, mais elle doit être identique à la variabilité interspécifique, ce qui n'est pas très convaincant. En absence de variabilité intraspécifique, Chiu et Chao redéfinissent la distance de référence: $\delta_{s,s}=0$ et $\delta_{s,t}=(\nicefrac{D}{D-1})Q$. Il n'est donc pas possible de comparer le nombre effectif d'espèces de deux communautés différentes puisque la définition même du nombre effectif dépend de la diversité, ce qui invalide cette définition de la diversité fonctionnelle.
+
+Enfin, cette définition de la diversité ne respecte pas le principe de \textcite{Solow1993} selon lequel le remplacement d'une partie des effectifs d'une espèce par le même nombre d'individus d'une espèce différente mais fonctionnellement identique ne doit pas faire varier la diversité \autocite{Botta-Dukat2017}.
+
 
 
 \section{$H_p$ et $I_1$}
