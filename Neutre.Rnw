@@ -2266,6 +2266,33 @@ Les espèces plus rares sont prises en compte dans la partie du profil de divers
 L'entropie de Simpson généralisée est donc l'outil le plus approprié pour comparer des profils de diversité de communautés riches et sous-échantillonnées.
 
 
+\subsection{L'entropie par cas}
+
+\textcite{Rajaram2016} décomposent la diversité de Shannon en produit des contributions de chaque catégorie et proposent une mesure cumulative de la diversité d'une communauté prenant en compte une partie des espèces classées selon un critère pertinent, décrivant leur complexité: par exemple, la diversité des mammifères classés par taille croissante, ou la position dans l'évolution.
+
+La fraction de la communauté dont le cumul des probabilités égale $c$ est prise en compte.
+La diversité cumulée est:
+\begin{equation}
+  \mathit{D_c} = \prod_c{p_s^{-p_s}}.
+\end{equation}
+
+La mesure normalisée est appelée \foreignlanguage{english}{\emph{case-based entropy}} en anglais et vaut 
+\begin{equation}
+  \mathit{C_c} = \frac{100 D_c}{\xq{D}{1}{}{}{}}.
+\end{equation}
+
+$\mathit{D_c}=\xq{D}{1}{}{}{}$ quand toute la communauté est prise en compte ($c=1$).
+Les auteurs s'intéressent principalement à la courbe de $C_c$ en fonction de $c$ pour montrer \autocite{Castellani2016} que la contribution à la diversité totale des 40\% des composants les moints complexes de systèmes très divers (\og des galaxies au gènes \fg{}) atteint toujours au moins 60\%, ce résultat étant interprété comme une loi universelle de limitation de la complexité.
+
+Cette mesure peut être étendue à l'entropie HCDT sans difficulté:
+\begin{equation}
+  \mathit{\xq{C}{q}{}{c}{}} = {\left(\sum_c{p^q_s}\right)}^{\frac{1}{1-q}}.
+\end{equation}
+
+La méthode peut être appliquée pour évaluer la contribution de n'importe quel partie de la communauté à la diversité totale.
+Il ne s'agit pas d'une décomposition de la diversité au sens classique du terme (voir partie~\ref{part:Beta}), qui consiste à partitionner la diversité totale en diversité intra et inter-groupes, mais plutôt d'une façon de prendre en compte les caractéristiques des espèces dans une approche non-neutre.
+
+
 
 \chapter{\'Equitabilité}
 \label{sec:Equitabilite}

@@ -16,7 +16,7 @@ data(Paracou618)
 \sisetup{locale = FR}
 \chapter{Synthèse}
 
-\lettrine{L}{a} biodiversité peut être mesurée de nombreuses façons. 
+\lettrine{L}{a biodiversité} peut être mesurée de nombreuses façons. 
 La dualité entropie-diversité fournit un cadre clair et rigoureux pour le faire.
 D'autres mesures de diversité ont été présentées ici, d'autres encore peuvent être trouvées dans la littérature. 
 Elles ont en général un moins bon support mathématique, surtout les mesures de diversité $\beta$, elles ne peuvent pas % !TeX encoding = UTF-8
