@@ -467,7 +467,7 @@ En revanche, quand l'échantillonnage est insuffisant, l'estimateur jackknife d'
 
 Enfin, \textcite{Beguinot2015a, Beguinot2016} suggère d'utiliser en règle générale le jacknife 2 (mais ne traite pas les cas dans lesquels l'échantillonnage est trop faible pour justifier un ordre supérieur) tant que  le nombre de singletons est supérieur à $2-\sqrt(2) \approx 0,6$ fois le nombre de doubletons.
 Le ratio des singletons sur les doubletons diminue quand l'échantillonnage approche de l'exhaustivité.
-Quand le seuil de 0,6 est dépassé, la valeur de l'estimateur de Chao devient supérieur au jancknife 2 et doit être utilisé.
+Quand le seuil de 0,6 est dépassé, la valeur de l'estimateur de Chao devient supérieur au jacknife 2 et doit être utilisé.
 Ce seuil est cohérent avec les règles de \textcite{Brose2003}.
 
 
@@ -2556,7 +2556,7 @@ Il ne prouve pas de corrélation entre ces valeurs pour des communautés réelle
 Cette approche est similaire à celle de \textcite{Jost2010}, plus aboutie.
 
 \textcite{May1975} montre que dans le cadre d'une distribution log-normale, la richesse, l'entropie de Simpson et l'équitabilité de Pielou sont positivement corrélées.
-Ce résultat a été étendu par \autocite{Stirling2001} aux distributions en log-séries et testé dans des communautés réelles avec des conclusions contrastées, notamment des corrélations négatives ntre richesse et équitabilité dans des communautés très riches.
+Ce résultat a été étendu par \textcite{Stirling2001} aux distributions en log-séries et testé dans des communautés réelles avec des conclusions contrastées, notamment des corrélations négatives ntre richesse et équitabilité dans des communautés très riches.
 
 Des simulations permettent de comprendre les corrélations dans des cas simples.
 La figure~\ref{SJLogNormale}
