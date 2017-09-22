@@ -732,8 +732,10 @@ Gleason propose une relation dans laquelle le nombre d'espèces (et non son loga
 {\includegraphics[width=\maxwidth]{Coleman1982}}
 
 En concurrence au modèle de \textcite{Preston1962} prédisant une SAR en forme de loi de puissance, \textcite{Coleman1981, Coleman1982} proposent le modèle de placement aléatoire (\foreignlanguage{english}{\emph{random placement}}).
+L'idée sous-jacente est que certaines communautés ont une composition \og aléatoire \fg{}, c'est-à-dire issues d'un simple échantillonnage de la méta-communauté.
+Coleman ne prétend pas que la SAR des arbres de forêt tropicale suive son modèle, mais que ce soit le cas par exemple pour les oiseaux à une échelle spatiale limitée.
 
-Plusieurs îles (communautés locales) de taille relative  $\{p_i\}$ appartiennent à un ensemble (méta-communautés) dans lequel la distribution des espèces $\{n_s\}$, est considéré comme connu.
+Plusieurs îles (communautés locales) de taille relative  $p_i$ appartiennent à un ensemble (méta-communautés) dans lequel la distribution des espèces $\vectorsym{n}$, est considéré comme connue.
 Chaque individu d'une espèce donnée peut se placer sur une quelconque des îles, avec une probabilité égale à $p_i$.
 La probabilité qu'un individu au moins de l'espèce $s$ se trouve sur l'île $i$ est $1-(1-p_i)^{n_s}$ (1 moins la probabilité que tous les individus de l'espèce se trouve sur une autre île, elle-même égale à $1-p_i$ pour tous les individus).
 L'espérance du nombre d'espèces représentées sur l'île $i$ est donc
@@ -742,6 +744,7 @@ L'espérance du nombre d'espèces représentées sur l'île $i$ est donc
 \end{equation}
 
 Ce modèle ne fait aucune hypothèse sur la distribution de la probabilité des espèces et n'assume que l'indépendance des individus et la proportionnalité entre la probabilité de présence et la surface.
+Formellement, il s'agit donc d'une courbe d'accumulation d'espèces.
 Sur des données de richesse en nombre d'espèces d'oiseaux reproducteurs dans les îles d'un lac nord-américain, le modèle s'ajuste mieux que ceux d'Arrhenius et de Gleason (figure~\ref{Coleman1982}).
 
 Le modèle de Coleman est parfois utilisé à l'échelle locale, pour construire une courbe d'accumulation par raréfaction \autocite{Coleman1981}.
