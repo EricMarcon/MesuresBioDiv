@@ -31,7 +31,7 @@
 
 \author{Eric Marcon}
 \title{Mesures \\ de la Biodiversité}
-\date{18 juin 2017}
+\date{23 octobre 2017}
 
 
 %%%------------------------------------------------------------------------------

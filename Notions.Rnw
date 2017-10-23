@@ -40,8 +40,8 @@ La plupart des exemples concerneront ici les arbres de la forêt tropicale, qui 
 On peut bien évidemment s'intéresser à d'autres niveaux et d'autres objets, par exemple la diversité génétique (en termes d'allèles différents pour certains gènes ou marqueurs) à l'intérieur d'une population, ou  même la diversité des interactions entre espèces d'une communauté \autocite{Jizhong1991}.
 On gardera toujours à l'esprit que la prise en compte de la diversité spécifique n'est pas la seule approche, les méthodes présentées ici s'appliquent à la mesure de la diversité en général, pas même nécessairement biologique.
 
-L'objectif de ce document est de traiter la mesure de la biodiversité, pas son importance en tant que telle 
-(on se référera par exemple à \textcite{Chapin2000} pour une revue sur cette question ou \textcite{Cardinale2012} pour les conséquences de l'érosion de la biodiversité sur les services écosystémiques). 
+L'objectif de ce document est de traiter la mesure de la biodiversité, pas son importance en tant que telle.
+On se référera par exemple à \textcite{Chapin2000} pour une revue sur cette question, \textcite{Cardinale2012} pour les conséquences de l'érosion de la biodiversité sur les services écosystémiques ou \textcite{Ceballos2017} pour les propriétés autocatalytiques de la biodiversité.
 La mesure de la diversité est un sujet important en tant que tel \autocite{Purvis2000}, pour permettre de formaliser les concepts et de les appliquer à la réalité. 
 La question est loin d'être épuisée, et fait toujours l'objet d'une recherche active et de controverses \autocite{Ricotta2005b}.
 

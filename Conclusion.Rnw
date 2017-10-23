@@ -102,6 +102,7 @@ Les effectifs ne sont pas pris en compte dans la mesure de la diversité (sauf d
 L'argument, développé par \textcite{Balmford2003}, est que la diminution des effectifs des espèces suivies est corrélé à la disparition des espèces plus vulnérables; l'effectif d'une population est aussi un indicateur de sa diversité génétique.
 La moyenne géométrique des abondances relatives \autocite{Buckland2011} compare les abondances des espèces au cours du temps à leur valeur initiale.
 L'indice LPI (\foreignlanguage{english}{\emph{Living Planet Index}}) \autocite{Loh2005} s'appuie sur ce même principe: il mesure l'évolution dans le temps des effectifs d'un grand nombre de populations de vertébrés.
+Une approche similaire mais plus exhaustive \autocite{Ceballos2017} montre une très forte probabilité d'extinction massive à venir.
 
 La recherche sur la mesure de la diversité est très active, ce document évolue donc régulièrement pour prendre en compte les avancées récentes.
 
