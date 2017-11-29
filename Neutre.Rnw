@@ -854,7 +854,7 @@ Il est obtenu par extrapolation de la relation du nombre de taxons d'un niveau �
 
 
 En se limitant aux arbres, l'estimation se monte à \SI{16000} espèces pour l'Amazonie \autocite{TerSteege2013}, de l'ordre de 5000 pour l'Afrique et entre 40000 et 53000 pour l'ensemble des tropiques \autocite{Slik2015} (donc pour l'ensemble de la planète, le nombre d'espèces non-tropicales étant négligeable).
-Ces estimations sont obtenues par extrapolation du modèle en log-séries (chapitre~\ref{chap:Fisher}) et sont sujettes au paradoxe de Fisher: les espèces représentées par un très petit nombre d'individu dans le modèle, notamment les singletons, sont les plus nombreuses.
+Ces estimations sont obtenues par extrapolation du modèle en log-séries (capitre~\ref{chap:Fisher}) et sont sujettes au paradoxe de Fisher: les espèces représentées par un très petit nombre d'individu dans le modèle, notamment les singletons, sont les plus nombreuses.
 Une discussion approfondie est donnée par \textcite{Hubbell2015}: les espèces récemment apparues au sens du modèle ne sont pas détectables avant plusieurs générations, créant un décalage entre le nombre d'espèces reconnues par la taxonomie et modèle.
 
 \textcite{Wilson2012} compilent les relevés du nombre d'espèces de plantes vasculaires en fonction de la surface et retiennent uniquement les plus riches à chaque échelle spatiale (du millimètre carré à l'hectare).
@@ -1548,10 +1548,10 @@ Enfin, sa décomposition sera présentée en détail dans le chapitre~\ref{chap:
 
 L'écriture de l'entropie HCDT est largement simplifiée en introduisant le formalisme des logarithmes déformés \autocite{Tsallis1994}. 
 Le logarithme d'ordre $q$ est défini par
-
 \begin{equation}
-  \ln_q{x} = \frac{x^{1-q}-1}{1-q}.
+  \ln_q{x} = \frac{x^{1-q}-1}{1-q},
 \end{equation}
+dont la forme est identique à la transformation de \textcite{Box1964} utilisée en statistiques pour normaliser une variable.
 
 Le logarithme déformé converge vers le logarithme naturel quand $q\to 1$ (Figure~\ref{lnqFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
