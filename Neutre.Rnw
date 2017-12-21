@@ -1500,7 +1500,7 @@ Ils sont des transformations simples des indices classiques:
 Ces résultats avaient déjà été obtenus avec une autre approche par \textcite{MacArthur1965} et repris par \textcite{Adelman1969} dans la littérature économique.
 
 Les nombres de Hill sont des \og nombres effectifs\fg{} ou \og nombres équivalents{}\fg{}. 
-Le concept a été défini rigoureusement par Gregorius\autocite{Gregorius1991}, d'après \textcite{Wright1931} (qui avait le premier défini la taille effective d'une population): étant donné une variable caractéristique (ici, l'entropie) fonction seulement d'une variable numérique (ici, le nombre d'espèces) dans un cas idéal (ici, l'équiprobabilité des espèces), le nombre effectif est la valeur de la variable numérique pour laquelle la variable caractéristique est celle du jeu de données. 
+Le concept a été défini rigoureusement par \textcite{Gregorius1991}, d'après \textcite{Wright1931} (qui avait le premier défini la taille effective d'une population): étant donné une variable caractéristique (ici, l'entropie) fonction seulement d'une variable numérique (ici, le nombre d'espèces) dans un cas idéal (ici, l'équiprobabilité des espèces), le nombre effectif est la valeur de la variable numérique pour laquelle la variable caractéristique est celle du jeu de données. 
 
 \textcite{Gregorius2014} montre que de nombreux autres indices de diversité sont acceptables dans le sens où ils vérifient les axiomes précédents et, de plus, que la diversité d'un assemblage de communautés est obligatoirement supérieure à la diversité moyenne de ces communautés (l'égalité n'étant possible que si les communautés sont toutes identiques). 
 Cette dernière propriété sera traitée en détail dans la partie~\ref{part:Beta}. 
@@ -1677,7 +1677,7 @@ Le biais d'estimation est sensible;
 \textcite{Hill1973} l'appelle \og le nombre d'espèces très abondantes\fg{}. 
 Il comptabilise les interactions possibles entre paires d'individus: les espèces rares interviennent dans peu de paires, et influent peu sur l'indice. 
 En conséquence, le biais d'estimation est très petit; de plus, un estimateur non biaisé existe;
-  \item  $\xq{D}{\infty}{}{}{}={1}/{d}$ est l'inverse de l'indice de Berger-Parker \autocite{Berger1970} qui est la proportion de la communauté représentée par l'espèce la plus abondante: $d=\max(p_S)$. 
+  \item  $\xq{D}{\infty}{}{}{}={1}/{d}$ est l'inverse de l'indice de Berger-Parker \autocite{Berger1970} qui est la proportion de la communauté représentée par l'espèce la plus abondante: $d=\max(\vectorsym{p})$. 
 Toutes les autres espèces sont ignorées.
 \end{itemize}
 
