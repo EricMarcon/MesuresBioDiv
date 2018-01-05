@@ -34,3 +34,6 @@
 
 # Intermediate files
 *.tex
+.Rproj.user
+*.pdf
+*.R
