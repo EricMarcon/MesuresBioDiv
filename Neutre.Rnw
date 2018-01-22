@@ -972,7 +972,7 @@ Pour la $S$-ième espèce, le nombre est $\binom{n-np_1-\dots -np_{s-1}}{np_i}$.
 Les produits de combinaisons se simplifient pour donner l'équation (\ref{eq:ShannonL}).
 
 On peut maintenant écrire le logarithme de $L$:
-$$\ln{L}=\ln{n!}-\sum^S_{s=1}{\ln  {np_s}}.$$ 
+$$\ln{L}=\ln{n!}-\sum^S_{s=1}{\ln{np_s}!}.$$ 
 On utilise l'approximation de Stirling, 
 $$\ln{n!}\approx n\ln{n}-n,$$
 pour obtenir après simplifications:
@@ -981,8 +981,6 @@ pour obtenir après simplifications:
   \ln{L} = -n\sum^S_{s=1}{p_s \ln{p_s}}.
 \label{eq:ShannonlnL}
 \end{equation}
-
-On ne s'intéresse pas aux listes de plantes ne respectant pas les probabilités individuelles.
 
 $H=(\ln{L})/{n}$ est l'indice de Shannon. 
 Ce résultat est connu sous le nom de formule de \textcite{Brillouin1962}. 
