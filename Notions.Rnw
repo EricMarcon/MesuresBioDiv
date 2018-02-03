@@ -145,7 +145,7 @@ Les diversités $\alpha$ et $\gamma$ se mesurent donc de la même façon.
 
 \subsection{Décomposition}
 
-\textcite{Whittaker1977} a proposé sans succès une normalisation des échelles d'évaluation de la biodiversité, en introduisant la diversité régionale $\varepsilon$ ($\gamma$ étant réservé au paysage et $\alpha$ à l'habitat) et la diversité $\delta $ entre les paysages. 
+\textcite{Whittaker1977} a proposé sans succès une normalisation des échelles d'évaluation de la biodiversité, en introduisant la diversité régionale $\varepsilon$ ($\gamma$ étant réservé au paysage et $\alpha$ à l'habitat) et la diversité $\delta$ entre les paysages. 
 Seuls les trois niveaux originaux ont été conservés par la littérature, sans définition stricte des échelles d'observation.
 
 La distinction entre les diversités $\alpha$ et $\beta$ dépend de la finesse de la définition de l'habitat. 
@@ -163,7 +163,7 @@ Une analyse historique et philosophique en est faite par \textcite{Richards2010}
 L'autre aspect, avec des conséquences pratiques plus immédiates, concerne leur délimitation. 
 \textcite{Mayden1997} recense 22 définitions différentes du concept d'espèce.
 
-Le concept le plus répandu est celui d'espèce \emph{biologique} \autocite{Mayr1942, Dobzhansky1937} : un \og groupe de populations naturelles isolées reproductivement les unes des autres\fg{} \autocite{Mayr1970}. 
+Le concept le plus répandu est celui d'espèce \emph{biologique} \autocite{Dobzhansky1937} : un \og groupe de populations naturelles isolées reproductivement les unes des autres\fg{} \autocite{Mayr1942}. 
 Lorsque les populations d'une espèce sont isolées géographiquement, leur capacité à se reproduire ensemble est toute théorique (et d'ailleurs rarement vérifiée expérimentalement). 
 Des populations allopatriques n'ont pas de flux de gènes réels entre elles et peuvent être considérées comme des espèces distinctes selon le concept d'espèce \emph{phylogénétique} : \og le plus petit groupe identifiable d'individus avec un pattern commun d'ancêtres et de descendants\fg{} \autocite{Cracraft1983}.
 C'est l'unité génétique détectée par la méthode du coalescent pour la délimitation des espèces \autocite{Sukumaran2017}.
@@ -174,7 +174,7 @@ Le choix de la définition modifie considérablement sur la quantification de la
 Des problèmes méthodologiques s'ajoutent aux problèmes conceptuels \autocite{Hey2001} : la séparation ou le regroupement de plusieurs populations ou morphotypes en un nombre plus ou moins grand d'espèces est un choix qui reflète les connaissances du moment et peut évoluer \autocite{Barberousse2014}.
 
 L'impact du problème de l'espèce sur la mesure de la diversité reste sans solution à ce stade, si ce n'est d'utiliser les mêmes définitions si des communautés différentes doivent être comparées. 
-L'approche phylogénétique (page~\pageref{chap:Phyloentropie}) règle le problème : si deux taxons très semblables apportent à peine plus de diversité qu'un seul taxon, le choix de les distinguer ou non n'est pas critique.
+L'approche phylogénétique (page~\pageref{chap:Phyloentropie}) permet de contourner le problème : si deux taxons très semblables apportent à peine plus de diversité qu'un seul taxon, le choix de les distinguer ou non n'est pas critique.
 
 
 
@@ -186,10 +186,14 @@ L'approche phylogénétique (page~\pageref{chap:Phyloentropie}) règle le probl�
   
   La distribution des abondances des espèces (SAD) est représentée par une histogramme des fréquences ou un diagramme rang-abondance.
   
-  Le taux de couverture est la somme des probabilités des espèces observées étant donné l'effort d'échantillonnage. Il peut être estimé précisément à partir des données d'inventaire. Le taux de complétude est la proportion (en nombre) des espèces observées.
+  Le taux de couverture est la somme des probabilités des espèces observées étant donné l'effort d'échantillonnage. 
+  Il peut être estimé précisément à partir des données d'inventaire. 
+  Le taux de complétude est la proportion (en nombre) des espèces observées.
 \end{Essentiel}
 
-\lettrine{Q}{uelques} outils sont nécessaires avant d'entrer dans le c\oe ur du sujet. Les relations décrivant le nombre d'espèces en fonction de la taille de l'échantillon (relations aire-espèces) et la distribution de l'abondance des espèces sont importants pour les écologues. La mesure de l'exhaustivité de l'échantillonnage par le taux de couverture sera la base de l'estimation de la diversité à partir de données réelles.
+\lettrine{Q}{uelques} outils sont nécessaires avant d'entrer dans le c\oe ur du sujet. 
+Les relations décrivant le nombre d'espèces en fonction de la taille de l'échantillon (relations aire-espèces) et la distribution de l'abondance des espèces sont importants pour les écologues. 
+La mesure de l'exhaustivité de l'échantillonnage par le taux de couverture sera la base de l'estimation de la diversité à partir de données réelles.
 
 
 
@@ -222,7 +226,7 @@ La courbe aire-espèces (SAR: \foreignlanguage{english}{\emph{Species Area Relat
 Il existe plusieurs façons de prendre en compte cette relation \autocite{Scheiner2003}, classables en deux grandes familles \autocite{Dengler2009} :
 \begin{itemize}
   \item Dans une SAR au sens strict, chaque point représente une communauté. 
-  La question traitée est la relation entre le nombre d'espèces et la taille de la communauté;
+  La question traitée est la relation entre le nombre d'espèces et la taille de chaque communauté;
   \item Si les points représentent un effort d'échantillonnage différent dans même communauté, on parle de courbe d'accumulation (SAC: \foreignlanguage{english}{\emph{Species Acumulation Curve}}). Une courbe de raréfaction (\foreignlanguage{english}{\emph{Rarefaction Curve}}) peut être calculée en réduisant par des outils statistiques l'effort d'échantillonnage réel pour obtenir une SAC théorique, libérée des aléas de l'ordre de prise en compte des données.
 \end{itemize}
 
@@ -306,7 +310,8 @@ Pour $\nu=0$, l'ignorance du nombre d'espèces non échantillonnées ${\xq{s}{}{
 Ces relations sont le fondement des estimateurs de richesse de Chao présentées ci-dessous.
 
 La relation a été précisée \autocite[][eq. 6 et 7a]{Chiu2014a} en limitant les approximations dans les calculs.
-La seule nécessaire est que les probabilités des espèces représentées le même nombre de fois $\nu$ varient peu et puissent être considérées toutes égales à $\alpha_\nu$. Alors, $\alpha_\nu$ est estimé par
+La seule nécessaire est que les probabilités des espèces représentées le même nombre de fois $\nu$ varient peu et puissent être considérées toutes égales à $\alpha_\nu$.
+Alors, $\alpha_\nu$ est estimé par
 \begin{equation}
   \label{eq:GoodTuring2014}
   \hat{\alpha}_\nu = \frac{\left(\nu+1 \right) \xq{s}{}{n}{\nu+1}{}}{\left(n-\nu \right) \xq{s}{}{n}{\nu}{} + \left(\nu+1 \right) \xq{s}{}{n}{\nu+1}{}}.
@@ -340,7 +345,8 @@ Cet estimateur est biaisé \autocite{Zhang2007}. En réalité,
   C = 1-\frac{{\mathbb E}(\xq{S}{}{n}{1}{}) - \pi_1}{n}.
 \end{equation}
 
-L'estimateur de Good néglige le terme $\pi_1$, la somme des probabilités des espèces observées une fois. Ce terme peut être estimé avec un biais plus petit.
+L'estimateur de Good néglige le terme $\pi_1$, la somme des probabilités des espèces observées une fois. 
+Ce terme peut être estimé avec un biais plus petit.
 \textcite{Chao1988} puis \textcite{Zhang2007} proposent l'estimateur suivant, qui utilise toute l'information disponible et a le plus petit biais possible:
 
 \begin{equation}
