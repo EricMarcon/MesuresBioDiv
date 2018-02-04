@@ -1,4 +1,4 @@
-# MesuresBioDiv
+# Mesures de la Biodiversité
 
 Ouvrage de synthèse sur la mesure de la biodiversité.
 
