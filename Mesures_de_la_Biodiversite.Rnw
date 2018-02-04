@@ -24,7 +24,7 @@
 
 %%% BIBLIOGRAPHY FILE
 %%%------------------------------------------------------------------------------
-\addbibresource{../library.bib}
+\addbibresource{library.bib}
  
 %%% THE DOCUMENT
 %%%-------------------------------------------------------------------------------
@@ -71,6 +71,7 @@ Ce document est réalisé de façon dynamique et reproductible grâce à:
   \item \emph{knitr} (\url{http://yihui.name/knitr/}).
 \end{itemize}
 
+Son code source est publié sur GitHub (\url{https://github.com/EricMarcon/MesuresBioDiv}).
 ]
 
 \SmallMargins
