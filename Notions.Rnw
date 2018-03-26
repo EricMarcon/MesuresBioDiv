@@ -1,14 +1,14 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = fr-classique
 <<Notions-parent, echo=FALSE, cache=FALSE>>=
-set_parent('Mesures_de_la_Biodiversite.Rnw')
+knitr::set_parent('Mesures_de_la_Biodiversite.Rnw')
 # knitr and document format options
-opts_knit$set(concordance=TRUE)
+knitr::opts_knit$set(concordance=TRUE)
 # Set global chunk options
-opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+knitr::opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
 # Postscript plots
-setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
+grDevices::setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
 # ggplot style
 library("ggplot2")
@@ -211,10 +211,12 @@ La liste des notations est fournie en préambule du document, on s'y référera 
 Les calculs sont réalisés dans R \autocite{R}, essentiellement avec le package \emph{entropart} \autocite{Marcon2014c}. 
 L'ensemble du code est disponible sur le site web\footnote{\url{http://www.ecofog.gf/spip.php?article427}} où se trouvent les mises à jour de ce document.
 
-Les données sont souvent celles de la parcelle forestière permanente de Barro Colorado Island (BCI)\autocite{Condit2012}: \SI{50}{\hectare} de forêt tropicale dont les arbres de plus de \SI{1}{\centi\meter} de diamètre à hauteur de poitrine (DBH: \foreignlanguage{english}{\emph{Diameter at Breast Height}}) ont été inventoriés.
-Le jeu de données utilisé pour les exemples est une version réduite aux arbres de plus de \SI{10}{\centi\meter} disponible dans le package \emph{vegan} \autocite{Oksanen2012}.
-D'autres exemples utilisent des inventaires de la forêt de Paracou en Guyane française \autocite{Gourlet-Fleury2004}, principalement deux placettes d'un hectare numérotées 6 et 18, dont les données, toujours des arbres de plus de \SI{10}{\centi\meter} DBH, se trouvent dans le package \emph{entropart}.
+Les données sont souvent celles de la parcelle 6 de Paracou en Guyane française \autocite{Gourlet-Fleury2004}, d'une surface de \SI{6.25}{\hectare}.
+Tous les arbres de plus de \SI{10}{\centi\meter} de diamètre à hauteur de poitrine (DBH: \foreignlanguage{english}{\emph{Diameter at Breast Height}}) y ont été inventoriés en 2016.
+La postition de chaque arbre, son espèce et sa surface terrière sont fournis dans le package \emph{SpatDiv}.
 
+D'autres exemples utilisent la parcelle forestière permanente de Barro Colorado Island (BCI)\autocite{Condit2012}: \SI{50}{\hectare} de forêt tropicale dont les arbres de plus de \SI{1}{\centi\meter} de diamètre à hauteur de poitrine (DBH: \foreignlanguage{english}{\emph{Diameter at Breast Height}}) ont été inventoriés.
+Le jeu de données utilisé pour les exemples est une version réduite aux arbres de plus de \SI{10}{\centi\meter} disponible dans le package \emph{vegan} \autocite{Oksanen2012}.
 
 
 \section{SAD et SAR}
@@ -277,7 +279,7 @@ Les espèces ne sont pas identifiées individuellement, mais par le nombre d'ind
   N <- sum(Ns)
   SADhist <- ggplot(data.frame(Ns), aes(log(Ns))) + 
     geom_histogram(bins=nclass.Sturges(log(Ns)), 
-                   color="black", fill="white") +
+                   color="black", fill="white", boundary = 0) +
     labs(y="Nombre d'espèces")
   SADhist + ggstyle
   @
@@ -397,9 +399,17 @@ Alors:
 
 Dans le package \emph{entropart}, la fonction \code{Coverage} calcule les trois estimateurs (celui de Zhang et Huang par défaut):
 
-<<Coverage>>=
-data(Paracou618)
-Coverage(Paracou618.MC$Ns)
+<<CoverageBCI>>=
+library("entropart")
+Coverage(Ns)
+@
+
+Le taux de couverture de BCI est proche de 1 parce que l'inventaire couvre \SI{50}{\hectare}.
+Il est moindre sur les \SI{6.25}{\hectare} de la parcelle 6 de Paracou:
+
+<<CoverageP6>>=
+library("SpatDiv")
+Coverage(Paracou6)
 @
 
 
@@ -421,13 +431,24 @@ La complétude de l'échantillonnage est la proportion du nombre d'espèces obse
 Elle compte simplement les espèces et ne doit pas être confondue avec la couverture qui somme leurs probabilités: le taux de complétude est toujours très inférieur au taux de couverture parce que les espèces non échantillonnées sont les plus rares.
 
 La complétude du même échantillon d'arbres de forêt tropicale que dans l'exemple précédent peut être estimée en divisant le nombre d'espèces observées par le nombre d'espèces estimées (voir page~\ref{sec:Richesse}):
+\`A BCI: 
 
-<<Completeness>>=
-# Espèces observées
-(Obs <- Richness(Paracou618.MC$Ps))
-# Richesse estimée
-(Est <- Richness(Paracou618.MC$Ns, Correction = "Jackknife"))
-# Complétude
+<<CompletenessBCI>>=
+# Species observed
+(Obs <- Richness(Ns, Correction = "None"))
+# Estimated richness
+(Est <- Richness(Ns, Correction = "Jackknife"))
+# Completeness
 as.numeric(Obs/Est)
 @
 
+\`A Paracou:
+
+<<CompletenessP6>>=
+# Species observed
+(Obs <- Richness(Paracou6, Correction = "None"))
+# Estimated richness
+(Est <- Richness(Paracou6, Correction = "Jackknife"))
+# Completeness
+as.numeric(Obs/Est)
+@

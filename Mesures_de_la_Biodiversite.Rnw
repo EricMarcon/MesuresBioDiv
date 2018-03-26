@@ -41,15 +41,15 @@
 InstallPackages <- function(Packages) {
   sapply(Packages, function(Package) if (!Package %in% installed.packages()[, 1]) {install.packages(Package, repos="https://cran.rstudio.com/")})
 }
-InstallPackages(c("ade4", "adespatial", "entropart", "entropy", "EntropyEstimation", "gplots", "ggplot2", "iNEXT", "knitr", "sp", "SPECIES", "untb", "vegan"))
+InstallPackages(c("ade4", "adespatial", "devtools", "entropart", "entropy", "EntropyEstimation", "gplots", "ggplot2", "iNEXT", "knitr", "sp", "SPECIES", "untb", "vegan"))
+devtools::install_github("EricMarcon/SpatDiv")
 # knitr and document format options (copied into child documents)
-library("knitr")
-opts_knit$set(concordance=TRUE)
+knitr::opts_knit$set(concordance=TRUE)
 # Set global chunk options
-opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+knitr::opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
 # Postscript plots
-setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
+grDevices::setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
 # ggplot style
 library("ggplot2")
