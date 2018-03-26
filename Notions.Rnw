@@ -409,7 +409,7 @@ Il est moindre sur les \SI{6.25}{\hectare} de la parcelle 6 de Paracou:
 
 <<CoverageP6>>=
 library("SpatDiv")
-Coverage(Paracou6)
+Coverage(as.AbdVector(Paracou6))
 @
 
 
