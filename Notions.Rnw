@@ -2,11 +2,17 @@
 % !TeX spellcheck = fr-classique
 <<Notions-parent, echo=FALSE, cache=FALSE>>=
 set_parent('Mesures_de_la_Biodiversite.Rnw')
+# knitr and document format options
+opts_knit$set(concordance=TRUE)
+# Set global chunk options
 opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
-# Graphiques postscript
+# Postscript plots
 setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
+# ggplot style
+library("ggplot2")
+ggstyle <- list(scale_colour_grey(), theme_bw(), theme(legend.position="none"))
 @
 
 \LargeMargins
@@ -237,7 +243,10 @@ La Figure~\ref{SARFig}
   data(BCI)
   Cumul <- apply(BCI, 2, cumsum)
   Richesse <- apply(Cumul, 1, function(x) sum(x>0))
-  plot(y=c(0, Richesse), x=0:50, type="l", xlab="Surface (ha)")
+  SARplot <- ggplot(data.frame(A=0:50, S=c(0, Richesse)), aes(A, S)) +
+    geom_line() +
+    labs(x="Surface (ha)")
+  SARplot + ggstyle
   @
 } montre l'accumulation des espèces pour les données de BCI.
 Une SAC peut être tracée en fonction de la surface, du nombre d'individus ou du nombres de placettes d'échantillonnage, selon les besoins.
@@ -264,16 +273,18 @@ La distribution de l'abondance des espèces (SAD: \foreignlanguage{english}{\emp
 Les espèces ne sont pas identifiées individuellement, mais par le nombre d'individus leur appartenant (Figure~\ref{SADRACFig}
 \verbfootnote{Code R pour la figure:
   <<SADCode, eval=FALSE, tidy=FALSE>>=
-  data(BCI)
   Ns <- sort(colSums(BCI), decr = TRUE)
   N <- sum(Ns)
-  hist(log(Ns), main = NULL , xlab = expression(ln(N[s])), 
-  ylab="Nb Espèces")
+  SADhist <- ggplot(data.frame(Ns), aes(log(Ns))) + 
+    geom_histogram(bins=nclass.Sturges(log(Ns)), 
+                   color="black", fill="white") +
+    labs(y="Nombre d'espèces")
+  SADhist + ggstyle
   @
   <<RACCode, eval=FALSE, tidy=FALSE>>=
   library("entropart")
-  plot(as.AbdVector(Ns), Distribution = "lnorm")
-  @
+  autoplot(as.AbdVector(Ns), Distribution = "lnorm") + ggstyle
+@
 }). 
 Elle peut être représentée sous la forme d'un histogramme des fréquences (diagramme de \textcite{Preston1948}, en haut) ou bien d'un diagramme rang-abondance (RAC: \foreignlanguage{english}{\emph{Rank Abundance Curve}} ou diagramme de \textcite{Whittaker1965}, en bas). 
 Le RAC est souvent utilisé pour reconnaître des distributions connues. 
