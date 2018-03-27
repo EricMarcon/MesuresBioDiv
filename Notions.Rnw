@@ -12,7 +12,7 @@ grDevices::setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="Comp
 par(mar=c(0,0,0,0))
 # ggplot style
 library("ggplot2")
-ggstyle <- list(scale_colour_grey(), theme_bw(), theme(legend.position="none"))
+theme_set(theme_bw())
 @
 
 \LargeMargins
@@ -248,7 +248,7 @@ La Figure~\ref{SARFig}
   SARplot <- ggplot(data.frame(A=0:50, S=c(0, Richesse)), aes(A, S)) +
     geom_line() +
     labs(x="Surface (ha)")
-  SARplot + ggstyle
+  SARplot
   @
 } montre l'accumulation des espèces pour les données de BCI.
 Une SAC peut être tracée en fonction de la surface, du nombre d'individus ou du nombres de placettes d'échantillonnage, selon les besoins.
@@ -281,11 +281,11 @@ Les espèces ne sont pas identifiées individuellement, mais par le nombre d'ind
     geom_histogram(bins=nclass.Sturges(log(Ns)), 
                    color="black", fill="white", boundary = 0) +
     labs(y="Nombre d'espèces")
-  SADhist + ggstyle
+  SADhist
   @
   <<RACCode, eval=FALSE, tidy=FALSE>>=
   library("entropart")
-  autoplot(as.AbdVector(Ns), Distribution = "lnorm") + ggstyle
+  autoplot(as.AbdVector(Ns), Distribution = "lnorm")
 @
 }). 
 Elle peut être représentée sous la forme d'un histogramme des fréquences (diagramme de \textcite{Preston1948}, en haut) ou bien d'un diagramme rang-abondance (RAC: \foreignlanguage{english}{\emph{Rank Abundance Curve}} ou diagramme de \textcite{Whittaker1965}, en bas). 

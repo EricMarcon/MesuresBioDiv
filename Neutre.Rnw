@@ -2,13 +2,16 @@
 % !TeX spellcheck = fr-classique
 <<Neutre-parent, echo=FALSE, cache=FALSE>>=
 set_parent('Mesures_de_la_Biodiversite.Rnw')
-opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+knitr::opts_knit$set(concordance=TRUE)
+# Set global chunk options
+knitr::opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
-# Graphiques postscript
-setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
+# Postscript plots
+grDevices::setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
-library("entropart")
-data(Paracou618)
+# ggplot style
+library("ggplot2")
+theme_set(theme_bw())
 @
 
 \LargeMargins
@@ -269,7 +272,7 @@ L'échantillon est présenté en Figure~\ref{BiaisJack1Fig}
 \verbfootnote{
 Code R:
 <<BiaisJack1Code, eval=FALSE>>=
-plot(Ns, Distribution="lnorm")
+autoplot(Ns, Distribution="lnorm")
 @
 }.
 
@@ -309,11 +312,14 @@ Bias <- sapply(n.seq, function(n) sum((1-Ps)^n))
 Le nombre d'espèces non observées, qui est le biais de l'estimateur de la richesse, est présenté en Figure~\ref{BiaisJack3Fig}
 \verbfootnote{
 Code R:
-<<BiaisJack3Code, eval=FALSE>>=
-plot(x=n.seq , y=Bias, type="l")
-lines(x=n.seq, y=predict(lm1), col="red", lty=2)
-lines(x=n.seq, y=predict(lm2), col="orange", lty=2)
-lines(x=n.seq, y=predict(lm4), col="blue", lty=2)
+<<BiaisJack3Code, eval=FALSE, tidy=FALSE>>=
+ggplot(data.frame(n=n.seq, Biais, lm1=predict(lm1), 
+        lm2=predict(lm2), lm4=predict(lm4)), aes(x=n)) +
+  geom_line(aes(y=Biais), col="black", lty=1) +
+  geom_line(aes(y=lm1), col="red", lty=2) +
+  geom_line(aes(y=lm2), col="orange", lty=3) +
+  geom_line(aes(y=lm4), col="blue", lty=4) +
+  coord_cartesian(ylim = c(0, 250)) 
 @
 }.
 
@@ -321,9 +327,9 @@ La courbe peut être approchée par une série de puissances négatives de $n$ d
 
 <<BiaisJack4>>=
 # Ordre 1
-summary(lm1 <- lm(Bias ~ 0 +I(1/n.seq)))
+lm1 <- lm(Bias ~ 0 +I(1/n.seq))
 # Ordre 2
-summary(lm2 <- lm(Bias ~ 0 +I(1/n.seq) + I(1/n.seq^2)))
+lm2 <- lm(Bias ~ 0 +I(1/n.seq) + I(1/n.seq^2))
 # Ordre 4
 summary(lm4 <- lm(Bias ~ 0 +I(1/n.seq) + I(1/n.seq^2) + I(1/n.seq^3) + I(1/n.seq^4)))
 @
@@ -457,8 +463,15 @@ S'ils sont incohérents (intervalle des estimations supérieur à 50\% de leur m
 Si elle est faible (de l'ordre de 0,5-0,6), les estimateurs jackknife 2 à 4 sont performants, l'ordre diminuant avec l'intensité d'échantillonnage (forte: 10\%, faible: 0,5\% de la communauté). 
 Pour une forte équitabilité (0,8-0,9), on préférera jackknife 1 ou 2.
 
-Exemple de BCI: le nombre d'espèces estimé par jackknife 1 est 244. 
+Pour BCI, le nombre d'espèces estimé par jackknife 1 est 244. 
 La complétude est ${225}/{244}=92\%$, dans le domaine de validité du jackknife 1 (74\% à 96\%) qui est donc le bon estimateur.
+
+La parcelle 6 de Paracou nécessite l'estimateur jackknife 2:
+<<ParacouJack>>=
+jackknife(AbdFreqCount(as.AbdVector(Paracou6)))
+# Complétude
+as.numeric(Richness(Paracou6, Correction = "None")/Richness(Paracou6, Correction = "Jackknife"))
+@
 
 \textcite{Chiu2014a}, à partir d'autres simulations, préfèrent l'utilisation de l'estimateur \emph{iChao1}.
 Quand l'échantillonnage est suffisant, les estimateurs de Chao ont l'avantage de posséder une base théorique solide et de fournir une borne inférieure du nombre d'espèces possible.
@@ -496,7 +509,7 @@ Exemple de BCI, suite du code de la page~\pageref{code:VerifJack1} : combien de 
 @
 
 \figureSC{NonObserve}
-  {Nombres de nouvelles espèces découvertes en fonction de l'effort d'échantillonnage supplémentaire (données de BCI). 
+  {Nombre de nouvelles espèces découvertes en fonction de l'effort d'échantillonnage supplémentaire (données de BCI). 
 Seulement 7 nouvelles espèces seront observées en échantillonnant 10000 arbres supplémentaires (environ \SI{25}{\hectare} en plus des \SI{50}{\hectare} de la parcelle qui contiennent 225 espèces).
   }
   {
@@ -511,7 +524,8 @@ La courbe obtenue est en Figure~\ref{NonObserve}
   <<NonObsN, eval=FALSE>>=
   # Nouvelles espèces en fonction du nombre de nouveaux individus
   Sprime <- function(Nprime) NonObs*(1-(1-(1-C)/NonObs)^Nprime)
-  curve(Sprime, 1, 10000)
+  ggplot(data.frame(x=c(1, 10000)), aes(x)) + stat_function(fun=Sprime) +
+    labs(x = "n'", y="S'")
   @
 }.
 
@@ -747,9 +761,11 @@ lm1 <- lm(y ~ x)
 
 On voit assez clairement que le modèle (Figure~\ref{LineweaverFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<Lineweaver2, eval=FALSE>>=
-  plot(y ~ x)
-  abline(lm1$coef)
+  <<Lineweaver2, eval=FALSE, tidy = FALSE>>=
+  ggplot(data.frame(x, y), aes(x, y)) + 
+    geom_point() +
+    stat_smooth(method = "lm", col = "red") +
+    labs(x = "1/n", y="1/S")
   @
 }) s'ajuste mal quand il est représenté sous cette forme \autocite{Raaijmakers1987}.
 
@@ -806,12 +822,18 @@ L'estimation est cette fois supérieure à celle du jackknife (\Sexpr{round(SPEC
 La figure~\ref{SobLLorFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
   <<SobLLor, eval=FALSE>>=
-  plot(nArbres, nEspeces)
-  # Courbe ajustée
   x <- seq(from=0, to=max(nArbres), length=255)
-  lines(x = x, y = predict(nlsfit, newdata = list(nArbres = x)))
-  lines(x = x, y = predict(nlsexp, newdata = list(nArbres = x)), lty=2)
-  lines(x = x, y = predict(nlslog, newdata = list(nArbres = x)), lty=3)
+  NewData <- list(nArbres = x)
+  ggplot(data.frame(x, 
+          MM = predict(nlsfit, newdata = NewData),
+          Holdridge = predict(nlsexp, newdata = NewData),
+          Soberon = predict(nlslog, newdata = NewData)), 
+      aes(x)) +
+    geom_point(data=data.frame(nArbres, nEspeces), mapping=aes(nArbres, nEspeces)) +
+    geom_line(aes(y = MM)) +
+    geom_line(aes(y = Holdridge), lty=2) +
+    geom_line(aes(y = Soberon), lty=3) +
+    labs(x = "Nombre d'arbres", y="Nombre d'espèces")
   @
 } présente les deux ajustements de modèle de Soberón et Llorente avec celui de Clench. 
 L'estimation de la richesse par extrapolation est plus incertaine que par les méthodes non paramétriques. 

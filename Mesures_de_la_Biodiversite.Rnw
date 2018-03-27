@@ -53,7 +53,7 @@ grDevices::setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="Comp
 par(mar=c(0,0,0,0))
 # ggplot style
 library("ggplot2")
-ggstyle <- list(scale_colour_grey(), theme_bw(), theme(legend.position="none"))
+theme_set(theme_bw())
 @
 
 
