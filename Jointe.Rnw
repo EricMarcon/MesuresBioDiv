@@ -188,7 +188,7 @@ Pour revenir au cas simple dans lequel les habitats ont des poids égaux, les co
 \label{sec:DiversiteJointe}
 
 \begin{Essentiel}
-  La diversité jointe peut être décomposée en diversité $\gamma$ (elle-même décomposable en diversités $\alpha$ et $\beta$) et diversité de differentiation, égale au nombre effectif de répétitions de l'assemblage des communautés nécessaire pour obtenir la diversité jointe réelle.
+  La diversité jointe peut être décomposée en diversité $\gamma$ (elle-même décomposable en diversités $\alpha$ et $\beta$) et réplication, égale au nombre effectif de répétitions de l'assemblage des communautés nécessaire pour obtenir la diversité jointe réelle.
 \end{Essentiel}
 
 \lettrine{L}{a décomposition} de la diversité jointe \autocite{Gregorius2009a, Gregorius2010} complète celle de la diversité $\gamma$ vue dans les parties précédentes.
@@ -252,26 +252,26 @@ Diversity(as.ProbaVector(df2), q)
 
 La distribution de référence pour définir ce nombre effectif correspond à l'équitabilité maximale: $S$ espèces équiprobables sont réparties dans $I$ communautés équiprobables. 
 Le nombre effectif est alors $SI$. 
-Si nombre effectif d'espèces est égal à la diversité $\gamma$, le rapport entre la diversité jointe et la diversité $\gamma$, noté $D_{I|S}$, est le nombre effectif de communautés produisant la diversité jointe observée, compte-tenu de la diversité $\gamma$. 
-Il mesure l'ubiquité des espèces, c'est-à-dire le nombre effectif de communautés dans lesquelles elles se trouvent, et complète la diversité $\gamma$ en fournissant un niveau d'information supplémentaire. 
-Gregorius le qualifie de \og diversité de différenciation\fg{} (\foreignlanguage{english}{\emph{differentiation}}) parce que $D_{I|S}$ compare la distribution réelle à une distribution de référence, et pas seulement les distributions des communautés entre elles. 
+Si nombre effectif d'espèces est égal à la diversité $\gamma$, le rapport entre la diversité jointe et la diversité $\gamma$, noté $\xq{R}{q}{}{c}{}$, est le nombre effectif de méta-communautés identiques produisant la diversité jointe observée. 
+Il mesure la \emph{réplication des communautés} et complète la diversité $\gamma$ en fournissant un niveau d'information supplémentaire. 
+Gregorius le qualifie de \og diversité de différenciation\fg{} (\foreignlanguage{english}{\emph{differentiation}}) parce que $\xq{R}{q}{}{c}{}$ compare la distribution réelle à une distribution de référence, et pas seulement les distributions des communautés entre elles. 
 En résumé:
 \begin{itemize}
 \item Le nombre effectif d'espèces $\xq{D}{q}{}{}{i}$ de la communauté {i} est le nombre d'espèces équifréquentes nécessaires pour obtenir la diversité observée dans la communauté. 
 La diversité $\alpha$ est le nombre d'espèces équifréquentes nécessaires dans chaque communauté pour obtenir la diversité observée;
 \item La diversité $\beta$ est le nombre de communautés totalement distinctes (chaque espèce n'est présente que dans une seule communauté), de même poids et de même diversité (cette diversité étant égale à la diversité $\alpha$), égal au rapport entre la diversité $\gamma$ et la diversité $\alpha$;
 \item La diversité $\gamma$ est le nombre effectif d'espèces de l'assemblage des communautés;
-\item L'ubiquité des espèces est le nombre effectif de communautés dans lesquelles les espèces sont présentes.
+\item La réplication des communautés est le nombre effectif d'assemblages identiques constituant la méta-communauté.
 \end{itemize}
 
 La décomposition complète de la diversité jointe s'écrit
 \begin{equation}
 \label{eq:DecJointe}
 \xq{D}{q}{}{}{}\left(\{p_{s,i}\}\right)
-= \xq{D}{q}{}{\alpha}{} \xq{D}{q}{}{\beta}{} \xq{D}{q}{}{I|S}{}.
+= \xq{D}{q}{}{\alpha}{} \xq{D}{q}{}{\beta}{} \xq{R}{q}{}{c}{}.
 \end{equation}
 
-La méta-communauté suivante illustre cette décomposition: elle contient $D_{I|S}=3$ répliques identiques de $D_{\beta}=2$ communautés équiprobables totalement distinctes, comprenant chacune $D_{\beta}=2$ espèces équiprobables (Figure~\ref{DifferentiationFig}). 
+La méta-communauté suivante illustre cette décomposition: elle contient $R=3$ répliques identiques de $D_{\beta}=2$ communautés équiprobables totalement distinctes, comprenant chacune $D_{\alpha}=2$ espèces équiprobables (Figure~\ref{DifferentiationFig}). 
 Sa diversité jointe est 12 (le nombre de cellules non nulles dans la matrice) :
 
 <<Differentiation>>=
@@ -302,32 +302,31 @@ La définition de la diversité $\alpha$ de \textcite{Chiu2014} (page~\pageref{C
 = \frac{1}{I} \xq[\,]{D}{q}{}{}{}(\{p_{s,i}\}).
 \end{equation}
 
-En introduisant cette définition dans la décomposition de la diversité jointe, équation~\ref{eq:DecJointe}, il vient
+
+\section{Relations avec d'autres mesures de diversité}
+
+En introduisant la définition précédente dans la décomposition de la diversité jointe, équation~\ref{eq:DecJointe}, il vient
 
 \begin{equation}
 \xq{D}{q}{}{\beta}{}
 = \frac{\xq{D}{q}{}{\gamma}{}}{\xq{D}{q}{}{\alpha}{}}
-= \frac{I}{\xq{D}{q}{}{I|S}{}}.
+= \frac{I}{\xq{R}{q}{}{c}{}}.
 \end{equation}
 
+La définition de la diversité $\alpha$ de Chiu et al. implique que la diversité $\beta$ soit le rapport entre le nombre de communautés et leur réplication.
+Ce n'est pas une mesure de diversité $\beta$ de répartition.
 
-\section{Relations avec d'autres mesures de diversité}
-
-La définition de la diversité $\alpha$ de Chiu et al. implique que la diversité $\beta$ est le rapport entre le nombre de communautés et l'ubiquité des espèces, c'est-à-dire une mesure de différenciation et non de répartition.
-
-$D_{S|I}$ est le nombre effectif d'espèces des communautés au sens de la diversité de différenciation. 
-Il est calculé symétriquement à $D_{I|S}$, en divisant la diversité jointe par la diversité des poids des communautés:
+En inversant le rôle des lignes et des colonnes de la matrice $\{p_{s,i}\}$, on peut calculer la réplication des espèces en divisant la diversité jointe par la diversité des poids des communautés:
 
 \begin{equation}
-\xq{D}{q}{}{S|I}{}
+\xq{R}{q}{}{s}{}
 = \frac{\xq{D}{q}{}{}{}\left(\{p_{s,i}\}\right)}{\xq{D}{q}{}{}{}\left(\{p_{i}\}\right)}.
 \end{equation}
 
-Gregorius montre que $\xq{D}{q}{}{S|I}{}$ égale la diversité $\alpha$ selon Jost (page~\pageref{JostAlpha}):
+Gregorius montre que $\xq{R}{q}{}{s}{}$ égale la diversité $\alpha$ selon Jost (page~\pageref{JostAlpha}):
 
 \begin{equation}
-\xq{D}{q}{}{S|I}{}
+\xq{R}{q}{}{s}{}
 = {\left(\sum_s{\sum_i{\frac{p^q_i}{\sum_i{p^q_i}}p^q_{s|i}}}\right)}^{{1}/{\left(1-q\right)}}.
 \end{equation}
 
-La diversité $\alpha$ au sens de Jost donc est elle aussi une diversité de différenciation.
