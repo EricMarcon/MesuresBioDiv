@@ -1,12 +1,19 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = fr-classique
 <<Spatial-parent, echo=FALSE, cache=FALSE>>=
-set_parent('Mesures_de_la_Biodiversite.Rnw')
-opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+knitr::set_parent('Mesures_de_la_Biodiversite.Rnw')
+# knitr and document format options
+knitr::opts_knit$set(concordance=TRUE)
+# Set global chunk options
+knitr::opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
-# Graphiques postscript
-setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
+# Postscript plots
+grDevices::setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
+# ggplot style
+library("ggplot2")
+theme_set(theme_bw())
+# Data
 library("entropart")
 data(Paracou618)
 @
@@ -65,36 +72,96 @@ Le nombre d'espèces échantillonnées dépend de l'effort d'échantillonnage.
 Fisher a relié le nombre d'espèces $\xq{S}{}{n}{}{}$ au nombre d'individus $n$ échantillonnés à partir du modèle suivant:
 
 \begin{itemize}
-\item  \'Etant donné la taille de l'échantillon $n$ et la probabilité $p_s$ d'échantillonner l'espèce $s$, l'espérance du nombre d'individus échantillonnés dans l'espèce $s$ est $np_s$;
-\item  Le nombre d'individus réellement observé fluctue aléatoirement. 
-Il suit une loi de Poisson d'espérance $np_s$, conséquence directe des hypothèses : surface fixée et indépendance entre les échantillons;
-\item  Les probabilités $p_s$ suivent toutes la même loi. 
-La densité de probabilité de $np_s$ est notée $f(\lambda)$, où $\lambda=np_s$ permet d'alléger l'écriture.
+  \item  \'Etant donné la taille de l'échantillon $n$ et la probabilité $p_s$ d'échantillonner l'espèce $s$, l'espérance du nombre d'individus échantillonnés dans l'espèce $s$ est $np_s$;
+  \item  Le nombre d'individus réellement observé fluctue aléatoirement.
+  Il suit une loi de Poisson d'espérance $\lambda_s$, où $\lambda_s=np_s$ permet d'alléger l'écriture.
+  C'est une conséquence directe des hypothèses : surface fixée et indépendance entre les échantillons.
+  \item La probabilité d'observer $\nu$ individus d'une espèce est notée ${\pi}_{\nu}$.
+  \item La distribution de $\lambda_s$ retenue par Fisher est une loi gamma de paramètres $k$ et $p$, choisie pour ses propriétés mathématiques qui impliquent que ${\pi}_{\nu}$ suit une loi binomiale négative de paramètres $k$ et $1/(p+1)$.
+  \item Le paramètre $k=0$ décrit bien les données de Fisher et permet de calculer l'espérance du nombre d'espèces dans un échantillon de taille $n$.
 \end{itemize}
 
-La probabilité ${\pi}_{n_s}$ d'observer $n_s$ individus d'une espèce donnée est donc la moyenne sur toutes les valeurs possibles de $\lambda$ de la loi de Poisson:
+\figureSC{gammaFig}
+{
+  Densité de probabilité d'une loi gamma de paramètres $0,2$ et 100. Seules les valeurs inférieures à 50 sont affichées.
+}
+{
+  <<gammaFig, echo=FALSE, results='hide'>>=
+  <<gammaCode, message=FALSE>>
+  @
+}
 
-\begin{equation}
-\pi_{n_s} = \int^{+\infty}_{0}{\frac{{\lambda}^{n_s}e^{-\lambda}}{n_s!} f(\lambda)\mathop{d\lambda}}.
-\end{equation}
+Le raisonnement est détaillé ici.
+La loi gamma a deux paramètres positifs notés $k$ et $p$ par Fisher : le premier fixe sa forme, le second l'échelle.
+Les valeurs de forme inférieures à 1 donnent une distribution décroissante présentée sur la figure~\ref{gammaFig}
+\verbfootnote{Le code R nécessaire pour réaliser la figure est:
+  <<gammaCode, eval=FALSE>>=
+  library("GoFKernel")
+  k <- 0.2
+  p <- 100
+  d <- density.reflected(rgamma(10000, shape=k, scale=p), lower=0)
+  gammaplot <- ggplot(data.frame(d$x, d$y), aes(d.x, d.y)) +
+    geom_line() +
+    xlim(0, 50) +
+    labs(x=expression(lambda[s]), y = "Densité de probablité")
+  gammaplot
+  @
+}.
+La distribution obtenue est celle de $\lambda_s$, l'espérance du nombre d'individus de l'espèce $s$.
+Le paramètre de d'échelle permet d'ajuster les nombres d'individus à la taille de l'échantillon.
+Il est forcément très supérieur à 1.
+Plus le paramètre de forme $k$ est proche de 0, plus la décroissance des probabilités est rapide.
 
-La distribution de $\lambda$ retenue par Fisher est une loi gamma, ce qui implique que ${\pi}_{n_s}$ suit une loi binomiale négative de paramètres $p$ et $k$.
-Le paramètre $p$ n'a pas d'interprétation utile à ce stade; $k$ est lié à la variance de la distribution: plus il est grand, plus les probabilités des espèces sont uniformes. 
 
-On notera que la distribution de ${\pi}_{n_s}$ n'est pas celle de $p_s$. 
-La courbe représentant $n_s$ en fonction de son rang n'est pas un vrai diagramme rang-abondance, mais un \og pseudo-RAC\fg{} \autocite{Izsak2012}.
+\figureSC{nbinFig}
+{
+  Densité de probabilité d'une loi gamma de paramètres $0,2$ et 100. Seules les valeurs inférieures à 50 sont affichées. Les espèces d'abondance nulle ne sont pas observées dans l'échantillon.
+}
+{
+  <<nbinFig, echo=FALSE, results='hide'>>=
+  <<nbinCode>>
+  @
+}
 
+Les effectifs de la communauté sont un mélange de lois de Poisson de paramètres aléatoires suivant tous la même loi gamma.
+La distribution des probabilités qui en résulte est une loi binomiale négative \autocite{Greenwood1920}.
+La probabilité qu'une espèce soit représentée par $\nu$ individus, notée ${\pi}_{\nu}$, suit donc une loi binomiale négative de paramètres $k$ et $\nicefrac{1}{p+1}$ représentée sur la figure~\ref{nbinFig}
+\verbfootnote{Le code R nécessaire pour réaliser la figure est:
+  <<nbinCode, eval=FALSE>>=
+  nbin <- rnbinom(10000, size=k, prob=1/(p+1))
+  nbinbar <- ggplot(data.frame(nbin), aes(x=nbin, y=..prop..)) + 
+    geom_bar(width=1, color="black", fill="white") +
+    xlim(-.5, 50) +
+    labs(x=expression(paste("Abondance ", nu)), y="Probabilité") 
+  nbinhist
+  @
+}.
+
+On notera que la distribution de ${\pi}_{\nu}$ décrit, pour une espèce, la probabilité d'être représentée par $\nu$ individus.
+Ce n'est pas la distribution des probabilités $p_s$, qui donnent la probabilité qu'un individu appartienne à l'espèce $s$.
+Une courbe représentant les valeurs de ${\pi}_{\nu}$ en fonction de leur rang n'est donc pas un diagramme rang-abondance, mais un \og pseudo-RAC\fg{} \autocite{Izsak2012}.
+
+La variance de la loi binomiale négative varie en sens inverse du paramètre $k$.
 En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui correspond à une distribution comprenant de nombreuses espèces de fréquences très variables, donc un pseudo-RAC décroissant rapidement, et retient cette propriété pour la suite de son raisonnement. 
 Dans ce cas, l'espérance du nombre d'espèces représentées par $\nu$ individus est, en posant $x=\nicefrac{p}{p+1}$ et $\alpha$ une constante:
 
 \begin{equation}
 \label{eq:nalpha}
-  s_\nu = \frac{\alpha}{\nu} x^\nu.
+  {\mathbb E}\left(\xq{S}{}{n}{\nu}{}\right) = \frac{\alpha}{\nu} x^\nu.
 \end{equation}
 
-Le nombre total d'individus en est donc la somme pour toutes les valeurs de $\nu$:
+L'espérance du nombre d'espèces en est la somme pour toutes les valeurs de $\nu$:
 \begin{equation}
-  n = \sum_{\nu=1}^{\infty}{\alpha x^\nu} = \frac{\alpha x}{1-x}.
+  {\mathbb E}\left(\xq{S}{}{n}{}{}\right) 
+  = \sum_{\nu=1}^{\infty}{{\mathbb E}\left(\xq{S}{}{n}{\nu}{}\right)}
+  = -\alpha \ln(1-x).
+\end{equation}
+
+De même, le nombre total d'individus est :
+\begin{equation}
+  n = \sum_{\nu=1}^{\infty}{\nu {\mathbb E}\left(\xq{S}{}{n}{\nu}{}\right)}
+    = \sum_{\nu=1}^{\infty}{\alpha x^\nu} 
+    = \frac{\alpha x}{1-x}.
 \end{equation}
 
 La combinaison des deux équations permet d'éliminer $x$ et d'obtenir l'espérance du nombre d'espèces observées en fonction de la taille de l'échantillon:
