@@ -277,10 +277,11 @@ Les espèces ne sont pas identifiées individuellement, mais par le nombre d'ind
   <<SADCode, eval=FALSE, tidy=FALSE>>=
   Ns <- sort(colSums(BCI), decr = TRUE)
   N <- sum(Ns)
-  SADhist <- ggplot(data.frame(Ns), aes(log(Ns))) + 
+  SADhist <- ggplot(data.frame(Ns), aes(Ns)) + 
     geom_histogram(bins=nclass.Sturges(log(Ns)), 
                    color="black", fill="white", boundary = 0) +
-    labs(y="Nombre d'espèces")
+    scale_x_log10() +
+    labs(x="Effectifs (échelle logarithmique)", y="Nombre d'espèces")
   SADhist
   @
   <<RACCode, eval=FALSE, tidy=FALSE>>=

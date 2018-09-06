@@ -31,7 +31,7 @@
 
 \author{Eric Marcon}
 \title{Mesures \\ de la Biodiversité}
-\date{23 octobre 2017}
+\date{6 septembre 2018}
 
 
 %%%------------------------------------------------------------------------------
@@ -41,7 +41,7 @@
 InstallPackages <- function(Packages) {
   sapply(Packages, function(Package) if (!Package %in% installed.packages()[, 1]) {install.packages(Package, repos="https://cran.rstudio.com/")})
 }
-InstallPackages(c("ade4", "adespatial", "devtools", "entropart", "entropy", "EntropyEstimation", "gplots", "ggplot2", "iNEXT", "knitr", "sp", "SPECIES", "untb", "vegan"))
+InstallPackages(c("ade4", "adespatial", "devtools", "entropart", "entropy", "EntropyEstimation", "gplots", "ggplot2", "GoFKernel", "iNEXT", "knitr", "sp", "SPECIES", "untb", "vegan"))
 devtools::install_github("EricMarcon/SpatDiv")
 # knitr and document format options (copied into child documents)
 knitr::opts_knit$set(concordance=TRUE)

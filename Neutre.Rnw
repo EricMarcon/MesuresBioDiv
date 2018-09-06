@@ -313,7 +313,7 @@ Le nombre d'espèces non observées, qui est le biais de l'estimateur de la rich
 \verbfootnote{
 Code R:
 <<BiaisJack3Code, eval=FALSE, tidy=FALSE>>=
-ggplot(data.frame(n=n.seq, Biais, lm1=predict(lm1), 
+ggplot(data.frame(n=n.seq, Biais=Bias, lm1=predict(lm1), 
         lm2=predict(lm2), lm4=predict(lm4)), aes(x=n)) +
   geom_line(aes(y=Biais), col="black", lty=1) +
   geom_line(aes(y=lm1), col="red", lty=2) +
@@ -468,6 +468,7 @@ La complétude est ${225}/{244}=92\%$, dans le domaine de validité du jackknife
 
 La parcelle 6 de Paracou nécessite l'estimateur jackknife 2:
 <<ParacouJack>>=
+library("SpatDiv")
 jackknife(AbdFreqCount(as.AbdVector(Paracou6)))
 # Complétude
 as.numeric(Richness(Paracou6, Correction = "None")/Richness(Paracou6, Correction = "Jackknife"))
@@ -521,11 +522,12 @@ Seulement 7 nouvelles espèces seront observées en échantillonnant 10000 arbre
 Le taux de couverture de l'inventaire de BCI est très proche de 100\%, donc peu de nouvelles espèces seront découvertes en augmentant l'effort d'échantillonnage. 
 La courbe obtenue est en Figure~\ref{NonObserve}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<NonObsN, eval=FALSE>>=
+  <<NonObsN, eval=FALSE, tidy=FALSE>>=
   # Nouvelles espèces en fonction du nombre de nouveaux individus
-  Sprime <- function(Nprime) NonObs*(1-(1-(1-C)/NonObs)^Nprime)
-  ggplot(data.frame(x=c(1, 10000)), aes(x)) + stat_function(fun=Sprime) +
-    labs(x = "n'", y="S'")
+  Sprime <- function(Nprime) NonObs * (1 - (1 - (1 - C)/NonObs)^Nprime)
+  ggplot(data.frame(x = c(1, 10000)), aes(x)) + 
+    stat_function(fun = Sprime) +
+    labs(x = "n'", y = "S'")
   @
 }.
 
@@ -821,19 +823,19 @@ L'estimation est cette fois supérieure à celle du jackknife (\Sexpr{round(SPEC
 
 La figure~\ref{SobLLorFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<SobLLor, eval=FALSE>>=
-  x <- seq(from=0, to=max(nArbres), length=255)
+  <<SobLLor, eval=FALSE, tidy=FALSE>>=
+  x <- seq(from = 0, to = max(nArbres), length = 255)
   NewData <- list(nArbres = x)
   ggplot(data.frame(x, 
           MM = predict(nlsfit, newdata = NewData),
           Holdridge = predict(nlsexp, newdata = NewData),
           Soberon = predict(nlslog, newdata = NewData)), 
       aes(x)) +
-    geom_point(data=data.frame(nArbres, nEspeces), mapping=aes(nArbres, nEspeces)) +
+    geom_point(aes(nArbres, nEspeces), data.frame(nArbres, nEspeces)) +
     geom_line(aes(y = MM)) +
-    geom_line(aes(y = Holdridge), lty=2) +
-    geom_line(aes(y = Soberon), lty=3) +
-    labs(x = "Nombre d'arbres", y="Nombre d'espèces")
+    geom_line(aes(y = Holdridge), lty = 2) +
+    geom_line(aes(y = Soberon), lty = 3) +
+    labs(x = "Nombre d'arbres", y = "Nombre d'espèces")
   @
 } présente les deux ajustements de modèle de Soberón et Llorente avec celui de Clench. 
 L'estimation de la richesse par extrapolation est plus incertaine que par les méthodes non paramétriques. 
@@ -1135,8 +1137,10 @@ Chaque estimateur ${\hat{p}}_s$ fluctue autour de $p_s$ mais vaut $p_s$ en moyen
 \`A cause de la concavité, $\ln({\hat{p}}_s)$ est en moyenne inférieur à $\ln(p_s)$: cette relation est connue sous le nom d'inégalité de \textcite{Jensen1906}. 
 L'indice de Shannon est concave (Figure~\ref{ShannonFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<ShannonCode, eval=FALSE>>=
-  curve(-x*log(x), 0.0001, 1)
+  <<ShannonCode, eval=FALSE, tidy=FALSE>>=
+  ggplot(data.frame(x = c(0.0001, 1)), aes(x)) + 
+    stat_function(fun = function(x) -x*log(x)) +
+    labs(x = "p", y = "H(p)")
   @
 }) donc son estimateur (\ref{eq:Shannon}) est biaisé négativement, même sans prendre en considération les espèces non observées.
 
@@ -1154,17 +1158,19 @@ Le biais est la différence entre ${-p}_s{\ln  p_s}$ (connu) et la moyenne des 1
 La valeur du biais en fonction de $p_s$ est en Figure~\ref{ShannonBiaisFig}
 \verbfootnote{
 Code R:
-<<ShannonBiaisCode, eval=FALSE>>=
+<<ShannonBiaisCode, eval=FALSE, tidy=FALSE>>=
   Biais.p <- function (p) {
     Ps <-rnorm(10000, p, 0.01)
-    p*log(p)-mean(Ps*log(Ps))
+    p * log(p) - mean(Ps * log(Ps))
   }
   Biais <- function (Ps) {
     # Applique Biais.p à chaque valeur de Ps
     sapply(Ps, Biais.p)
   }
-  curve(Biais, 0.05, .95)
-  abline(h=0, lty=2)
+  ggplot(data.frame(x = c(0.05, 0.95)), aes(x)) + 
+    stat_function(fun = Biais) +
+    geom_hline(yintercept = 0, lty = 2) +
+    labs(x = "p", y = "Biais")
 @
 }. 
 Le biais de l'indice de Shannon est la somme des biais pour toutes les probabilités spécifiques de la communauté étudiée, et son calcul est toujours l'objet de recherches.
@@ -1387,9 +1393,15 @@ Ces trois fonctions d'information sont représentées en Figure~\ref{IFig}
 \verbfootnote{
 Le code R nécessaire pour réaliser la figure est:
 <<ICode, eval=FALSE>>=
-curve((1-x)/x, 0, 1, lty=1, xlab="p", ylab="I(p)", ylim=c(0,10))
-curve(-log(x), 0, 1, lty=2, add=TRUE)
-curve(1-x, 0, 1, lty=3, add=TRUE)
+I0 <- function(p) (1-p)/p
+I1 <- function(p) -log(p)
+I2 <- function(p) 1-p
+ggplot(data.frame(x=c(0, 1)), aes(x)) + 
+    stat_function(fun=I0) +
+    stat_function(fun=I1, lty=2) +
+    stat_function(fun=I2, lty=3) +
+    coord_cartesian(ylim=c(0, 10)) +
+    labs(x = "p", y="I(p)")
 @
 }.
 
@@ -1406,9 +1418,14 @@ La contribution de chaque espèce à la valeur totale de l'entropie est représe
 \verbfootnote{
 Code R:
 <<EntropieCode, eval=FALSE>>=
-curve(1-x, 0, 1, lty=1, xlab="p", ylab="p I(p)")
-curve(-x*log(x), 0, 1, lty=2, add=TRUE)
-curve(x*(1-x), 0, 1, lty=3, add=TRUE)
+H0 <- function(p) 1-p
+H1 <- function(p) -p*log(p)
+H2 <- function(p) p*(1-p)
+ggplot(data.frame(x=c(0.001, 1)), aes(x)) + 
+    stat_function(fun=H0) +
+    stat_function(fun=H1, lty=2) +
+    stat_function(fun=H2, lty=3) +
+    labs(x = "p", y="H(p)")
 @
 }.
 
@@ -1455,13 +1472,13 @@ En se limitant à la diversité $\alpha$, on peut remarquer que l'indice de Shan
 Les valeurs de chaque terme de la divergence sont représentées Figure~\ref{KullbackLeiblerFig}
 \verbfootnote{
 Le code R nécessaire pour réaliser la figure est:
-<<KullbackLeiblerCode, eval=FALSE, message=FALSE>>=
+<<KullbackLeiblerCode, eval=FALSE, message=FALSE, fig.asp=1>>=
 p <- q <- seq(0.01, 1, .01)
 KB <- function(p, q) p*log(p/q)
 xyz <- t(outer(p, q, FUN = "KB"))
 library("sp")
 image(xyz, col=bpy.colors(n = 100, cutoff.tails = 0.3, alpha = .6), 
-      xlab="q", ylab="p")
+      xlab="q", ylab="p", asp=1)
 contour(xyz, levels = c(seq(-.3, 0, .1), c(.2, .5), seq(1, 4, 1)), 
         labcex = 1, add=T)
 @
@@ -1575,14 +1592,17 @@ dont la forme est identique à la transformation de \textcite{Box1964} utilisée
 
 Le logarithme déformé converge vers le logarithme naturel quand $q\to 1$ (Figure~\ref{lnqFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-<<lnqCode, eval=FALSE>>=
-curve(log(x), 0, 1, lty=1, ylab = expression(ln[q](x)))
-curve(lnq(x, 0), 0, 1, lty = 2, add = TRUE)
-curve(lnq(x, 2), 0, 1, lty = 3, add = TRUE)
-curve(lnq(x, -1), 0, 1, lty = 4, add = TRUE)  
-legend("bottomright", legend = c(expression(ln[0](x)), "ln(x)",
-      expression(ln[2](x)), expression(ln[-1](x))),
-      lty = c(2, 1, 3, 4), inset=  0.02)
+<<lnqCode, eval=FALSE, tidy=FALSE>>=
+ln0 <- function(p) lnq(p, 0)
+ln2 <- function(p) lnq(p, 2)
+lnm1 <- function(p) lnq(p, -1)
+ggplot(data.frame(x = c(0, 1)), aes(x)) + 
+    stat_function(fun = log) +
+    stat_function(fun = ln0, lty = 2, col = "red") +
+    stat_function(fun = ln2, lty = 3, col = "blue") +
+    stat_function(fun = lnm1, lty = 4, col = "green") +
+    coord_cartesian(ylim = c(-4, 0)) +
+    labs(x = "p", y = expression(ln[q](p)))
 @
 }).
 
@@ -1593,7 +1613,7 @@ Sa fonction inverse est l'exponentielle d'ordre $q$:
 \end{equation}
 
 \figureSC{lnqFig}
-{Valeur du logarithme d'ordre $q$ de probabilités entre 0 et 1 pour différentes valeurs de $q$: $q = 0$ (pointillés longs), la courbe est une droite; $q = 1$ (trait plein): logarithme naturel; $q = 2$ (pointillés courts): la courbe a la même forme que le logarithme naturel pour les valeurs positives de $q$; $q =-1$ (pointillés alternés): la courbe est convexe pour les valeurs négatives de $q$.}
+{Valeur du logarithme d'ordre $q$ de probabilités entre 0 et 1 pour différentes valeurs de $q$: $q = 0$ (pointillés longs rouges), la courbe est une droite; $q = 1$ (trait plein): logarithme naturel; $q = 2$ (pointillés courts bleus): la courbe a la même forme que le logarithme naturel pour les valeurs positives de $q$; $q =-1$ (pointillés alternés verts): la courbe est convexe pour les valeurs négatives de $q$.}
 {
 <<lnqFig, echo=FALSE, results='hide'>>=
 <<lnqCode>>
@@ -1720,12 +1740,12 @@ La diversité n'est pas une fonction linéaire des probabilités: la diversité 
 \textcite{Leinster2012}, après \textcite{Hill1973}, \textcite{Patil1982}, \textcite{Tothmeresz1995} et \textcite{Kindt2006}, recommandent de tracer des profils de diversité, c'est-à-dire la valeur de la diversité $\xq{D}{q}{}{}{}$ en fonction de l'ordre $q$ (Figure~\ref{ProfilDivFig}
 \verbfootnote{
   Code R :
-  <<ProfilDivCode, eval=FALSE>>=
+  <<ProfilDivCode, eval=FALSE, tidy=FALSE>>=
   q.seq <- seq(0, 2, .1)
-  P6D<- CommunityProfile(Diversity, Paracou618.MC$Nsi[,1], q.seq)
-  P18D<- CommunityProfile(Diversity, Paracou618.MC$Nsi[,2], q.seq)
-  plot(P6D, xlab="q", ylab="Diversité", main="", ylim=c(min(P6D$y), max(P18D$y)))
-  lines(P18D, lty=2)
+  P6D<- CommunityProfile(Diversity, Paracou618.MC$Nsi[, 1], q.seq)
+  P18D<- CommunityProfile(Diversity, Paracou618.MC$Nsi[, 2], q.seq)
+  autoplot(P6D, xlab = "q", ylab = "Diversité") +
+    geom_line(aes(x, y), as.data.frame.list(P18D), lty = 2)
   @
 }) pour comparer plusieurs communautés.
 Une communauté peut être déclarée plus diverse qu'une autre si son profil de diversité est au-dessus de l'autre pour toutes les valeurs de $q$. 
@@ -1752,11 +1772,15 @@ Le profil de la queue de distribution est construit en classant les espèces de 
   Code R :
   <<ProfilQueueCode, eval=FALSE>>=
   # Elimination des espèces absentes des deux parcelles
-  Psi <- Paracou618.MC$Psi[Paracou618.MC$Ps>0,]
-  P6Ps <- sort(Psi[,1])
-  P18Ps <- sort(Psi[,2])
-  plot(rev(cumsum(P6Ps)), type="l", log="x", xlab="Espèces", ylab="Fréquence")
-  lines(rev(cumsum(P18Ps)), lty=2)
+  Psi <- as.data.frame(Paracou618.MC$Psi[Paracou618.MC$Ps>0,])
+  Psi[,1] %<>% sort %>% cumsum %>% rev
+  Psi[,2] %<>% sort %>% cumsum %>% rev
+  Psi$x <- 1:nrow(Psi)
+  ggplot(Psi, aes(x)) +
+    geom_path(aes(y=P006)) +
+    geom_path(aes(y=P018), lty=2) +
+    labs(x="Espèces", y="Fréquence") +
+    scale_x_log10()
   @
 }).
 Les coordonnées des points du profil sont définies par
@@ -2167,39 +2191,38 @@ L'existence d'un estimateur sans biais et d'un intervalle de confiance calculabl
 
 La figure~\ref{comProfilzeta}
 \verbfootnote{Code R pour réaliser la figure:
-  <<comProfilzetaCode, eval=FALSE>>=
+  <<comProfilzetaCode, eval=FALSE, tidy=FALSE>>=
   # Profil P6
   library("EntropyEstimation")
-  zeta6 <- CommunityProfile(GenSimpson, NsP6, 1:(S-1))
-  sigma6 <- sapply(1:(S-1), function(r) GenSimp.sd(NsP6,r))
-  ic6 <- qnorm(1-0.05/2)*sigma6/sqrt(sum(NsP6))
+  zeta6 <- CommunityProfile(GenSimpson, NsP6, 1:(S - 1))
+  sigma6 <- sapply(1:(S - 1), function(r) GenSimp.sd(NsP6, r))
+  ic6 <- qnorm(1 - 0.05/2) * sigma6/sqrt(sum(NsP6))
   zeta6$low <- zeta6$y - ic6
   zeta6$high <- zeta6$y + ic6
   # Profil P18
-  zeta18 <- CommunityProfile(GenSimpson, NsP18, 1:(S-1))
-  sigma18 <- sapply(1:(S-1), function(r) GenSimp.sd(NsP18,r))
-  ic18 <- qnorm(1-0.05/2)*sigma18/sqrt(sum(NsP18))
+  zeta18 <- CommunityProfile(GenSimpson, NsP18, 1:(S - 1))
+  sigma18 <- sapply(1:(S - 1), function(r) GenSimp.sd(NsP18, r))
+  ic18 <- qnorm(1 - 0.05/2) * sigma18/sqrt(sum(NsP18))
   zeta18$low <- zeta18$y - ic18
   zeta18$high <- zeta18$y + ic18
   # Transformation en diversité
   zeta6D <- zeta6
-  zeta6D$y <- 1/(1-(zeta6$y)^(1/zeta6$x))
-  zeta6D$low <- 1/(1-(zeta6$low)^(1/zeta6$x))
-  zeta6D$high <- 1/(1-(zeta6$high)^(1/zeta6$x))
+  zeta6D$y <- 1/(1 - (zeta6$y)^(1/zeta6$x))
+  zeta6D$low <- 1/(1 - (zeta6$low)^(1/zeta6$x))
+  zeta6D$high <- 1/(1 - (zeta6$high)^(1/zeta6$x))
   zeta18D <- zeta18
-  zeta18D$y <- 1/(1-(zeta18$y)^(1/zeta18$x))
-  zeta18D$low <- 1/(1-(zeta18$low)^(1/zeta18$x))
-  zeta18D$high <- 1/(1-(zeta18$high)^(1/zeta18$x))
+  zeta18D$y <- 1/(1 - (zeta18$y)^(1/zeta18$x))
+  zeta18D$low <- 1/(1 - (zeta18$low)^(1/zeta18$x))
+  zeta18D$high <- 1/(1 - (zeta18$high)^(1/zeta18$x))
   # Figure
-  plot(zeta18D$x, zeta18D$y, xlim=c(1, S-1), ylim=c(min(zeta6D$low)*.9, 
-    max(zeta18D$high)*1.05), xlab = "Ordre de diversité", main="", 
-    ylab = "Diversité de Simpson généralisée",
-    type="n")
-  CEnvelope(zeta6D, LineWidth=2, main="", xlim=c(1, S-1), ShadeColor=NA, col="darkgreen")
-  lines(zeta6D$x, zeta6D$high, col="darkgreen", lty=1)
-  lines(zeta6D$x, zeta6D$low, col="darkgreen", lty=1)
-  CEnvelope(zeta18D, lty=2, LineWidth=2, ShadeColor="NA", col="red", 
-            BorderColor="red")
+  ggplot() + 
+    geom_ribbon(aes(x, ymin = low, ymax = high), 
+                as.data.frame.list(zeta18D), alpha = 0.3) +
+    geom_line(aes(x, y), as.data.frame.list(zeta18D), col = "red") +
+    geom_ribbon(aes(x, ymin = low, ymax = high), 
+                as.data.frame.list(zeta6D), alpha = 0.3) +
+    geom_line(aes(x, y), as.data.frame.list(zeta6D), col = "darkgreen") +
+    labs(x = "Ordre de diversité", y = "Diversité de Simpson généralisée")
   @
 } montre les profils de diversité (en nombre effectifs d'espèces) des deux parcelles 6 et 18 de Paracou: \SI{1}{\hectare} inventorié, respectivement 681 et 483 arbres, pour une richesse estimée à 254 et 309 espèces par les estimateurs jackknife d'ordres 2 et 3:
 <<Paracou618S>>=
@@ -2214,19 +2237,19 @@ La diversité est donc estimée jusqu'à l'ordre 253.
 
 En comparaison, la figure~\ref{comProfilHCDT}
 \verbfootnote{Code R pour réaliser la figure:
-  <<comProfilHCDTCode, eval=FALSE>>=
+  <<comProfilHCDTCode, eval=FALSE, tidy=FALSE>>=
   # Calcul des profils HCDT
-  D6 <- CommunityProfile(Diversity, NsP6, NumberOfSimulations=10,
-  q.seq=q.seq, Correction="UnveilJ")
-  D18 <- CommunityProfile(Diversity, NsP18, NumberOfSimulations=10,
-  q.seq=q.seq, Correction="UnveilJ")
+  D6 <- CommunityProfile(Diversity, NsP6, NumberOfSimulations = 10,
+  q.seq=q.seq, Correction = "UnveilJ")
+  D18 <- CommunityProfile(Diversity, NsP18, NumberOfSimulations = 10,
+  q.seq=q.seq, Correction = "UnveilJ")
   # Figure
-  plot(D18$x, D18$y, ylim=c(min(D18$low)*.9, max(D18$high)*1.05),
-  xlab = "Ordre de diversité", ylab = "Nombre de Hill", main="", xlim=range(q.seq), type="n")
-  CEnvelope(D6, LineWidth=2, main="", xlim=range(q.seq), ShadeColor=NA, col="darkgreen")
-  lines(D6$x, D6$high, col="darkgreen", lty=1)
-  lines(D6$x, D6$low, col="darkgreen", lty=1)
-  CEnvelope(D18, lty=2, LineWidth=2, ShadeColor="NA", col="red", BorderColor="red")
+  ggplot(data.frame(x = D6$x, D6$y, D18$y)) +
+    geom_ribbon(aes(x, ymin = low, ymax = high), as.data.frame.list(D6), alpha = 0.3) +
+    geom_line(aes(x, D6.y), col = "darkgreen", lty = 2) + 
+    geom_ribbon(aes(x, ymin = low, ymax = high), as.data.frame.list(D18), alpha = 0.3) +
+    geom_line(aes(x, D18.y), col = "red") + 
+    labs(x = "Ordre de diversité", y = "Nombre de Hill")
   @
 } montre les profils de diversité HCDT des mêmes parcelles.
 Ils se chevauchent pour les petits ordres de diversité, ce qui ne permet pas de conclure.
@@ -2251,18 +2274,18 @@ Ils se chevauchent pour les petits ordres de diversité, ce qui ne permet pas de
 
 La distribution statistique de la différence d'entropie est connue, et peut donc être tracée (Figure~\ref{zetaDiffFig}
 \verbfootnote{Code R pour réaliser la figure:
-  <<zetaDiffCode, eval=FALSE>>=
+  <<zetaDiffCode, eval=FALSE, tidy=FALSE>>=
   # Calcul de P18-P6 avec IC
-  Difference <- list(x=zeta18$x, y=zeta18$y-zeta6$y)
+  Difference <- list(x = zeta18$x, y = zeta18$y-zeta6$y)
   class(Difference) <- class(zeta18)
-  icDifference <- qnorm(1-0.05/2)*sqrt(sigma6^2/sum(NsP6) + sigma18^2/sum(NsP18))
+  icDifference <- qnorm(1-0.05/2)*sqrt(sigma6^2/sum(NsP6) 
+                                       + sigma18^2/sum(NsP18))
   Difference$low <- Difference$y - icDifference
   Difference$high <- Difference$y + icDifference
   # Plot
-  Xlab <- "Ordre de diversité"
-  Ylab <- "Différence d'entropie"
-  plot(Difference, xlab = Xlab, ylab=Ylab)
-  abline(h=0, col="blue", lty=2)
+  autoplot(Difference, xlab = "Ordre de diversité", 
+           ylab = "Différence d'entropie") + 
+    geom_hline(yintercept = 0, col = "blue", lty = 2)
   @
 }).
 Son intervalle de confiance ne contient jamais la valeur 0, ce qui permet de conclure que la parcelle 18 est plus diverse.
@@ -2509,9 +2532,9 @@ L'inéquitabilité $1/{\xq{E}{q}{}{}{}}$ (Figure~\ref{ProfilIneqFig}
   Ns <- colSums(BCI)
   UBNs <- jackknife(AbdFreqCount(Ns), k=1)$Nhat
   # Profil
-  DivPrf <- CommunityProfile(Diversity, Ns)
-  plot(y=UBNs/DivPrf$y, x=q.seq, type="l", col="black",
-  lwd=2, xlab="q", ylab="Inéquitabilité", main="")
+  Inq <- DivPrf <- CommunityProfile(Diversity, Ns)
+  Inq$y <- UBNs/DivPrf$y
+  autoplot(Inq, xlab="Ordre de diversité", ylab="Inéquitabilité")
   @
 }
 ) est un nombre effectif d'espèces: c'est la richesse d'une communauté du même niveau d'équitabilité que la communauté réelle dans laquelle tous les individus (sauf un nombre négligeable) appartiendraient à une seule espèce.
@@ -2553,8 +2576,8 @@ Un profil d'équitabilité calculé de cette façon est présenté Figure~\ref{B
 \verbfootnote{
   Code R supplémentaire :
   <<BCIEqCode, eval=FALSE>>=
-  plot(y=log(DivPrf$y)/log(UBNs), x=q.seq, type="l", col="black",
-  lwd=2, xlab="q", ylab="Indice de Pielou", main="")
+  Inq$y <- log(DivPrf$y)/log(UBNs)
+  autoplot(Inq, xlab="Ordre de diversité", ylab="Indice de Pielou")
   @
 }.
 
@@ -2589,20 +2612,25 @@ La figure~\ref{SJLogNormale}
   # Richesse et Shannon
   Sobs <- sapply(rcl, Richness)
   H <- sapply(rcl, Shannon)
-  plot(log(S), H)
+  ggplot(data.frame(S, H), aes(S, H)) +
+    geom_point() + scale_x_log10() + 
+    labs(y="S (échelle logarithmique)")
   @
   <<SJLogNormaleJCode, eval=FALSE>>=
   # Equitabilité de Pielou
   J <- H/log(S)
-  plot(S, J)
+  ggplot(data.frame(S, J), aes(S, J)) +
+    geom_point()
   @
   <<SJLogNormaleECode, eval=FALSE>>=
   E <- sapply(rcl, Simpson)
-  plot(S, E)
+  ggplot(data.frame(S, E), aes(S, E)) +
+    geom_point()
   @
   <<SJLogNormaleJ2Code, eval=FALSE>>=
   J2 <- E/(1-1/S)
-  plot(S, J2)
+  ggplot(data.frame(S, J2), aes(S, J2)) +
+    geom_point()
   @
 } montre que l'entropie et l'équitabilité sont corrélées positivement à la richesse dans des communautés log-normales de même variance.
 
@@ -2646,20 +2674,25 @@ En revanche, dans une communauté log-normale de richesse fixe mais insuffisamme
   # Richesse et Shannon
   S <- apply(rmc$Psi, 2, Richness)
   H <- apply(rmc$Psi, 2, Shannon)
-  plot(log(S), H)
+  ggplot(data.frame(S, H), aes(S, H)) +
+    geom_point() + scale_x_log10() + 
+    labs(y="S (échelle logarithmique)")
   @
   <<NJLogNormaleJCode, eval=FALSE>>=
   # Equitabilité de Pielou
   J <- H/log(S)
-  plot(S, J)
+  ggplot(data.frame(S, J), aes(S, J)) +
+    geom_point()
   @
   <<NJLogNormaleECode, eval=FALSE>>=
   E <- apply(rmc$Psi, 2, Simpson)
-  plot(S, E)
+  ggplot(data.frame(S, E), aes(S, E)) +
+    geom_point()
   @
   <<NJLogNormaleJ2Code, eval=FALSE>>=
   J2 <- E/(1-1/S)
-  plot(S, J2)
+  ggplot(data.frame(S, J2), aes(S, J2)) +
+    geom_point()
   @
 }).
 Le sous-échantillonnage a un effet plus sévère sur la richesse que sur les entropies d'ordres supérieurs.
