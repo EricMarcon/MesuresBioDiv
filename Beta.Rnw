@@ -1,14 +1,17 @@
 % !TeX encoding = UTF-8
 % !TeX spellcheck = fr-classique
 <<Beta-parent, echo=FALSE, cache=FALSE>>=
-set_parent('Mesures_de_la_Biodiversite.Rnw')
-opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
+knitr::set_parent('Mesures_de_la_Biodiversite.Rnw')
+knitr::opts_knit$set(concordance=TRUE)
+# Set global chunk options
+knitr::opts_chunk$set(cache=TRUE, warning=FALSE, tidy=TRUE, fig.width=8, fig.height=6, out.width='.8\\maxwidth', tidy.opts=list(blank=FALSE, width.cutoff=60), size="scriptsize")
 options(width=60)
-# Graphiques postscript
-setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
+# Postscript plots
+grDevices::setEPS(horizontal=FALSE, onefile=FALSE, paper="special", family="ComputerModern", encoding="TeXtext.enc", width=8.0, height=6.0)
 par(mar=c(0,0,0,0))
-library("entropart")
-data(Paracou618)
+# ggplot style
+library("ggplot2")
+theme_set(theme_bw())
 @
 
 \LargeMargins
@@ -38,6 +41,7 @@ Les données sont organisées dans le package sous la forme d'un objet \code{Met
 Les parcelles de Paracou sont dans l'objet \code{Paracou618.MC}.
 
 <<Paracou618.MC>>=
+library(entropart)
 summary(Paracou618.MC)
 @
 
@@ -334,7 +338,8 @@ DistJaccard <- dist.binary(BCI, method = 1)
 La distribution des valeurs de l'indice de Jaccard $S_3=1-D_3^2$ est en figure~\ref{JaccardFig}
 \verbfootnote{Code R pour la figure:
   <<JaccardCode, eval=FALSE>>=
-  plot(density(1-DistJaccard^2))
+  ggplot(data.frame(Jaccard=as.numeric(1-DistJaccard^2)), aes(x=Jaccard)) +
+    geom_density()
   @
 }. 
 Le mode est proche de 0,5: la moitié des espèces sont communes entre deux carrés.
@@ -390,31 +395,31 @@ La matrice de dissimilarité corrigée est assez différente de l'originale. L'i
 <<ChaoJaccard1>>=
 # Calcul de U et V, N2Col est une matrice ou un dataframe de deux colonnes contenant les effectifs de chaque parcelle
 ChaoUV <- function(N2Col) {
-NCommunity <- colSums(N2Col)
-Common <- (N2Col[, 1] > 0) & (N2Col[, 2] > 0)
-Single <- N2Col == 1
-NSingleCommon <- colSums(Common & Single)
-Double <- N2Col == 2
-NDoubleCommon <- colSums(Common & Double)
-NsCommon <- N2Col[Common,]
-PsCommon <- t(t(NsCommon)/colSums(N2Col))
-U <- sum(PsCommon[, 1]) + (NCommunity[2]-1)/NCommunity[2] * NSingleCommon[2]/2/max(NDoubleCommon[2], 1) * sum(PsCommon[, 1][(NsCommon == 1)[, 2]]) 
-V <- sum(PsCommon[, 2]) + (NCommunity[1]-1)/NCommunity[1] * NSingleCommon[1]/2/max(NDoubleCommon[1], 1) * sum(PsCommon[, 2][(NsCommon == 1)[, 1]]) 
+  NCommunity <- colSums(N2Col)
+  Common <- (N2Col[, 1] > 0) & (N2Col[, 2] > 0)
+  Single <- N2Col == 1
+  NSingleCommon <- colSums(Common & Single)
+  Double <- N2Col == 2
+  NDoubleCommon <- colSums(Common & Double)
+  NsCommon <- N2Col[Common,]
+  PsCommon <- t(t(NsCommon)/colSums(N2Col))
+  U <- sum(PsCommon[, 1]) + (NCommunity[2]-1)/NCommunity[2] * NSingleCommon[2]/2/max(NDoubleCommon[2], 1) * sum(PsCommon[, 1][(NsCommon == 1)[, 2]]) 
+  V <- sum(PsCommon[, 2]) + (NCommunity[1]-1)/NCommunity[1] * NSingleCommon[1]/2/max(NDoubleCommon[1], 1) * sum(PsCommon[, 2][(NsCommon == 1)[, 1]]) 
 return (list(U=U, V=V))
 }
 
 # Indice de Jaccard corrigé
 bcJaccard <- function(N2Col) {
-ChaoEst <- ChaoUV(N2Col)
-return (min(ChaoEst$U * ChaoEst$V / (ChaoEst$U + ChaoEst$V - ChaoEst$U*ChaoEst$V), 1))
+  ChaoEst <- ChaoUV(N2Col)
+  return (min(ChaoEst$U * ChaoEst$V / (ChaoEst$U + ChaoEst$V - ChaoEst$U*ChaoEst$V), 1))
 }
 
 # Calcul de l'indice entre les carrés i et j de BCI, i<j.
 BCIjaccard <- function(i,j) {
-if (i>=j) 
-return(NA)
-else
-return(bcJaccard(t(BCI[c(i,j),])))
+  if (i>=j) 
+    return(NA)
+  else
+    return(bcJaccard(t(BCI[c(i,j),])))
 }
 
 # Calcul de la matrice de dissimilarité entre les 50 carrés
@@ -427,7 +432,8 @@ BCIjaccard(1,2)
 La distribution des valeurs de l'indice corrigé se trouve en figure~\ref{ChaoJaccardFig}
 \verbfootnote{Code R pour la figure:
   <<ChaoJaccardCode, eval=FALSE>>=
-  plot(density(ChaoJaccard, na.rm=TRUE, to=1))
+  ggplot(data.frame(ChaoJaccard=as.numeric(ChaoJaccard)), aes(x=ChaoJaccard)) +
+    geom_density()
   @
 }. 
 
@@ -1500,7 +1506,6 @@ summary(DivPart(q = 1, Paracou618.MC, Biased = FALSE,
 La Figure~\ref{DivPartFig}
 \verbfootnote{Code pour réaliser la figure:
   <<DivPartCode, eval=FALSE, tidy=FALSE>>=
-  data(Paracou618)
   q <- 1
   Neutre <- DivPart(q, Paracou618.MC, Biased = FALSE)
   plot(c(0, Neutre$GammaDiversity), c(0, Paracou618.MC$Ncommunities),

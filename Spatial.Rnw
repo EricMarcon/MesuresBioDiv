@@ -100,11 +100,10 @@ Les valeurs de forme inférieures à 1 donnent une distribution décroissante pr
   k <- 0.2
   p <- 100
   d <- density.reflected(rgamma(10000, shape=k, scale=p), lower=0)
-  gammaplot <- ggplot(data.frame(d$x, d$y), aes(d.x, d.y)) +
+  ggplot(data.frame(d$x, d$y), aes(d.x, d.y)) +
     geom_line() +
     xlim(0, 50) +
     labs(x=expression(lambda[s]), y = "Densité de probablité")
-  gammaplot
   @
 }.
 La distribution obtenue est celle de $\lambda_s$, l'espérance du nombre d'individus de l'espèce $s$.
@@ -129,11 +128,10 @@ La probabilité qu'une espèce soit représentée par $\nu$ individus, notée ${
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
   <<nbinCode, eval=FALSE>>=
   nbin <- rnbinom(10000, size=k, prob=1/(p+1))
-  nbinbar <- ggplot(data.frame(nbin), aes(x=nbin, y=..prop..)) + 
+  ggplot(data.frame(nbin), aes(x=nbin, y=..prop..)) + 
     geom_bar(width=1, color="black", fill="white") +
     xlim(-.5, 50) +
-    labs(x=expression(paste("Abondance ", nu)), y="Probabilité") 
-  nbinhist
+    labs(x=expression(paste("Abondance ", nu)), y="Probabilité")
   @
 }.
 
@@ -271,12 +269,14 @@ Sq3 <- nEspeces[nq3]
 La SAC correspondante est tracée en Figure~\ref{KemptonQFig}
 \verbfootnote{Code R pour réaliser la figure:
   <<KemptonQCode, eval=FALSE>>=
-  plot(y=nEspeces, x=log(1:ncol(Inventaire)), xlab="log(n)", ylab="Nombre d'espèces", type="l")
-  abline(v=log(nq1), lty=3)
-  abline(v=log(nq3), lty=3)
-  abline(h=Sq1, lty=3)
-  abline(h=Sq3, lty=3)
-  abline(b=Q, a=Sq1-Q*log(nq1), lty=2)
+  ggplot(data.frame(x=log(1:ncol(Inventaire)), y=nEspeces)) +
+    geom_line(aes(x=x, y=y)) +
+    geom_vline(xintercept=log(nq1), lty=3) +
+    geom_vline(xintercept=log(nq3), lty=3) +
+    geom_hline(yintercept=Sq1, lty=3) +
+    geom_hline(yintercept=Sq3, lty=3) +
+    geom_abline(intercept=Sq1-Q*log(nq1), slope=Q) +
+    labs(x="log(n)", y="Nombre d'espèces")
   @
 }.
 
@@ -373,7 +373,9 @@ La courbe obtenue (Figure~\ref{SACzetaFig}
   Ns <- colSums(BCI)
   gsValues <- sapply(1:(sum(Ns)-1), function(r) GenSimp.z(Ns, r))
   SAC <- cumsum(gsValues)
-  plot(0:(sum(Ns)-1), c(0, SAC), type="l", xlab="Nombre d'individus", ylab="Nombre d'espèces")
+  ggplot(data.frame(x=0:(sum(Ns)-1), y=c(0, SAC)), aes(x=x, y=y)) +
+    geom_line() +
+    labs(x="Nombre d'individus", y="Nombre d'espèces")
   @
 }) est la même que par raréfaction, sans les problèmes d'estimation.
 Son intervalle de confiance n'est pas représenté : l'estimation est sans biais et a une variance très petite; d'autre part, la variabilité de l'échantillonnage prise en compte dans la figure~\ref{specaccumFig} est ignorée ici. La fonction \code{GenSimp.z} est fournie par le package \emph{EntropyEstimation} \autocite{Cao2014}.
@@ -489,12 +491,12 @@ La Figure~\ref{Beguinot2015Fig}
   <<Beguinot2015Code, eval=FALSE>>=
   Xlab <- "Nombre d'espèces"
   Ylab <- "Densité de probabilité"
-  Xlim <- c(min(richCommunities, eB, ei, eS), max(richCommunities, eB, ei, eS))
-  Ylim <- c(min(deCommunities$y, deB$y, dei$y, deS$y), max(deCommunities$y, deB$y, dei$y, deS$y))
-  plot(deCommunities, main="", xlab=Xlab, ylab=Ylab, xlim=Xlim, ylim=Ylim)
-  lines(deB, lty=2, col="red")
-  lines(dei, lty=3, col="blue")
-  lines(deS, lty=4, col="darkgreen")
+  ggplot(data.frame(richCommunities, eB, ei, eS)) +
+    geom_density(aes(richCommunities)) +
+    geom_density(aes(eB), lty=2, col="red") +
+    geom_density(aes(ei), lty=3, col="blue") +
+    geom_density(aes(eS), lty=4, col="darkgreen") +
+    labs(x=Xlab, y=Ylab)
   @
 } montre que les extrapolations sont bonnes et très similaires avec les trois méthodes.
 La distribution des 500 simulations d'extrapolation est proche de celle des 500 inventaires, avec une plus grande variabilité due à la quantiité plus faible de données disponibles.
@@ -570,13 +572,14 @@ MoyenneReduit <- apply(ExtraSACs, 1, mean)
 
 L'extrapolation fonctionne assez bien (Figure~\ref{Beguinot2015aFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<Beguinot2015aCode, eval=FALSE>>=
-  plot(0:Nmax, c(0, SAC), type = "n", xlab = "Nombre d'individus", 
-       ylab = "Nombre d'espèces", ylim=c(0,max(Max)))
-  polygon(c(n:Nmax,Nmax:n),c(Min,rev(Max)),col = "lightgray", border = FALSE)
-  lines(0:Nmax, c(0, SAC))
-  lines(n:Nmax, Moyenne, col="red", lty=2)
-  lines(nReduit:Nmax, MoyenneReduit, col="blue", lty=3)
+  <<Beguinot2015aCode, evalNN=FALSE>>=
+  ggplot() +
+    geom_ribbon(aes(x, ymin = Min, ymax = Max), 
+                data.frame(x=n:Nmax, Min, Max), alpha = 0.3) +
+    geom_line(aes(x, y), data.frame(x=0:Nmax, y=c(0, SAC))) +
+    geom_line(aes(x, y), data.frame(x=n:Nmax, y=Moyenne), col = "red", lty=2) +
+    geom_line(aes(x, y), data.frame(x=nReduit:Nmax, y=MoyenneReduit), col = "blue", lty=3) +
+    labs(x = "Nombre d'individus", y = "Nombre d'espèces")
   @
 }) tant que l'échantillonnage n'est pas trop faible.
 Avec un inventaire de 5000 individus dans cet exemple, l'estimation de la richesse asymptotique par l'estimateur jackknife 2 est correcte, l'extrapolation de la SAC l'est aussi.

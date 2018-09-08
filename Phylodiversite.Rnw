@@ -361,12 +361,21 @@ Sa version normalisée, MFAD \autocite{Schmera2009} est
 Les deux indices violent l'axiome de jumelage.
 \`A un facteur de normalisation près, ce sont des cas particuliers de l'indice de Rao pour des effectifs égaux.
 
-Le calcul sous R est simple avec un arbre au format \code{phylog} d'\emph{ADE4} :
+Le calcul sous R est immédiat avec un arbre au format \code{phylog} du package \emph{ade4}.
+Un arbre au format \code{phylo} du package \emph{ape} nécessite une conversion : la fonction \code{Preprocess.Tree} du package \emph{entropart} la réalise.
 
 <<MFAD>>=
-Tree <- hclust2phylog(as.hclust(Paracou618.Taxonomy))
-# La conversion as.hclust() double les distances et Tree$Wdist contient les valeurs de sqrt(2*distance)
-(FAD <- sum(Tree$Wdist^2/4))
+phyTree <- Paracou618.Taxonomy
+# La conversion as.hclust() double les distances. Il faut donc les diviser par deux.
+phyTree$edge.length <- phyTree$edge.length/2
+library("ape")
+# Conversion au format hclust
+hTree <- as.hclust.phylo(phyTree)
+# Conversion au format phylog
+library("ade4")
+Tree <- hclust2phylog(hTree)
+# Tree$Wdist contient les valeurs de sqrt(2*distance)
+(FAD <- sum(Tree$Wdist^2/2))
 (MFAD <- FAD/length(Tree$leaves))
 @
 
@@ -468,12 +477,20 @@ Cette contribution est présentée en figure~\ref{HurlbertCFig}
   # Préparation du graphique
   Xlab <- "Taille de l'échantillon"
   Ylab <- "Contribution des espèces"
-  plot(x=nRange, y=c(rep(0,length(nRange)-1),max(Ps)), type = "n", 
-       xlab=Xlab, ylab=Ylab, log="x")
-  # Tracé des courbes
-  sapply(1:S, function(s) lines(nRange, sapply(nRange, 
-                function(n) (1-(1-Ps[s])^n))/ESn, lty=s))
-  abline(h=1/(S))
+  # Contribution de chaque espece à chaque valeur de n
+  Csn <- sapply(1:S, function(s) sapply(nRange, 
+                function(n) (1-(1-Ps[s])^n))/ESn)
+  # Dataframe contenant les données
+  df <- as.data.frame(cbind(nRange, Csn))
+  colnames(df) <- c("n", "s07", "s019", "s01", "s001")
+  # Graphique
+  ESnplot <- ggplot(gather(df, Sp, Contribution, -n), aes(x=n)) +
+    geom_line(aes(y = Contribution, lty=Sp)) +
+    geom_hline(yintercept=1/4, col="red") +
+    scale_x_log10() +
+    labs(x=Xlab, y=Ylab) +
+    theme(legend.position="none")
+  ESnplot
   @
 }.
 Quand $n=1$, c'est simplement la fréquence des espèces.
@@ -641,8 +658,11 @@ En se limitant à deux dimensions pour la lisibilité, la figure~\ref{ScheinerPs
   Ybas <- c(0, fsCum)
   Yhaut <- c(fsCum, 1)
   # Rectangles occupés par chaque espèce
-  plot(c(0, 1), c(0, 1), asp=1, type="n", xlab="Fréquence", ylab="Niche")
-  rect(Xgauche, Ybas, Xdroite, Yhaut)
+  ggplot(data.frame(Xgauche, Ybas, Xdroite, Yhaut)) +
+    geom_rect(aes(xmin=Xgauche, xmax=Xdroite, ymin=Ybas, ymax=Yhaut), 
+               color="black", fill="white") +
+    coord_fixed() +
+    labs(x="Fréquence", y="Niche")
   @
 } présente les rectangles correspondant à la diversité d'abondance et fonctionnelle occupés par les espèces de la méta-communauté \code{Paracou618}, classées par fréquences décroissantes.
 
@@ -665,9 +685,11 @@ Le profil de diversité d'abondance et fonctionnelle est en figure~\ref{ProfilDq
 \verbfootnote{
   Code R:
   <<ProfilDqAFCode, eval=FALSE>>=
-  plot(CommunityProfile(Diversity, Rs), xlab="Ordre de diversité", ylab="Diversité")
-  lines(CommunityProfile(Diversity, Ps), lty=2)
-  lines(CommunityProfile(Diversity, fs), lty=3)
+  autoplot(CommunityProfile(Diversity, Rs), xlab="Ordre de diversité", ylab="Diversité") +
+  geom_line(data=as.data.frame.list(CommunityProfile(Diversity, Ps)), 
+            mapping=aes(x, y), lty=2) +
+  geom_line(data=as.data.frame.list(CommunityProfile(Diversity, fs)),
+            mapping=aes(x, y), lty=3)
   @
 }. 
 
@@ -1236,9 +1258,12 @@ Elle donne un fort poids aux petites valeurs de $x_s$ dans la moyenne pour les f
   X <- runif(100)
   # La moyenne n'est pas définie à r=0, décalage de 10^-8
   r <- seq(-5, 10, .1) + 1E-8
-  plot(y=sapply(r, function(r) (mean(X^r))^(1/r)), x=r,
-       type="l", ylab="Moyenne")
-  abline(h=.5, lty=2); abline(v=1, lty=2)
+  # Préparation des données
+  df <- data.frame(r, Moyenne=sapply(r, function(r) (mean(X^r))^(1/r)))
+  ggplot(df, aes(x=r, y=Moyenne)) +
+    geom_line() +
+    geom_hline(yintercept = .5, lty=2) +
+    geom_vline(xintercept = 1, lty=2)
   @
 }).
 
@@ -1382,13 +1407,17 @@ Dans les faits, cette approximation vaut pour des valeurs de banalité assez él
   <<LineaireZpsqCode1, eval=FALSE>>=
   r <- 0.5
   seqZp <- seq(0, 1, 0.001)
-  plot(seqZp^r~seqZp, type="l", xlab="x", ylab=expression(x^r))
-  abline(a=1-r, b=r, col="red", lty=2)
+  ggplot(data.frame(r=seqZp, xr=seqZp^r), aes(r, xr)) +
+    geom_line() +
+    geom_abline(intercept=1-r, slope=r, col="red", lty=2) +
+    labs(y=expression(x^r))
   @
   <<LineaireZpsqCode2, eval=FALSE>>=
   r <- -0.5
-  plot(seqZp^r~seqZp, type="l", xlab="x", ylab=expression(x^r))
-  abline(a=1-r, b=r, col="red", lty=2)
+  ggplot(data.frame(r=seqZp, xr=seqZp^r), aes(r, xr)) +
+    geom_line() +
+    geom_abline(intercept=1-r, slope=r, col="red", lty=2) +
+    labs(y=expression(x^r))
   @
 }). 
 Si une majorité des espèces (au sens de la somme de leurs probabilités respectives) a une banalité supérieure à 0,5, l'approximation linéaire est assez bonne et la moyenne généralisée de la banalité est proche de sa moyenne arithmétique. 
@@ -1401,9 +1430,11 @@ $u$ est une constante positive.
 Plus $u$ est grand, plus la transformation est convexe : les similarités sont tassées vers 0 (Figure~\ref{EchelleFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
   <<EchelleCode, eval=FALSE>>=
-  curve(exp(-x), ylim=c(0,1))
-  curve(exp(-2*x), lty=2, add=TRUE)
-  curve(exp(-10*x), lty=3, add=TRUE)
+  ggplot(data.frame(x=seq(0, 1, by=.01)), aes(x)) + 
+    stat_function(fun=function(x) exp(-x)) +
+    stat_function(fun=function(x) exp(-2*x), lty=2) +
+    stat_function(fun=function(x) exp(-10*x), lty=3) +
+    labs(y=expression(exp(-ux)))
   @
 }). 
 Augmenter la valeur de $u$ diminue les similarités et donc la banalité des espèces, ce qui règle (arbitrairement) le problème de la faible sensibilité de la diversité au paramètre $q$.
@@ -1694,7 +1725,8 @@ Le profil de diversité se trouve en Figure~\ref{DqZLambdaFig}
   DqZLambda<- CommunityProfile(Diversity, Mu)
   Xlab <- "Ordre de diversité"
   Ylab <- "Diversité"
-  plot(DqZLambda, log="y", xlab=Xlab, ylab=Ylab)
+  autoplot(DqZLambda, xlab=Xlab, ylab=Ylab) +
+    scale_y_log10()
   @
 }.
 
@@ -1735,13 +1767,16 @@ $\xq{D}{q}{\matrixsym{Z}}{}{}$ est moins sensible au paramètre $q$ que $\xq{D}{
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
   <<ComparaisonDqCode, eval=FALSE>>=
   q <- c(seq(0, 3, 0.1))
-  DistanceMatrix <- as.matrix(Paracou618.Taxonomy$Wdist^2/2)
+  # Réutilisation de Paracou618.Taxonomy au format phylog (cf. calcul de FAD)
+  DistanceMatrix <- as.matrix(Tree$Wdist^2/2)
   Z <- 1 - DistanceMatrix/max(DistanceMatrix)
   Divqz <- sapply(q, function(q) Dqz(Paracou618.MC$Ps, q, Z))
   Divq <- sapply(q,
        function(q) ChaoPD(Paracou618.MC$Ps, q=q, PhyloTree=Paracou618.Taxonomy))
-  plot(y=Divq, x=q, type="l", ylab="Diversity", lty=2)
-  lines(y=Divqz, x=q, lty=1)
+  ggplot(data.frame(q, Divq, Divqz), aes(q)) +
+    geom_line(aes(y=Divqz)) +
+    geom_line(aes(y=Divq), lty=2) 
+    labs(y="Diversité")
   @
 } compare les deux mesures.
 Le rôle du paramètre est assez différent: dans $\xq{D}{q}{\matrixsym{Z}}{}{}$, la banalité des espèces est à la puissance $q$ alors que leur probabilité est à la puissance 1.
@@ -1757,7 +1792,7 @@ Les deux notions se confondent quand la diversité neutre est considérée: la b
 }
 
 $\xq{D}{q}{\matrixsym{Z}}{}{}$ est particulièrement intéressante pour mesurer la diversité fonctionnelle, souvent définie à partir d'une matrice de distances entre les espèces. 
-La transformation d'une matrice en un arbre phylogénétique déforme les données \autocite{Pavoine2005a, Podani2006, Podani2007}. 
+La transformation d'une matrice en un arbre phylogénétique déforme les données.  \autocite{Pavoine2005a}\autocite{Podani2006, Podani2007}  
 La diversité de Leinster et Cobbold est calculée directement à partir de la matrice.
 
 Si l'arbre phylogénétique n'est pas ultramétrique, le calcul de la diversité est possible, mais la matrice $\matrixsym{Z}$ contient alors des valeurs comprises entre 0 et 1 qui dépendent des effectifs des espèces actuelles (ils interviennent dans le calcul de la hauteur de l'arbre qui est la moyenne de la longueur des branches). 
