@@ -1961,8 +1961,6 @@ La distribution de la valeur de l'échantillon permet de juger ses performances 
 Un estimateur performant doit être peu biaisé mais aussi peu variable.
 L'erreur quadratique moyenne, somme du carré du biais et de la variance, ou sa racine carrée dont la dimension est celle des données (\foreignlanguage{english}{\emph{root mean square error}}: RMSE), est un bon critère de test \autocite[Voir par exemple][figure 1]{Chao2013}.
 
-\clearpage
-
 \textcite{Haegeman2013} proposent deux estimateurs de la diversité $\xq{D}{q}{}{}{}$ à partir des courbes de raréfaction et d'extrapolation du nombre d'espèces.
 Les deux estimateurs bornent la vraie valeur de $\xq{D}{q}{}{}{}$ (leur variabilité n'est pas prise en compte, mais elle est négligeable dans le cadre utilisé).
 L'estimateur minimal est très proche de celui de Chao et Jost, à la différence que les termes estimant le biais résiduel sont évalués par une approximation numérique.

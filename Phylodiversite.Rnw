@@ -1043,7 +1043,7 @@ Enfin, cette définition de la diversité ne respecte pas le principe de \textci
 
 
 
-\section{$H_p$ et $I_1$}
+\section[Hp et I1]{$H_p$ et $I_1$}
 \label{sec:HpI1}
 
 Simultanément, \textcite{Pavoine2009a} et \textcite{Allen2009} ont proposé la généralisation de l'indice de Shannon à la diversité phylogénétique. 
@@ -1792,7 +1792,7 @@ Les deux notions se confondent quand la diversité neutre est considérée: la b
 }
 
 $\xq{D}{q}{\matrixsym{Z}}{}{}$ est particulièrement intéressante pour mesurer la diversité fonctionnelle, souvent définie à partir d'une matrice de distances entre les espèces. 
-La transformation d'une matrice en un arbre phylogénétique déforme les données.  \autocite{Pavoine2005a}\autocite{Podani2006, Podani2007}  
+La transformation d'une matrice en un arbre phylogénétique déforme les données.  \autocite{Pavoine2005a,Podani2006, Podani2007}  
 La diversité de Leinster et Cobbold est calculée directement à partir de la matrice.
 
 Si l'arbre phylogénétique n'est pas ultramétrique, le calcul de la diversité est possible, mais la matrice $\matrixsym{Z}$ contient alors des valeurs comprises entre 0 et 1 qui dépendent des effectifs des espèces actuelles (ils interviennent dans le calcul de la hauteur de l'arbre qui est la moyenne de la longueur des branches). 
