@@ -50,7 +50,7 @@
 
 % Bibliography
 \RequirePackage[
-	backend=bibtex,
+	backend=biber,
 	hyperref=true,
 	isbn=false,
 	backref=true,
@@ -72,7 +72,7 @@
 	\setunit*{\nameyeardelim}
 	\iffieldundef{labelyear}
 		{}
-		{\printtext[parens]{\printfield{labelyear}\printfield{extrayear}}.}
+		{\printtext[parens]{\printfield{labelyear}\printfield{userb}}.}
 	\ifsamepage{\the\value{instcount}}{\csuse{cbx@f@\thefield{entrykey}}}
 		{}
 		{\setunit*{\nametitledelim} \printfield[title]{labeltitle}}
