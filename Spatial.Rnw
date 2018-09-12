@@ -81,29 +81,19 @@ Fisher a relié le nombre d'espèces $\xq{S}{}{n}{}{}$ au nombre d'individus $n$
   \item Le paramètre $k=0$ décrit bien les données de Fisher et permet de calculer l'espérance du nombre d'espèces dans un échantillon de taille $n$.
 \end{itemize}
 
-\figureSC{gammaFig}
-{
-  Densité de probabilité d'une loi gamma de paramètres $0,2$ et 100. Seules les valeurs inférieures à 50 sont affichées.
-}
-{
-  <<gammaFig, echo=FALSE, results='hide'>>=
-  <<gammaCode, message=FALSE>>
-  @
-}
-
 Le raisonnement est détaillé ici.
 La loi gamma a deux paramètres positifs notés $k$ et $p$ par Fisher : le premier fixe sa forme, le second l'échelle.
 Les valeurs de forme inférieures à 1 donnent une distribution décroissante présentée sur la figure~\ref{gammaFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<gammaCode, eval=FALSE>>=
+  <<gammaCode, eval=FALSE, tidy=FALSE>>=
   library("GoFKernel")
   k <- 0.2
   p <- 100
-  d <- density.reflected(rgamma(10000, shape=k, scale=p), lower=0)
+  d <- density.reflected(rgamma(10000, shape = k, scale = p), lower = 0)
   ggplot(data.frame(d$x, d$y), aes(d.x, d.y)) +
     geom_line() +
     xlim(0, 50) +
-    labs(x=expression(lambda[s]), y = "Densité de probablité")
+    labs(x = expression(lambda[s]), y = "Densité de probablité")
   @
 }.
 La distribution obtenue est celle de $\lambda_s$, l'espérance du nombre d'individus de l'espèce $s$.
@@ -111,14 +101,13 @@ Le paramètre de d'échelle permet d'ajuster les nombres d'individus à la taill
 Il est forcément très supérieur à 1.
 Plus le paramètre de forme $k$ est proche de 0, plus la décroissance des probabilités est rapide.
 
-
-\figureSC{nbinFig}
+\figureSC{gammaFig}
 {
-  Densité de probabilité d'une loi gamma de paramètres $0,2$ et 100. Seules les valeurs inférieures à 50 sont affichées. Les espèces d'abondance nulle ne sont pas observées dans l'échantillon.
+  Densité de probabilité d'une loi gamma de paramètres $0,2$ et 100. Seules les valeurs inférieures à 50 sont affichées.
 }
 {
-  <<nbinFig, echo=FALSE, results='hide'>>=
-  <<nbinCode>>
+  <<gammaFig, echo=FALSE, results='hide', message=FALSE>>=
+  <<gammaCode>>
   @
 }
 
@@ -126,14 +115,24 @@ Les effectifs de la communauté sont un mélange de lois de Poisson de paramètr
 La distribution des probabilités qui en résulte est une loi binomiale négative \autocite{Greenwood1920}.
 La probabilité qu'une espèce soit représentée par $\nu$ individus, notée ${\pi}_{\nu}$, suit donc une loi binomiale négative de paramètres $k$ et $\nicefrac{1}{p+1}$ représentée sur la figure~\ref{nbinFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<nbinCode, eval=FALSE>>=
-  nbin <- rnbinom(10000, size=k, prob=1/(p+1))
-  ggplot(data.frame(nbin), aes(x=nbin, y=..prop..)) + 
-    geom_bar(width=1, color="black", fill="white") +
-    xlim(-.5, 50) +
-    labs(x=expression(paste("Abondance ", nu)), y="Probabilité")
+  <<nbinCode, eval=FALSE, tidy=FALSE>>=
+  nbin <- rnbinom(10000, size = k, prob = 1/(p+1))
+  ggplot(data.frame(nbin), aes(x = nbin, y = ..prop..)) + 
+    geom_bar(width = 1, color = "black", fill = "white") +
+    xlim(-0.5, 50) +
+    labs(x = expression(paste("Abondance ", nu)), y = "Probabilité")
   @
 }.
+
+\figureSC{nbinFig}
+{
+  Réalisation d'une loi gamma de paramètres $0,2$ et 100. L'histogramme représente la proportion (qui estime la probabilité) des valeurs inférieures à 50. Les espèces d'abondance nulle ne sont pas observées dans l'échantillon.
+}
+{
+  <<nbinFig, echo=FALSE, results='hide'>>=
+  <<nbinCode>>
+  @
+}
 
 On notera que la distribution de ${\pi}_{\nu}$ décrit, pour une espèce, la probabilité d'être représentée par $\nu$ individus.
 Ce n'est pas la distribution des probabilités $p_s$, qui donnent la probabilité qu'un individu appartienne à l'espèce $s$.
@@ -268,15 +267,15 @@ Sq3 <- nEspeces[nq3]
 
 La SAC correspondante est tracée en Figure~\ref{KemptonQFig}
 \verbfootnote{Code R pour réaliser la figure:
-  <<KemptonQCode, eval=FALSE>>=
-  ggplot(data.frame(x=log(1:ncol(Inventaire)), y=nEspeces)) +
-    geom_line(aes(x=x, y=y)) +
-    geom_vline(xintercept=log(nq1), lty=3) +
-    geom_vline(xintercept=log(nq3), lty=3) +
-    geom_hline(yintercept=Sq1, lty=3) +
-    geom_hline(yintercept=Sq3, lty=3) +
-    geom_abline(intercept=Sq1-Q*log(nq1), slope=Q) +
-    labs(x="log(n)", y="Nombre d'espèces")
+  <<KemptonQCode, eval=FALSE, tidy=FALSE>>=
+  ggplot(data.frame(x = log(1:ncol(Inventaire)), y = nEspeces)) +
+    geom_line(aes(x = x, y = y)) +
+    geom_vline(xintercept = log(nq1), lty = 3) +
+    geom_vline(xintercept = log(nq3), lty = 3) +
+    geom_hline(yintercept = Sq1, lty = 3) +
+    geom_hline(yintercept = Sq3, lty = 3) +
+    geom_abline(intercept = Sq1-Q*log(nq1), slope = Q) +
+    labs(x = "log(n)", y = "Nombre d'espèces")
   @
 }.
 
@@ -367,15 +366,15 @@ Dans ce but, la SAC théorique peut être construite \autocite{Chao2013} comme l
 
 La courbe obtenue (Figure~\ref{SACzetaFig}
 \verbfootnote{Code R:
-  <<SACzetaCode, eval=FALSE>>=
+  <<SACzetaCode, eval=FALSE, tidy=FALSE>>=
   library("EntropyEstimation")
   data(BCI)
   Ns <- colSums(BCI)
   gsValues <- sapply(1:(sum(Ns)-1), function(r) GenSimp.z(Ns, r))
   SAC <- cumsum(gsValues)
-  ggplot(data.frame(x=0:(sum(Ns)-1), y=c(0, SAC)), aes(x=x, y=y)) +
+  ggplot(data.frame(x = 0:(sum(Ns)-1), y = c(0, SAC)), aes(x = x, y = y)) +
     geom_line() +
-    labs(x="Nombre d'individus", y="Nombre d'espèces")
+    labs(x = "Nombre d'individus", y = "Nombre d'espèces")
   @
 }) est la même que par raréfaction, sans les problèmes d'estimation.
 Son intervalle de confiance n'est pas représenté : l'estimation est sans biais et a une variance très petite; d'autre part, la variabilité de l'échantillonnage prise en compte dans la figure~\ref{specaccumFig} est ignorée ici. La fonction \code{GenSimp.z} est fournie par le package \emph{EntropyEstimation} \autocite{Cao2014}.
@@ -488,15 +487,15 @@ deS <- density(eS)
 
 La Figure~\ref{Beguinot2015Fig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<Beguinot2015Code, eval=FALSE>>=
+  <<Beguinot2015Code, eval=FALSE, tidy=FALSE>>=
   Xlab <- "Nombre d'espèces"
   Ylab <- "Densité de probabilité"
   ggplot(data.frame(richCommunities, eB, ei, eS)) +
     geom_density(aes(richCommunities)) +
-    geom_density(aes(eB), lty=2, col="red") +
-    geom_density(aes(ei), lty=3, col="blue") +
-    geom_density(aes(eS), lty=4, col="darkgreen") +
-    labs(x=Xlab, y=Ylab)
+    geom_density(aes(eB), lty = 2, col = "red") +
+    geom_density(aes(ei), lty = 3, col = "blue") +
+    geom_density(aes(eS), lty = 4, col = "darkgreen") +
+    labs(x = Xlab, y = Ylab)
   @
 } montre que les extrapolations sont bonnes et très similaires avec les trois méthodes.
 La distribution des 500 simulations d'extrapolation est proche de celle des 500 inventaires, avec une plus grande variabilité due à la quantiité plus faible de données disponibles.
@@ -572,13 +571,15 @@ MoyenneReduit <- apply(ExtraSACs, 1, mean)
 
 L'extrapolation fonctionne assez bien (Figure~\ref{Beguinot2015aFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<Beguinot2015aCode, evalNN=FALSE>>=
+  <<Beguinot2015aCode, eval=FALSE, tidy=FALSE>>=
   ggplot() +
     geom_ribbon(aes(x, ymin = Min, ymax = Max), 
-                data.frame(x=n:Nmax, Min, Max), alpha = 0.3) +
-    geom_line(aes(x, y), data.frame(x=0:Nmax, y=c(0, SAC))) +
-    geom_line(aes(x, y), data.frame(x=n:Nmax, y=Moyenne), col = "red", lty=2) +
-    geom_line(aes(x, y), data.frame(x=nReduit:Nmax, y=MoyenneReduit), col = "blue", lty=3) +
+                data.frame(x = n:Nmax, Min, Max), alpha = 0.3) +
+    geom_line(aes(x, y), data.frame(x = 0:Nmax, y = c(0, SAC))) +
+    geom_line(aes(x, y), data.frame(x = n:Nmax, y = Moyenne), 
+              col = "red", lty = 2) +
+    geom_line(aes(x, y), data.frame(x = nReduit:Nmax, y = MoyenneReduit), 
+              col = "blue", lty = 3) +
     labs(x = "Nombre d'individus", y = "Nombre d'espèces")
   @
 }) tant que l'échantillonnage n'est pas trop faible.

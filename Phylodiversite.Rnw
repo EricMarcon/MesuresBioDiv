@@ -323,6 +323,8 @@ L'indice $\mathit{FE}_{s}$ a été étendu pour être multidimensionnel par \tex
 L'arbre recouvrant de longueur minimum (\foreignlanguage{english}{\emph{minimum spanning tree}}) est d'abord calculé à partir des distances euclidiennes entre les espèces dans l'espace des traits: il s'agit de l'arbre de longueur totale minimale reliant tous les points.
 La longueur des branches est ensuite traitée de la même façon que $\delta T_s$ précédemment.
 
+\clearpage
+
 Un autre indice, ${\Lambda}^+$ \autocite{Clarke2001}, mesure la variance des distances entre paires d'espèces:
 
 \begin{equation}
@@ -443,7 +445,7 @@ Clairement, la diversité phylogénétique PD (section~\ref{sec:PDFD}) est la so
   @
 }
 
-\textcite{Ricotta2004b} construit un indice paramétrique (permettant de donner plus ou moins d'importance aux espèces rares) à partir de l'espérance du nombre d'espèces tirées dans un échantillon de taille $n$ fixée (l'indice de \textcite{Hurlbert1971}):
+\textcite{Ricotta2004a} construit un indice paramétrique (permettant de donner plus ou moins d'importance aux espèces rares) à partir de l'espérance du nombre d'espèces tirées dans un échantillon de taille $n$ fixée (l'indice de \textcite{Hurlbert1971}):
 
 \begin{equation}
   {\mathbb E}\left( \xq{{S}}{}{n}{}{} \right)
@@ -638,7 +640,7 @@ La mesure de biodiversité est la diversité des volumes occupés par les espèc
 
 En se limitant à deux dimensions pour la lisibilité, la figure~\ref{ScheinerPsfsFig}\verbfootnote{
   Code R:
-  <<ScheinerPsfsCode, eval=FALSE>>=
+  <<ScheinerPsfsCode, eval=FALSE, tidy=FALSE>>=
   # Probabilités
   Ps <- Paracou618.MC$Ps[Paracou618.MC$Ps>0]
   Ps <- sort(Ps, decreasing = TRUE)
@@ -659,10 +661,10 @@ En se limitant à deux dimensions pour la lisibilité, la figure~\ref{ScheinerPs
   Yhaut <- c(fsCum, 1)
   # Rectangles occupés par chaque espèce
   ggplot(data.frame(Xgauche, Ybas, Xdroite, Yhaut)) +
-    geom_rect(aes(xmin=Xgauche, xmax=Xdroite, ymin=Ybas, ymax=Yhaut), 
-               color="black", fill="white") +
+    geom_rect(aes(xmin= Xgauche, xmax= Xdroite, ymin= Ybas, ymax= Yhaut), 
+               color = "black", fill = "white") +
     coord_fixed() +
-    labs(x="Fréquence", y="Niche")
+    labs(x = "Fréquence", y="Niche")
   @
 } présente les rectangles correspondant à la diversité d'abondance et fonctionnelle occupés par les espèces de la méta-communauté \code{Paracou618}, classées par fréquences décroissantes.
 
@@ -684,12 +686,13 @@ Diversity(Rs, q=2)
 Le profil de diversité d'abondance et fonctionnelle est en figure~\ref{ProfilDqAFFig}
 \verbfootnote{
   Code R:
-  <<ProfilDqAFCode, eval=FALSE>>=
-  autoplot(CommunityProfile(Diversity, Rs), xlab="Ordre de diversité", ylab="Diversité") +
-  geom_line(data=as.data.frame.list(CommunityProfile(Diversity, Ps)), 
-            mapping=aes(x, y), lty=2) +
-  geom_line(data=as.data.frame.list(CommunityProfile(Diversity, fs)),
-            mapping=aes(x, y), lty=3)
+  <<ProfilDqAFCode, eval=FALSE, tidy=FALSE>>=
+  autoplot(CommunityProfile(Diversity, Rs), 
+           xlab="Ordre de diversité", ylab="Diversité") +
+  geom_line(data = as.data.frame.list(CommunityProfile(Diversity, Ps)), 
+            mapping = aes(x, y), lty = 2) +
+  geom_line(data = as.data.frame.list(CommunityProfile(Diversity, fs)),
+            mapping = aes(x, y), lty=3)
   @
 }. 
 
@@ -1254,16 +1257,16 @@ La moyenne généralisée tend vers la plus petite valeur (près de 0) quand $r\
 La moyenne généralisée se réduit à la moyenne arithmétique pondérée pour $r=1$. 
 Elle donne un fort poids aux petites valeurs de $x_s$ dans la moyenne pour les faibles valeurs de $r$ (qui peuvent être négatives), et un fort poids aux grandes valeurs quand $r$ est grand (Figure~\ref{MoyenneHardyFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<MoyenneHardyCode, eval=FALSE>>=
+  <<MoyenneHardyCode, eval=FALSE, tidy=FALSE>>=
   X <- runif(100)
   # La moyenne n'est pas définie à r=0, décalage de 10^-8
   r <- seq(-5, 10, .1) + 1E-8
   # Préparation des données
-  df <- data.frame(r, Moyenne=sapply(r, function(r) (mean(X^r))^(1/r)))
-  ggplot(df, aes(x=r, y=Moyenne)) +
+  df <- data.frame(r, Moyenne = sapply(r, function(r) (mean(X^r))^(1/r)))
+  ggplot(df, aes(x = r, y = Moyenne)) +
     geom_line() +
-    geom_hline(yintercept = .5, lty=2) +
-    geom_vline(xintercept = 1, lty=2)
+    geom_hline(yintercept = .5, lty = 2) +
+    geom_vline(xintercept = 1, lty = 2)
   @
 }).
 
@@ -1429,12 +1432,12 @@ est justifiée par \textcite{Leinster2013}.
 $u$ est une constante positive. 
 Plus $u$ est grand, plus la transformation est convexe : les similarités sont tassées vers 0 (Figure~\ref{EchelleFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
-  <<EchelleCode, eval=FALSE>>=
-  ggplot(data.frame(x=seq(0, 1, by=.01)), aes(x)) + 
-    stat_function(fun=function(x) exp(-x)) +
-    stat_function(fun=function(x) exp(-2*x), lty=2) +
-    stat_function(fun=function(x) exp(-10*x), lty=3) +
-    labs(y=expression(exp(-ux)))
+  <<EchelleCode, eval=FALSE, tidy=FALSE>>=
+  ggplot(data.frame(x = seq(0, 1, by = .01)), aes(x)) + 
+    stat_function(fun = function(x) exp(-x)) +
+    stat_function(fun = function(x) exp(-2*x), lty = 2) +
+    stat_function(fun = function(x) exp(-10*x), lty = 3) +
+    labs(y = expression(exp(-ux)))
   @
 }). 
 Augmenter la valeur de $u$ diminue les similarités et donc la banalité des espèces, ce qui règle (arbitrairement) le problème de la faible sensibilité de la diversité au paramètre $q$.

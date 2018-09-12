@@ -245,7 +245,7 @@ MC2 <- MetaCommunity(df2)
 summary(DivPart(q, MC2)->dp2)
 @
 
-La diversité jointe $\xq{D}{q}{}{}{}(\{p_{s,i}\})$ est en revanche doublée au cours de l'opération: elle mesure le nombre effectif de catégories (combinaison de l'espèce et de la communauté) du tableau de données:
+La diversité jointe $\xq{D}{q}{}{j}{}=\xq{D}{q}{}{}{}(\{p_{s,i}\})$ est en revanche doublée au cours de l'opération: elle mesure le nombre effectif de catégories (combinaison de l'espèce et de la communauté) du tableau de données:
 
 <<DivJointe>>=
 # Méta-communauté simple
@@ -271,11 +271,10 @@ La diversité $\alpha$ est le nombre d'espèces équifréquentes nécessaires da
 La décomposition complète de la diversité jointe s'écrit
 \begin{equation}
 \label{eq:DecJointe}
-\xq{D}{q}{}{}{}\left(\{p_{s,i}\}\right)
-= \xq{D}{q}{}{\alpha}{} \xq{D}{q}{}{\beta}{} \xq{R}{q}{}{c}{}.
+\xq{D}{q}{}{j}{}= \xq{D}{q}{}{\alpha}{} \xq{D}{q}{}{\beta}{} \xq{R}{q}{}{c}{}.
 \end{equation}
 
-La méta-communauté suivante illustre cette décomposition: elle contient $R=3$ répliques identiques de $D_{\beta}=2$ communautés équiprobables totalement distinctes, comprenant chacune $D_{\alpha}=2$ espèces équiprobables (Figure~\ref{DifferentiationFig}). 
+La méta-communauté suivante illustre cette décomposition: elle contient $R_c=3$ répliques identiques de $D_{\beta}=2$ communautés équiprobables totalement distinctes, comprenant chacune $D_{\alpha}=2$ espèces équiprobables (Figure~\ref{DifferentiationFig}). 
 Sa diversité jointe est 12 (le nombre de cellules non nulles dans la matrice) :
 
 <<Differentiation>>=
@@ -303,7 +302,7 @@ La définition de la diversité $\alpha$ de \textcite{Chiu2014} (page~\pageref{C
 \begin{equation}
 \xq{D}{q}{}{\alpha}{}
 = \frac{1}{I} {\left(\sum_s{\sum_i{{\left(w_i p_{s|i}\right)}^q}}\right)}^{{1}/{\left(1-q\right)}}
-= \frac{1}{I} \xq[\,]{D}{q}{}{}{}(\{p_{s,i}\}).
+= \frac{1}{I} \xq[\,]{D}{q}{}{j}{}.
 \end{equation}
 
 
@@ -324,7 +323,7 @@ En inversant le rôle des lignes et des colonnes de la matrice $\{p_{s,i}\}$, on
 
 \begin{equation}
 \xq{R}{q}{}{s}{}
-= \frac{\xq{D}{q}{}{}{}\left(\{p_{s,i}\}\right)}{\xq{D}{q}{}{}{}\left(\{p_{i}\}\right)}.
+= \frac{\xq{D}{q}{}{j}{}}{\xq{D}{q}{}{}{}\left(\{p_{i}\}\right)}.
 \end{equation}
 
 Gregorius montre que $\xq{R}{q}{}{s}{}$ égale la diversité $\alpha$ selon Jost (page~\pageref{JostAlpha}):

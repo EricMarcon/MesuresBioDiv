@@ -338,8 +338,8 @@ DistJaccard <- dist.binary(BCI, method = 1)
 La distribution des valeurs de l'indice de Jaccard $S_3=1-D_3^2$ est en figure~\ref{JaccardFig}
 \verbfootnote{Code R pour la figure:
   <<JaccardCode, eval=FALSE>>=
-  ggplot(data.frame(Jaccard=as.numeric(1-DistJaccard^2)), aes(x=Jaccard)) +
-    geom_density()
+  ggplot(data.frame(Jaccard=as.numeric(1-DistJaccard^2))) +
+    geom_density(aes(x=Jaccard))
   @
 }. 
 Le mode est proche de 0,5: la moitié des espèces sont communes entre deux carrés.
@@ -431,9 +431,9 @@ BCIjaccard(1,2)
 
 La distribution des valeurs de l'indice corrigé se trouve en figure~\ref{ChaoJaccardFig}
 \verbfootnote{Code R pour la figure:
-  <<ChaoJaccardCode, eval=FALSE>>=
-  ggplot(data.frame(ChaoJaccard=as.numeric(ChaoJaccard)), aes(x=ChaoJaccard)) +
-    geom_density()
+  <<ChaoJaccardCode, eval=FALSE, tidy=FALSE>>=
+  ggplot(data.frame(ChaoJaccard = as.numeric(ChaoJaccard))) +
+    geom_density(aes(x=ChaoJaccard))
   @
 }. 
 
@@ -651,6 +651,8 @@ mais avec pondération par l'abondance des espèces chez \textcite{Ricotta2008}:
   d_{\mathit{RB}} = \frac{1}{2}\left( \sum_s{p_{s|1}\min{d_{s,2}}} + \sum_t{p_{t|2}\min{d_{t,1}}} \right),
 \end{equation}
 
+\clearpage
+
 alors qu'elle l'est globalement dans l'indice de \textcite{Izsak2001}:
 \begin{equation}
   d_{\mathit{IP}} = \frac{\sum_s{\min{d_{s,2}}} + \sum_t{\min{d_{t,1}}}}{s_{1,1}+s_{1,0}+s_{1,1}+s_{0,1}},
@@ -819,7 +821,7 @@ La distance de Hellinger est obtenue par
 \end{equation}
 
 La distance euclidienne entre les profils de communautés ($y_{s|i} = p_{s|i}$) utilisée par \textcite{terBraak1983} n'est pas optimale parce qu'elle souffre des défauts de l'entropie de Simpson \autocite{Jost2007} qu'elle représente.
-\textcite[][annexe S3]{Legendre2013a} ont établi une liste de bonnes propriétés que doivent respecter les mesures de distance entre communautés pour analyser la diversité de différentiation.
+\textcite[][annexe S3]{Legendre2013} ont établi une liste de bonnes propriétés que doivent respecter les mesures de distance entre communautés pour analyser la diversité de différentiation.
 La fonction \code{dist.ldc} du package \emph{adespatial} permet de calculer toutes les distances présentées dans l'article.
 Les distance de corde et de Hellinger (qui est la distance entre les racines carrées des profils de communautés) les respectent toutes.
 
@@ -1171,9 +1173,10 @@ $G_{s,t}={D_{s,t}}/{H_t}$ est la différenciation relative.
 
 L'entropie $E_{\beta}$ calculée de cette manière est égale à $\xq{H}{2}{}{\beta}{}$ calculée à l'équation (\ref{eq:Hqbeta}) pour le cas général, mais la contribution de chaque communauté est différente: la décomposition de la variance est une façon alternative de décomposer l'entropie, valable uniquement pour l'entropie de Simpson.
 
+\clearpage
+
 Cette décomposition est remise en cause par \textcite{Jost2007, Jost2008}, qui a généré le débat \autocite{Heller2009, Ryman2009, Jost2009a, Whitlock2011}. 
-$E_{\gamma}$ étant inférieure ou égale à 1, $E_{\beta}$ n'est pas indépendante de $E_{\alpha}$: seule la décomposition multiplicative permet l'indépendance, et Jost propose d'utiliser une transformation de $\xq{D}{2}{}{\beta}{}$ comme mesure de différenciation (voir page~\pageref{sec:Chevauchement}). 
-\textcite{Gregorius2014} montre que ce problème n'est pas limité à l'entropie de Simpson mais s'applique à toutes les entropies HCDT d'ordre supérieur à 1.
+$E_{\gamma}$ étant inférieure ou égale à 1, $E_{\beta}$ n'est pas indépendante de $E_{\alpha}$: seule la décomposition multiplicative permet l'indépendance, et Jost propose d'utiliser une transformation de $\xq{D}{2}{}{\beta}{}$ comme mesure de différenciation (voir page~\pageref{sec:Chevauchement}). \textcite{Gregorius2014} montre que ce problème n'est pas limité à l'entropie de Simpson mais s'applique à toutes les entropies HCDT d'ordre supérieur à 1.
 
 Jost postule que la diversité $\beta$ de Simpson a la même relation à $E_{\beta}$ que les diversités $\alpha$ et $\gamma$,
 

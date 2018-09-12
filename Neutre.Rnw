@@ -120,6 +120,8 @@ où $\xq{s}{}{n}{\ne 0}{}$ est le nombre d'espèces différentes observé.
 
 Il s'agit d'un estimateur minimum: l'espérance du nombre d'espèces est supérieure ou égale au nombre estimé.
 
+\clearpage
+
 \textcite{Beguinot2014} a montré que l'estimateur est sans biais si le nombre d'espèces non observées décroît exponentiellement avec la taille de l'échantillon:
 \begin{equation}
   \label{eq:BiaisChao}
