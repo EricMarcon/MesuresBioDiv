@@ -72,12 +72,13 @@ Le nombre d'espèces échantillonnées dépend de l'effort d'échantillonnage.
 Fisher a relié le nombre d'espèces $\xq{S}{}{n}{}{}$ au nombre d'individus $n$ échantillonnés à partir du modèle suivant:
 
 \begin{itemize}
-  \item  \'Etant donné la taille de l'échantillon $n$ et la probabilité $p_s$ d'échantillonner l'espèce $s$, l'espérance du nombre d'individus échantillonnés dans l'espèce $s$ est $np_s$;
+  \item  Le nombre d'individus $N$ de l'échantillon suit une loi de Poisson de paramètre $\lambda$ par hypothèse : la surface est fixée, égale à 1, et les individus sont distribués totalement aléatoirement (avec la même probabilité partout, et indépendamment les uns des autres) ;
+  \item  \'Etant donné la taille de l'échantillon $N$ et la probabilité $p_s$ d'échantillonner l'espèce $s$, l'espérance du nombre d'individus échantillonnés dans l'espèce $s$ est $Np_s$;
   \item  Le nombre d'individus réellement observé fluctue aléatoirement.
-  Il suit une loi de Poisson d'espérance $\lambda_s$, où $\lambda_s=np_s$ permet d'alléger l'écriture.
-  C'est une conséquence directe des hypothèses : surface fixée et indépendance entre les échantillons.
-  \item La probabilité d'observer $\nu$ individus d'une espèce est notée ${\pi}_{\nu}$.
-  \item La distribution de $\lambda_s$ retenue par Fisher est une loi gamma de paramètres $k$ et $p$, choisie pour ses propriétés mathématiques qui impliquent que ${\pi}_{\nu}$ suit une loi binomiale négative de paramètres $k$ et $1/(p+1)$.
+  Il suit une loi de Poisson d'espérance $\lambda_s$, où $\lambda_s=\lambda p_s$;
+  \item La probabilité d'observer $\nu$ individus de l'espèce $s$ est notée ${\pi}_{s,\nu}$;
+  \item La distribution de $\lambda_s$ retenue par Fisher est une loi gamma de paramètres $k$ et $p$, choisie pour ses propriétés mathématiques qui impliquent que ${\pi}_{s,\nu}$ suit une loi binomiale négative de paramètres $k$ et $1/(p+1)$;
+  \item L'espérance du nombre d'espèces observées $\nu$ fois est $\sum_s{{\pi}_{s,\nu}}$;
   \item Le paramètre $k=0$ décrit bien les données de Fisher et permet de calculer l'espérance du nombre d'espèces dans un échantillon de taille $n$.
 \end{itemize}
 
@@ -113,7 +114,7 @@ Plus le paramètre de forme $k$ est proche de 0, plus la décroissance des proba
 
 Les effectifs de la communauté sont un mélange de lois de Poisson de paramètres aléatoires suivant tous la même loi gamma.
 La distribution des probabilités qui en résulte est une loi binomiale négative \autocite{Greenwood1920}.
-La probabilité qu'une espèce soit représentée par $\nu$ individus, notée ${\pi}_{\nu}$, suit donc une loi binomiale négative de paramètres $k$ et $\nicefrac{1}{p+1}$ représentée sur la figure~\ref{nbinFig}
+La probabilité qu'une espèce soit représentée par $\nu$ individus, notée ${\pi}_{s,\nu}$, suit donc une loi binomiale négative de paramètres $k$ et $\nicefrac{1}{p+1}$ représentée sur la figure~\ref{nbinFig}
 \verbfootnote{Le code R nécessaire pour réaliser la figure est:
   <<nbinCode, eval=FALSE, tidy=FALSE>>=
   nbin <- rnbinom(10000, size = k, prob = 1/(p+1))
@@ -134,12 +135,13 @@ La probabilité qu'une espèce soit représentée par $\nu$ individus, notée ${
   @
 }
 
-On notera que la distribution de ${\pi}_{\nu}$ décrit, pour une espèce, la probabilité d'être représentée par $\nu$ individus.
+On notera que la distribution de ${\pi}_{s,\nu}$ décrit, pour une espèce, la probabilité d'être représentée par $\nu$ individus.
 Ce n'est pas la distribution des probabilités $p_s$, qui donnent la probabilité qu'un individu appartienne à l'espèce $s$.
-Une courbe représentant les valeurs de ${\pi}_{\nu}$ en fonction de leur rang n'est donc pas un diagramme rang-abondance, mais un \og pseudo-RAC\fg{} \autocite{Izsak2012}.
+Une courbe représentant les valeurs de ${\pi}_{s,\nu}$ en fonction de leur rang n'est donc pas un diagramme rang-abondance, mais un \og pseudo-RAC\fg{} \autocite{Izsak2012}.
 
 La variance de la loi binomiale négative varie en sens inverse du paramètre $k$.
-En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui correspond à une distribution comprenant de nombreuses espèces de fréquences très variables, donc un pseudo-RAC décroissant rapidement, et retient cette propriété pour la suite de son raisonnement. 
+En appliquant son modèle à des données, Fisher remarque que $k \to 0$, ce qui correspond à une distribution comprenant de nombreuses espèces de fréquences très variables, donc un pseudo-RAC décroissant rapidement, et retient cette propriété pour la suite de son raisonnement.
+La valeur nulle de $k$ simplifie les calculs et permet de calculer pour une valeur arbitraire de $\nu$ la somme sur toutes les espèces des valeurs de ${\pi}_{s,\nu}$.
 Dans ce cas, l'espérance du nombre d'espèces représentées par $\nu$ individus est, en posant $x=\nicefrac{p}{p+1}$ et $\alpha$ une constante:
 
 \begin{equation}
@@ -153,6 +155,8 @@ L'espérance du nombre d'espèces en est la somme pour toutes les valeurs de $\n
   = \sum_{\nu=1}^{\infty}{{\mathbb E}\left(\xq{S}{}{n}{\nu}{}\right)}
   = -\alpha \ln(1-x).
 \end{equation}
+
+Le nombre d'espèces est obtenu par la somme du développement en série entière du logarithme de $1-x$, d'où le nom de \emph{log-série}.
 
 De même, le nombre total d'individus est :
 \begin{equation}
