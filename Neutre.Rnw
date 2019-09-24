@@ -63,11 +63,11 @@ Chaque individu a une probabilité $p_s$ d'appartenir à l'espèce $s$.
 
 On ne sait rien sur la loi des $p_s$. 
 On sait seulement, comme les individus sont tirés indépendamment les uns des autres, que l'espérance du nombre $n_s$ d'individus de l'espèce $s$ observé dans l'échantillon est $np_s$. 
-La probabilité de ne pas observer l'espèce est $1-(1-p_s)^n$.
+La probabilité de ne pas observer l'espèce est $(1-p_s)^n$.
 
 Pour les espèces fréquentes, $np_s$ est grand, et les espèces sont observées systématiquement. 
 La difficulté est due aux espèces pour lesquelles $np_s$, l'espérance du nombre d'observations, est petit. 
-La probabilité de les observer est donnée par la loi  binomiale: si $np_s$ est proche de 0, la probabilité d'observer un individu est faible.
+La probabilité de les observer est donnée par la loi binomiale: si $np_s$ est proche de 0, la probabilité d'observer un individu est faible.
 
 Les estimateurs non paramétriques cherchent à tirer le maximum d'information de la distribution des abondances $n_s$ pour estimer le nombre d'espèces non observées. 
 Une présentation détaillée du problème et des limites à sa résolution est fournie par \textcite{Mao2005} qui concluent notamment que les estimateurs ne peuvent fournir qu'une borne inférieure de l'intervalle des possibles valeurs du nombre réel d'espèces.
