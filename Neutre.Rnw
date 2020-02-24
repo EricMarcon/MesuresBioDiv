@@ -78,8 +78,14 @@ Une présentation détaillée du problème et des limites à sa résolution est 
 
 \textcite{Chao1984} estime le nombre d'espèces non observées à partir de celles observées 1 ou 2 fois.
 
-Dans un échantillon de taille $n$ résultant d'un tirage indépendant des individus, la probabilité que l'espèce $s$ soit observée $\nu$ fois suit une loi binomiale.
-L'espérance du nombre d'espèces observées $\nu$ fois, ${\mathbb E}(\xq{s}{}{n}{\nu}{})$, est obtenue en écrivant la probabilité d'observer l'espèce $s$ $\nu$ fois, sommée pour toutes les espèces et multipliée par le nombre de façons de choisir les $\nu$ individus parmi les $n$ échantillonnés:
+Dans un échantillon de taille $n$ résultant d'un tirage indépendant des individus, la probabilité que l'espèce $s$ soit observée $\nu$ fois est obtenue en écrivant la probabilité de tirer dans l'ordre $\nu$ fois l'espèce $s$ puis $n-\nu$ fois une autre espèce, multiplié par le nombre de combinaisons possible pour prendre en compte l'ordre des tirages:
+\begin{equation}
+\label{eq:psnu}
+  \xq{p}{}{n}{s, \nu}{} = \binom{n}{\nu} {p_s^\nu \left( 1-p_s \right)^{n-\nu}}.
+\end{equation}
+
+
+L'espérance du nombre d'espèces observées $\nu$ fois, ${\mathbb E}(\xq{s}{}{n}{\nu}{})$, est obtenue en sommant pour toutes les espèces la probabilité de les observer $\nu$ fois:
 \begin{equation}
 \label{eq:Esnnu}
   {\mathbb E}\left( \xq{s}{}{n}{\nu}{} \right) = \binom{n}{\nu} \sum_s{p_s^\nu \left( 1-p_s \right)^{n-\nu}}.

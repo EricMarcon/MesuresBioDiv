@@ -487,7 +487,7 @@ La matrice de distances n'est pas euclidienne à cause des approximations de l'e
 La distance la plus évidente entre communautés quand les effectifs des espèces sont connus est simplement la distance euclidienne, éventuellement normalisée par le nombre d'espèces (Dissimilarité $D_1$ de \textcite{Gower1986}).
 Son problème principal est qu'elle est très sensible aux ordres de grandeurs relatifs des variables.
 
-La dissimilarité de Steinhaus \autocite{Motyka1947}, plus connue sous le nom de Bray-Curtis \autocite{Odum1950, Bray1957} (voir l'analyse historique de \textcite[][note de bas de page, eq. 7.58]{Legendre2012}), qui pourrait être attribuée à \autocite{Renkonen1938}, est très utilisée (par défaut dans plusieurs analyses du package \emph{vegan} par exemple):
+La dissimilarité de Steinhaus \autocite{Motyka1947}, plus connue sous le nom de Bray-Curtis \autocite{Odum1950, Bray1957} (voir l'analyse historique de \textcite[][note de bas de page, eq. 7.58]{Legendre2012}), qui pourrait être attribuée à \textcite{Renkonen1938}, est très utilisée (par défaut dans plusieurs analyses du package \emph{vegan} par exemple):
 
 \begin{equation}
   \label{BrayCurtis}
