@@ -1,6 +1,11 @@
 # Mesures de la Biodiversité
 
+![stability-deprecated](https://img.shields.io/badge/stability-deprecated-red.svg)
+
 Ouvrage de synthèse sur la mesure de la biodiversité.
+
+[Remplacé par une version accessible en ligne (GitBook et PDF)](https://github.com/EricMarcon/MesuresBioDiv2/)
+
 
 [Téléchargeable sur HAL.](https://hal-agroparistech.archives-ouvertes.fr/cel-01205813/) ou sur [GitHub](https://github.com/EricMarcon/MesuresBioDiv/releases) 
 
